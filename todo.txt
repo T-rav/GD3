@@ -12,3 +12,16 @@ https://help.gitprime.com/using-the-app/calculations/what-is-new-work-vs-other-w
 
 // Impact is calculated by number of files changed in a commit (Roughly how much cognitive load did the engineer carry when implementing these changes?)
 https://help.gitprime.com/using-the-app/calculations/what-is-impact
+
+P1] Dev | Active Days | Commits / Day
+
+P2] 
+  + New v Old v Team Churn ( <= 2 sprints)
+  + Impact (Congnative Load)
+  + Team Velocity (Actual Delivery Pace)
+
+P3]
+  + Time to 100 (100m dash)
+  + Help ( <= 2 sprints)
+  + Individual Churn
+  + Efficency (fn of churn)
