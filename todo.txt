@@ -1,11 +1,14 @@
-        // Time To 100 Lines
-        https://help.gitprime.com/using-the-app/calculations/what-is-tt100
+// Team Velocity
+https://help.gitprime.com/using-the-app/calculations/what-is-velocity
 
-        // New v Old v Help v Churn
-        // https://help.gitprime.com/using-the-app/calculations/what-is-new-work-vs-other-work
+// Time To 100 Lines
+https://help.gitprime.com/using-the-app/calculations/what-is-tt100
 
-        // Developer, Rank, Active Days, Commits Per Day, Efficency, Impact
-        // Effiecney is function of churn
+// New v Old v Help v Churn
+https://help.gitprime.com/using-the-app/calculations/what-is-new-work-vs-other-work
 
-        // https://help.gitprime.com/using-the-app/calculations/what-is-impact
-        // Impact is calculated by number of files changed in a commit (Roughly how much cognitive load did the engineer carry when implementing these changes?)
+// Developer, Rank, Active Days, Commits Per Day, Efficiency, Impact
+// Efficiency is function of churn
+
+// Impact is calculated by number of files changed in a commit (Roughly how much cognitive load did the engineer carry when implementing these changes?)
+https://help.gitprime.com/using-the-app/calculations/what-is-impact
