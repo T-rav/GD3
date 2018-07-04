@@ -49,7 +49,7 @@ teamTotalCommits=$(awk '{s+=$1} END {print s}' $rawCommitStats)
 awk '{ arr[$3]+=$1 } END {for (key in arr) printf("%s\t%s\t%s\n", key, arr[key], arr[key]/$totalWorkingDays)}' $rawCommitStats  | sort +0n -1 > $individualCommitStats
 
 # get active days per developer
-grep -- -- < data.txt | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' -f2 | sort | uniq -c > $activeDaysPerDeveloper
+grep -- -- < $dataPath | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' -f2 | sort | uniq -c > $activeDaysPerDeveloper
 
 # --- Print Dashboard ---
 echo -e "\e[93mGD3 Stats for 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
