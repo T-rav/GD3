@@ -38,21 +38,13 @@ P3]
     done | sort | uniq
 	
  ---- Display details about a single commit
-   git show --oneline 1c41b04c8028d84057f51f703c6c433439ad775f
+    git show --pretty=fuller 3fc40333c241591bbea860813834390b7f4246d7q
+	
    
-    diff --git a/source/PdfReporting.Web.Services.Tests/Report/RenderReportTests.cs b/source/PdfReporting.Web.Services.Tests/Pdf/RenderReportTests.cs
-	similarity index 95%
-	rename from source/PdfReporting.Web.Services.Tests/Report/RenderReportTests.cs
-	rename to source/PdfReporting.Web.Services.Tests/Pdf/RenderReportTests.cs
-	index ca2e4d7..d032ed0 100644
-	--- a/source/PdfReporting.Web.Services.Tests/Report/RenderReportTests.cs
-	+++ b/source/PdfReporting.Web.Services.Tests/Pdf/RenderReportTests.cs
-	@@ -5,7 +5,7 @@ using NUnit.Framework;
-	 using PdfReporting.Web.Services.Report;
-	 using PdfReportingPoc.Domain.Report;
+    commit 3fc40333c241591bbea860813834390b7f4246d7
+	Author:     T-rav <tmfrisinger@gmail.com>
+	AuthorDate: Wed Jul 4 15:24:06 2018 +0200
+	Commit:     T-rav <tmfrisinger@gmail.com>
+	CommitDate: Wed Jul 4 15:24:30 2018 +0200
 
-	-namespace PdfReporting.Web.Services.Tests.Report
-	+namespace PdfReporting.Web.Services.Tests.Pdf
-	 {
-		 // todo : ensure each test follows the 3's State, Services, Sut
-		 [TestFixture]
+		code review feedback and some lite cleanup of things
