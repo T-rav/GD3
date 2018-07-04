@@ -13,6 +13,8 @@ https://help.gitprime.com/using-the-app/calculations/what-is-new-work-vs-other-w
 // Impact is calculated by number of files changed in a commit (Roughly how much cognitive load did the engineer carry when implementing these changes?)
 https://help.gitprime.com/using-the-app/calculations/what-is-impact
 
+git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renames
+
 P1] Dev | Active Days | Commits / Day
 
 P2] 
