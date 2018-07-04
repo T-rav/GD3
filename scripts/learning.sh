@@ -51,10 +51,11 @@ awk '{ arr[$3]+=$1 } END {for (key in arr) printf("%s\t%s\t%s\n", key, arr[key],
 # get active days per developer
 grep -- -- < data.txt | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' -f2 | sort | uniq -c > $activeDaysPerDeveloper
 
+# --- Print Dashboard ---
 echo -e "\e[93mGD3 Stats for 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
-echo "-----------------------------------------------"
-echo -e "Developer      | Active Days   | Commits / Day" # 16,16
-echo  "----------------------------------------------"
+echo "---------------------------------------------------------"
+echo -e "Developer      | Active Days   | Commits / Day | Impact" 
+echo  "---------------------------------------------------------"
 
 while read line
 do
@@ -65,7 +66,10 @@ do
     pad ${#developer} 17 
     echo -n "$activeDays"
     pad ${#activeDays} 16
-    echo "$commitsPerWorkingDay"
+    echo -n "$commitsPerWorkingDay"
+    pad ${#commitsPerWorkingDay} 16
+    echo "todo"
 done < $activeDaysPerDeveloper
 
+# clean up
 rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
