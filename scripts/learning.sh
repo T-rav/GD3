@@ -67,3 +67,5 @@ do
     pad ${#activeDays} 16
     echo "$commitsPerWorkingDay"
 done < $activeDaysPerDeveloper
+
+rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
