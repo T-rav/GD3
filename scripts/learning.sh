@@ -11,6 +11,12 @@ function calculateWorkingDays(){
     echo $result
 }
 
+function print(){
+    line=$1
+    echo -n "$line"
+    pad $(echo $line | wc -c) $2 
+}
+
 function pad(){
     spaces=$[$2-$1]
     index=0
@@ -27,10 +33,8 @@ function ceiling () {
   echo $RESULT
 }
 
-function print(){
-    line=$1
-    echo -n "$line"
-    pad $(echo $line | wc -c) $2 
+function removeDecimal(){
+    echo $(echo $1 |  sed 's/\.//g')
 }
 
 if [ "$#" -lt 1 ]; then
@@ -67,7 +71,7 @@ grep -- -- < $dataPath | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' 
 echo -e "\e[96mGD3 Stats - v0.9.2\e[39m"
 echo -e "\e[93mFor 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 echo "-----------------------------------------------------------------------------------"
-echo -e "Developer      | Active Days | Active Days Per Week* | Commits / Day | Impact" 
+echo -e "Developer      | Active Days | Active Days Per Week | Commits / Day | Impact" 
 echo  "-----------------------------------------------------------------------------------"
 
 rowCount=0
@@ -80,28 +84,35 @@ do
     activeDays=$(echo $line | cut -d' ' -f1)
     activeDaysPerWeek=$(( $activeDays*10 / $totalWorkingWeeks*10))
     avgActiveDaysPerWeek=$(echo $activeDaysPerWeek | sed 's/..$/.&/')
-    commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' )
+    commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
     
     print $developer 18
     print $activeDays 15
-    print $avgActiveDaysPerWeek 25
+    print $avgActiveDaysPerWeek 24
     print $commitsPerWorkingDay 17
     echo "todo"
 
     rowCount=$(($rowCount+1))
-    #teamActiveDays=$(($teamActiveDays+$activeDays))
-    #teamActiveDaysPerWeek=$(($teamActiveDaysPerWeek+$avgActiveDaysPerWeek))
-    #teamCommitsPerDay=$(($teamCommitsPerDay+$commiterPerWorkingDay))
+    teamActiveDays=$(($teamActiveDays+$activeDays))
+    teamActiveDaysPerWeek=$(($teamActiveDaysPerWeek+$(removeDecimal $avgActiveDaysPerWeek)))
+    teamCommitsPerDay=$(($teamCommitsPerDay+$(removeDecimal $commitsPerWorkingDay)))
 done < $activeDaysPerDeveloper
 echo  "-----------------------------------------------------------------------------------"
 
-#avgActiveDays=$(($teamActiveDays / $rowCount))
-#avgDaysPerWeek=$(($teamActiveDasyPerWeek / $rowCount))
+avgActiveDays=$(($teamActiveDays / $rowCount))
+avgDaysPerWeek=$(($teamActiveDaysPerWeek / $rowCount))
 #avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
 
-#print $(($teamActiveDays / $rowCount)) 18
-
-echo "* Global average is 3.2 days per week"
+print "Averages" 18
+print $(echo $avgActiveDays | sed 's/..$/.&/') 0
+print "*" 29
+print $(echo $avgDaysPerWeek | sed 's/..$/.&/') 0
+print "**" 17
+#print $(echo $teamCommitsPerDay | sed 's/..$/.&/')
+echo ""
+echo "-----------------------------------------------------------------------------------"
+echo "* of $totalWorkingDays possible working days"
+echo "** Global average is 3.2 days per week"
 
 # clean up
 rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
