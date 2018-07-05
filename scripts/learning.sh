@@ -123,5 +123,11 @@ echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 
 printDeveloperDashboard
 
+# todo : print team stats scoped to sprint* churn can be calculated with x-ray tool
+echo "-----------------------------------------------------------------------------------"
+echo -e "Team           | Average Velocity | Average Churn " 
+echo  "-----------------------------------------------------------------------------------"
+
+
 # clean up
 rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
