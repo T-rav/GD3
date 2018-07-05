@@ -44,7 +44,7 @@ fi
 # ---------------- end functions ----------------
 
 version="0.9.3"
-developerToFilter="T-ravasdfsda"
+developerToFilter="T-rav"
 gitDirctory=$1
 currentDirctory=$(pwd)
 totalWorkingDays=$(calculateWorkingDays)
@@ -75,7 +75,7 @@ grep -- -- < $dataPath | grep -v $developerToFilter | awk -F'--' '{print $3" "$4
 echo -e "\e[96mGD3 Stats - v$version\e[39m"
 echo -e "\e[93mFor 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 echo "-----------------------------------------------------------------------------------"
-echo -e "Developer      | Active Days | Active Days Per Week | Commits / Day | Impact" 
+echo -e "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
 echo  "-----------------------------------------------------------------------------------"
 
 rowCount=0
@@ -91,7 +91,7 @@ do
     commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
     
     print $developer 18
-    print $activeDays 15
+    print $activeDays 22
     print $avgActiveDaysPerWeek 24
     print $commitsPerWorkingDay 17
     echo "todo"
@@ -109,13 +109,13 @@ avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
 
 print "Averages" 18
 print $(echo $avgActiveDays | sed 's/..$/.&/') 0
-print "*" 29
+print "*" 36
 print $(echo $avgDaysPerWeek | sed 's/..$/.&/') 0
 print "**" 34
 print $(echo $avgCommitsPerDay | sed 's/..$/.&/') 10
 echo ""
 echo "-----------------------------------------------------------------------------------"
-echo "* of $totalWorkingDays possible working days"
+echo "* of $totalWorkingDays possible days"
 echo "** Global average is 3.2 days per week"
 
 # clean up
