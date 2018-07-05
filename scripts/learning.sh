@@ -37,11 +37,57 @@ function removeDecimal(){
     echo $(echo $1 |  sed 's/\.//g')
 }
 
+function printDeveloperDashboard(){
+    echo "-----------------------------------------------------------------------------------"
+    echo -e "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
+    echo  "-----------------------------------------------------------------------------------"
+
+    rowCount=0
+    teamActiveDays=0
+    teamActiveDaysPerWeek=0
+    teamCommitsPerDay=0
+    while read line
+    do
+        developer=$(echo $line | cut -d' ' -f2)
+        activeDays=$(echo $line | cut -d' ' -f1)
+        activeDaysPerWeek=$(( $activeDays*10 / $totalWorkingWeeks*10))
+        avgActiveDaysPerWeek=$(echo $activeDaysPerWeek | sed 's/..$/.&/')
+        commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
+        
+        print $developer 18
+        print $activeDays 22
+        print $avgActiveDaysPerWeek 24
+        print $commitsPerWorkingDay 17
+        echo "todo"
+
+        rowCount=$(($rowCount+1))
+        teamActiveDays=$(($teamActiveDays+$activeDays))
+        teamActiveDaysPerWeek=$(($teamActiveDaysPerWeek+$(removeDecimal $avgActiveDaysPerWeek)))
+        teamCommitsPerDay=$(($teamCommitsPerDay+$(removeDecimal $commitsPerWorkingDay)))
+    done < $activeDaysPerDeveloper
+    echo  "-----------------------------------------------------------------------------------"
+
+    avgActiveDays=$(($teamActiveDays / $rowCount))
+    avgDaysPerWeek=$(($teamActiveDaysPerWeek / $rowCount))
+    avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
+
+    print "Averages" 18
+    print $(echo $avgActiveDays | sed 's/..$/.&/') 0
+    print "*" 36
+    print $(echo $avgDaysPerWeek | sed 's/..$/.&/') 0
+    print "**" 34
+    print $(echo $avgCommitsPerDay | sed 's/..$/.&/') 10
+    echo ""
+    echo "-----------------------------------------------------------------------------------"
+    echo "* of $totalWorkingDays possible days"
+    echo "** Global average is 3.2 days per week"
+}
+
+# ---------------- end functions ----------------
 if [ "$#" -lt 1 ]; then
     echo "Illegal number of parameters - please pass the git repository path!"
     exit
 fi
-# ---------------- end functions ----------------
 
 version="0.9.3"
 developerToFilter="T-rav"
@@ -72,51 +118,10 @@ awk -v days="$totalWorkingDays" '{ arr[$3]+=$1 } END {for (key in arr) printf("%
 grep -- -- < $dataPath | grep -v $developerToFilter | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' -f2 | sort | uniq -c > $activeDaysPerDeveloper
 
 # --- Print Dashboard ---
-echo -e "\e[96mGD3 Stats - v$version\e[39m"
-echo -e "\e[93mFor 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
-echo "-----------------------------------------------------------------------------------"
-echo -e "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
-echo  "-----------------------------------------------------------------------------------"
+echo -en "\e[96mGD3 Stats - v$version\e[39m"
+echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 
-rowCount=0
-teamActiveDays=0
-teamActiveDaysPerWeek=0
-teamCommitsPerDay=0
-while read line
-do
-    developer=$(echo $line | cut -d' ' -f2)
-    activeDays=$(echo $line | cut -d' ' -f1)
-    activeDaysPerWeek=$(( $activeDays*10 / $totalWorkingWeeks*10))
-    avgActiveDaysPerWeek=$(echo $activeDaysPerWeek | sed 's/..$/.&/')
-    commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
-    
-    print $developer 18
-    print $activeDays 22
-    print $avgActiveDaysPerWeek 24
-    print $commitsPerWorkingDay 17
-    echo "todo"
-
-    rowCount=$(($rowCount+1))
-    teamActiveDays=$(($teamActiveDays+$activeDays))
-    teamActiveDaysPerWeek=$(($teamActiveDaysPerWeek+$(removeDecimal $avgActiveDaysPerWeek)))
-    teamCommitsPerDay=$(($teamCommitsPerDay+$(removeDecimal $commitsPerWorkingDay)))
-done < $activeDaysPerDeveloper
-echo  "-----------------------------------------------------------------------------------"
-
-avgActiveDays=$(($teamActiveDays / $rowCount))
-avgDaysPerWeek=$(($teamActiveDaysPerWeek / $rowCount))
-avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
-
-print "Averages" 18
-print $(echo $avgActiveDays | sed 's/..$/.&/') 0
-print "*" 36
-print $(echo $avgDaysPerWeek | sed 's/..$/.&/') 0
-print "**" 34
-print $(echo $avgCommitsPerDay | sed 's/..$/.&/') 10
-echo ""
-echo "-----------------------------------------------------------------------------------"
-echo "* of $totalWorkingDays possible days"
-echo "** Global average is 3.2 days per week"
+printDeveloperDashboard
 
 # clean up
-#rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
+rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
