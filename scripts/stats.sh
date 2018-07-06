@@ -37,7 +37,8 @@ function removeDecimal(){
 }
 
 function addDecimal(){
-    echo $(echo $1 | sed 's/..$/.&/')
+    formatedNumber=$(echo $1 | sed 's/..$/.&/')
+    echo $(printf "%.2f" $formatedNumber)
 }
 
 function printDeveloperDashboard(){
