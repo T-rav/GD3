@@ -1,10 +1,13 @@
 #!/bin/sh
 
-version="0.9.5.2"
+version="0.9.6.0"
 
 function calculateWorkingDays(){
-    local startDate="2018-06-25"
-    local today=$(date +%Y-%m-%d)
+    #local startDate="2018-06-25" # get first commit day to repo
+    #local today=$(date +%Y-%m-%d) # get latest commit day to repo
+
+    local startDate=$(git log --date=short --pretty=format:'%ad' --no-renames | tail -n1)
+    local today=$(git log --date=short --pretty=format:'%ad' --no-renames | head -n1)
     local rawWorkingDays=$(( ($(date --date="$today" +%s) - $(date --date="$startDate" +%s) )/(60*60*24) ))
     local weekends=$(expr $rawWorkingDays / 7)
     local weekendDays=$(($weekends * 2))
@@ -153,16 +156,16 @@ awk -v days="$totalWorkingDays" '{ commits[$3]+=$1 } END {for (key in commits) p
 # commits per day [Day\tCommits]
 awk '{ commits[$2]+=$1; developers[$2]+=1 } END {for (key in commits) printf("%s\t%s\t%s\t%.2f\n", key, commits[key], developers[key], commits[key]/developers[key])}' $rawCommitStats  | sort +0n -1 > $teamCommitStats
 
-# get active days per developer
-# filter out my commits
+# get active days per developer and filter out my commits
 grep -- -- < $dataPath | grep -v $developerToFilter | awk -F'--' '{print $3" "$4}' | sort | uniq | cut -d' ' -f2 | sort | uniq -c > $activeDaysPerDeveloper
 
-# --- Print Dashboard ---
+# --- Print Dashboards ---
 echo -en "\e[96mGD3 Stats - v$version\e[39m"
 echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 
 printDeveloperDashboard
 printTeamDashboard
+# --- End Print Dashboards ---
 
 # todo : print team stats scoped to sprint* churn can be calculated with x-ray tool
 # team titans and code instances
