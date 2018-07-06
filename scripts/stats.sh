@@ -34,7 +34,7 @@ function ceiling () {
 }
 
 function removeDecimal(){
-    echo $(echo $1 |  sed 's/\.//g')
+    echo $(echo $1 |  sed 's/\.//g' | sed 's/^0*//')
 }
 
 function addDecimal(){
