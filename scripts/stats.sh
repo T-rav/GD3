@@ -7,7 +7,6 @@ function calculateWorkingDays(){
     local weekends=$(expr $rawWorkingDays / 7)
     local weekendDays=$(($weekends * 2))
     local result=$(expr $rawWorkingDays - $weekendDays)
-    
     echo $result
 }
 
@@ -78,11 +77,9 @@ function printDeveloperDashboard(){
     avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
 
     print "Averages" 18
-    print $(echo $(addDecimal $avgActiveDays)) 0
-    print "*" 36
-    print $(echo $(addDecimal $avgDaysPerWeek)) 0
-    print "**" 34
-    print $(echo $(addDecimal $avgCommitsPerDay)) 10
+    print "$(echo $(addDecimal $avgActiveDays))*" 22
+    print "$(echo $(addDecimal $avgDaysPerWeek))**" 24
+    print $(echo $(addDecimal $avgCommitsPerDay)) 17
     echo ""
     echo "-----------------------------------------------------------------------------------"
     echo "* of $totalWorkingDays possible days"
@@ -126,7 +123,7 @@ if [ "$#" -lt 1 ]; then
     exit
 fi
 
-version="0.9.4"
+version="0.9.5"
 developerToFilter="T-rav"
 gitDirctory=$1
 currentDirctory=$(pwd)
