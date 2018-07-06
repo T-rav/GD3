@@ -96,6 +96,7 @@ function printDeveloperDashboard(){
     echo "*** % of code written that was productive - it was not re-writen or deleted later."
     echo "**** Congative load carried when contributing."
     echo "***** Time taken to write 100 productive lines of code"
+    echo "^^ A big missing piece is what percentage of hot-spot technical debt is this developer responsible for. No good being effiecent and impactful if all you do is leave a mess!"
 }
 
 function printTeamDashboard(){
@@ -138,7 +139,7 @@ if [ "$#" -lt 1 ]; then
     exit
 fi
 
-developerToFilter="T-rav"
+developerToFilter="T-ravx"
 gitDirctory=$1
 currentDirctory=$(pwd)
 
