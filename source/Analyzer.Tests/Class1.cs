@@ -7,6 +7,7 @@ namespace Analyzer.Tests
     [TestFixture]
     public class Class1
     {
+        // https://stackoverflow.com/questions/13122138/what-is-the-libgit2sharp-equivalent-of-git-log-path
         [Test]
         public void LearningTest_Goal_ReadGitHistory()
         {
