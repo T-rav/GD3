@@ -89,7 +89,7 @@ if [ "$#" -lt 1 ]; then
     exit
 fi
 
-version="0.9.3"
+version="0.9.4"
 developerToFilter="T-rav"
 gitDirctory=$1
 currentDirctory=$(pwd)
@@ -111,7 +111,7 @@ git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renam
 grep -- -- < $dataPath | awk -F'--' '{print $3" "$4}' | sort | uniq -c | grep -v $developerToFilter > $rawCommitStats
 
 # commits per person Person\tTotal Commits\tCommits Per Working Day
-awk -v days="$totalWorkingDays" '{ arr[$3]+=$1 } END {for (key in arr) printf("%s\t%s\t%s\n", key, arr[key], arr[key]/days)}' $rawCommitStats  | sort +0n -1 > $individualCommitStats
+awk -v days="$totalWorkingDays" '{ arr[$3]+=$1 } END {for (key in arr) printf("%s\t%s\t%f\n", key, arr[key], arr[key]/days)}' $rawCommitStats  | sort +0n -1 > $individualCommitStats
 
 # get active days per developer
 # filter out my commits
@@ -124,6 +124,7 @@ echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 printDeveloperDashboard
 
 # todo : print team stats scoped to sprint* churn can be calculated with x-ray tool
+# team titans and code instances
 echo "-----------------------------------------------------------------------------------"
 echo -e "Team           | Average Velocity | Average Churn " 
 echo  "-----------------------------------------------------------------------------------"
