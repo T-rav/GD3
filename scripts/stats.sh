@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="0.9.6.2"
+version="0.9.6.3"
 startDate="NA"
 endDate="NA"
 function calculateWorkingDays(){
@@ -45,11 +45,11 @@ function addDecimal(){
 }
 
 function printDeveloperDashboard(){
-    echo "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
     echo -e "\e[7mIndividual Developer Stats\e[27m"
-    echo "-----------------------------------------------------------------------------------"
-    echo "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
-    echo "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
+    echo "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Efficiency | Impact | PTT100" 
+    echo "---------------------------------------------------------------------------------------------------------"
 
     local rowCount=0
     local teamActiveDays=0
@@ -67,6 +67,8 @@ function printDeveloperDashboard(){
         print $activeDays 22
         print $(printf "%.2f" $avgActiveDaysPerWeek) 24
         print $(printf "%.2f" $commitsPerWorkingDay) 17
+        print "todo" 14
+        print "todo" 10
         echo "todo"
 
         rowCount=$(($rowCount+1))
@@ -74,7 +76,7 @@ function printDeveloperDashboard(){
         teamActiveDaysPerWeek=$(($teamActiveDaysPerWeek+$(removeDecimal $avgActiveDaysPerWeek)))
         teamCommitsPerDay=$(($teamCommitsPerDay+$(removeDecimal $commitsPerWorkingDay)))
     done < $activeDaysPerDeveloper
-    echo  "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
 
     avgActiveDays=$(($teamActiveDays / $rowCount))
     avgDaysPerWeek=$(($teamActiveDaysPerWeek / $rowCount))
@@ -84,18 +86,24 @@ function printDeveloperDashboard(){
     print "$(echo $(addDecimal $avgActiveDays))*" 22
     print "$(echo $(addDecimal $avgDaysPerWeek))**" 24
     print $(echo $(addDecimal $avgCommitsPerDay)) 17
+    print "?***" 26
+    print "?****" 21
+    print "?*****" 0
     echo ""
-    echo "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
     echo "* of $totalWorkingDays possible days"
     echo "** Global average is 3.2 days per week"
+    echo "*** % of code written that was productive - it was not re-writen or deleted later."
+    echo "**** Congative load carried when contributing."
+    echo "***** Time taken to write 100 productive lines of code"
 }
 
 function printTeamDashboard(){
-    echo "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
     echo -e "\e[7mTeam Stats\e[27m"
-    echo "-----------------------------------------------------------------------------------"
-    echo "Date           | Total Commits | Active Developers | Velocity " 
-    echo "-----------------------------------------------------------------------------------"
+    echo "---------------------------------------------------------------------------------------------------------"
+    echo "Date           | Total Commits | Active Developers | Velocity | Efficiency " 
+    echo "---------------------------------------------------------------------------------------------------------"
     local totalVelocity=0
     local lineCount=0
     while read line
@@ -107,23 +115,21 @@ function printTeamDashboard(){
         print $date 18
         print $totalCommits 17
         print $activeDevelopers 21
-        print $(printf "%.2f" $velocity)
-        echo ""
+        print $(printf "%.2f" $velocity) 12
+        echo "todo"
         totalVelocity=$(($totalVelocity+$(removeDecimal $velocity)))
         lineCount=$(($lineCount+1))
     done < $teamCommitStats
-    echo  "-----------------------------------------------------------------------------------"
-    print "" 35
-    print "Average Velocity" 20
-    #print $(echo $(( $(addDecimal $totalVelocity) / $lineCount )) )  0
-    print "$(echo $( addDecimal $(( $totalVelocity / $lineCount )) ) )*"  0
+    echo "---------------------------------------------------------------------------------------------------------"
+    print "Averages" 54
+    print "$(echo $( addDecimal $(( $totalVelocity / $lineCount )) ) )*"  12
+    print "?**"
     echo ""
-    echo  "-----------------------------------------------------------------------------------"
-    echo "* Unlike traditional Agile velocity, this velocity metric is a bellwether that"
-    echo "filters out item size and team size and is relatively agnostic about individual"
-    echo "contributions."
-    echo ""
+    echo "---------------------------------------------------------------------------------------------------------"
+    echo "* Unlike traditional Agile velocity, this velocity metric is a bellwether that filters out item size "
+    echo "and team size and is relatively agnostic about individual contributions."
     echo "The metric exist to anwser 'How is the flow of work in engineering?'"
+    echo "** % of code written that was productive - it was not re-writen or deleted later."
 }
 
 # ---------------- end functions ----------------
