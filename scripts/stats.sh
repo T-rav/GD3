@@ -4,9 +4,6 @@ version="0.9.6.1"
 startDate="NA"
 endDate="NA"
 function calculateWorkingDays(){
-    #local startDate="2018-06-25" # get first commit day to repo
-    #local endDate=$(date +%Y-%m-%d) # get latest commit day to repo
-
     local startDate=$1
     local endDate=$2
     local rawWorkingDays=$(( ($(date --date="$endDate" +%s) - $(date --date="$startDate" +%s) )/(60*60*24) ))
@@ -119,9 +116,14 @@ function printTeamDashboard(){
     print "" 35
     print "Average Velocity" 20
     #print $(echo $(( $(addDecimal $totalVelocity) / $lineCount )) )  0
-    print $(echo $( addDecimal $(( $totalVelocity / $lineCount )) ) )  0
+    print "$(echo $( addDecimal $(( $totalVelocity / $lineCount )) ) )*"  0
     echo ""
     echo  "-----------------------------------------------------------------------------------"
+    echo "* Unlike traditional Agile velocity, this velocity metric is a bellwether that"
+    echo "filters out item size and team size and is relatively agnostic about individual"
+    echo "contributions."
+    echo ""
+    echo "The metric exist to anwser 'How is the flow of work in engineering?'"
 }
 
 # ---------------- end functions ----------------
