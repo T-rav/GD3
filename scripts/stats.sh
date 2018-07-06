@@ -1,14 +1,15 @@
 #!/bin/sh
 
-version="0.9.6.0"
-
+version="0.9.6.1"
+startDate="NA"
+endDate="NA"
 function calculateWorkingDays(){
     #local startDate="2018-06-25" # get first commit day to repo
-    #local today=$(date +%Y-%m-%d) # get latest commit day to repo
+    #local endDate=$(date +%Y-%m-%d) # get latest commit day to repo
 
-    local startDate=$(git log --date=short --pretty=format:'%ad' --no-renames | tail -n1)
-    local today=$(git log --date=short --pretty=format:'%ad' --no-renames | head -n1)
-    local rawWorkingDays=$(( ($(date --date="$today" +%s) - $(date --date="$startDate" +%s) )/(60*60*24) ))
+    local startDate=$1
+    local endDate=$2
+    local rawWorkingDays=$(( ($(date --date="$endDate" +%s) - $(date --date="$startDate" +%s) )/(60*60*24) ))
     local weekends=$(expr $rawWorkingDays / 7)
     local weekendDays=$(($weekends * 2))
     local result=$(expr $rawWorkingDays - $weekendDays)
@@ -132,8 +133,6 @@ fi
 developerToFilter="T-rav"
 gitDirctory=$1
 currentDirctory=$(pwd)
-totalWorkingDays=$(calculateWorkingDays)
-totalWorkingWeeks=$(ceiling $totalWorkingDays 5)
 
 dataPath="$currentDirctory/data.txt"
 rawCommitStats="$currentDirctory/rawCommitStats.txt"
@@ -142,6 +141,12 @@ activeDaysPerDeveloper="$currentDirctory/activeDaysPerDeveloper.txt"
 teamCommitStats="$currentDirctory/teamCommitStats.txt"
 
 cd $gitDirctory
+
+#calculate start and end dates based on activity
+startDate=$(git log --date=short --pretty=format:'%ad' --no-renames | tail -n1)
+endDate=$(git log --date=short --pretty=format:'%ad' --no-renames | head -n1)
+totalWorkingDays=$(calculateWorkingDays $startDate $endDate)
+totalWorkingWeeks=$(ceiling $totalWorkingDays 5)
 
 # fetch raw data
 git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renames > $dataPath
@@ -161,7 +166,7 @@ grep -- -- < $dataPath | grep -v $developerToFilter | awk -F'--' '{print $3" "$4
 
 # --- Print Dashboards ---
 echo -en "\e[96mGD3 Stats - v$version\e[39m"
-echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
+echo -e " - \e[93mfor period $startDate - $endDate\e[39m"
 
 printDeveloperDashboard
 printTeamDashboard
