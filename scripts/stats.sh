@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="0.9.6.1"
+version="0.9.6.2"
 startDate="NA"
 endDate="NA"
 function calculateWorkingDays(){
@@ -178,4 +178,4 @@ printTeamDashboard
 # team titans and code instances
 
 # clean up
-#rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper $teamCommitStats
+rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper $teamCommitStats
