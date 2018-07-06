@@ -37,22 +37,28 @@ function removeDecimal(){
     echo $(echo $1 |  sed 's/\.//g')
 }
 
+function addDecimal(){
+    echo $(echo $1 | sed 's/..$/.&/')
+}
+
 function printDeveloperDashboard(){
     echo "-----------------------------------------------------------------------------------"
-    echo -e "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
-    echo  "-----------------------------------------------------------------------------------"
+    echo -e "\e[7mIndividual Developer Stats\e[27m"
+    echo "-----------------------------------------------------------------------------------"
+    echo "Developer      | Period Active Days | Active Days Per Week | Commits / Day | Impact" 
+    echo "-----------------------------------------------------------------------------------"
 
-    rowCount=0
-    teamActiveDays=0
-    teamActiveDaysPerWeek=0
-    teamCommitsPerDay=0
+    local rowCount=0
+    local teamActiveDays=0
+    local teamActiveDaysPerWeek=0
+    local teamCommitsPerDay=0
     while read line
     do
-        developer=$(echo $line | cut -d' ' -f2)
-        activeDays=$(echo $line | cut -d' ' -f1)
-        activeDaysPerWeek=$(( $activeDays*10 / $totalWorkingWeeks*10))
-        avgActiveDaysPerWeek=$(echo $activeDaysPerWeek | sed 's/..$/.&/')
-        commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
+        local developer=$(echo $line | cut -d' ' -f2)
+        local activeDays=$(echo $line | cut -d' ' -f1)
+        local activeDaysPerWeek=$(( $activeDays*10 / $totalWorkingWeeks*10))
+        local avgActiveDaysPerWeek=$(echo $activeDaysPerWeek | sed 's/..$/.&/')
+        local commitsPerWorkingDay=$(grep "$developer" < $individualCommitStats | awk -F'\t' '{print $3}' | grep -o -P '.{0,4}\..{0,2}')
         
         print $developer 18
         print $activeDays 22
@@ -72,15 +78,46 @@ function printDeveloperDashboard(){
     avgCommitsPerDay=$(($teamCommitsPerDay / $rowCount))
 
     print "Averages" 18
-    print $(echo $avgActiveDays | sed 's/..$/.&/') 0
+    print $(echo $(addDecimal $avgActiveDays)) 0
     print "*" 36
-    print $(echo $avgDaysPerWeek | sed 's/..$/.&/') 0
+    print $(echo $(addDecimal $avgDaysPerWeek)) 0
     print "**" 34
-    print $(echo $avgCommitsPerDay | sed 's/..$/.&/') 10
+    print $(echo $(addDecimal $avgCommitsPerDay)) 10
     echo ""
     echo "-----------------------------------------------------------------------------------"
     echo "* of $totalWorkingDays possible days"
     echo "** Global average is 3.2 days per week"
+}
+
+function printTeamDashboard(){
+    echo "-----------------------------------------------------------------------------------"
+    echo -e "\e[7mTeam Stats\e[27m"
+    echo "-----------------------------------------------------------------------------------"
+    echo "Date           | Total Commits | Active Developers | Velocity " 
+    echo "-----------------------------------------------------------------------------------"
+    local totalVelocity=0
+    local lineCount=0
+    while read line
+    do
+        local date=$(echo $line | cut -d' ' -f1)
+        local totalCommits=$(echo $line | cut -d' ' -f2)
+        local activeDevelopers=$(echo $line | cut -d' ' -f3)
+        local velocity=$(echo $line | cut -d' ' -f4)
+        print $date 18
+        print $totalCommits 17
+        print $activeDevelopers 21
+        print $velocity 
+        echo ""
+        totalVelocity=$(($totalVelocity+$(removeDecimal $velocity)))
+        lineCount=$(($lineCount+1))
+    done < $teamCommitStats
+    echo  "-----------------------------------------------------------------------------------"
+    print "" 35
+    print "Average Velocity" 20
+    #print $(echo $(( $(addDecimal $totalVelocity) / $lineCount )) )  0
+    print $(echo $( addDecimal $(( $totalVelocity / $lineCount )) ) )  0
+    echo ""
+    echo  "-----------------------------------------------------------------------------------"
 }
 
 # ---------------- end functions ----------------
@@ -100,6 +137,7 @@ dataPath="$currentDirctory/data.txt"
 rawCommitStats="$currentDirctory/rawCommitStats.txt"
 individualCommitStats="$currentDirctory/individualCommitStats.txt"
 activeDaysPerDeveloper="$currentDirctory/activeDaysPerDeveloper.txt"
+teamCommitStats="$currentDirctory/teamCommitStats.txt"
 
 cd $gitDirctory
 
@@ -110,8 +148,11 @@ git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renam
 # filter out my commits
 grep -- -- < $dataPath | awk -F'--' '{print $3" "$4}' | sort | uniq -c | grep -v $developerToFilter > $rawCommitStats
 
-# commits per person Person\tTotal Commits\tCommits Per Working Day
-awk -v days="$totalWorkingDays" '{ arr[$3]+=$1 } END {for (key in arr) printf("%s\t%s\t%f\n", key, arr[key], arr[key]/days)}' $rawCommitStats  | sort +0n -1 > $individualCommitStats
+# commits per person [Person\tTotal Commits\tCommits Per Working Day]
+awk -v days="$totalWorkingDays" '{ commits[$3]+=$1 } END {for (key in commits) printf("%s\t%s\t%.2f\n", key, commits[key], commits[key]/days)}' $rawCommitStats  | sort +0n -1 > $individualCommitStats
+
+# commits per day [Day\tCommits]
+awk '{ commits[$2]+=$1; developers[$2]+=1 } END {for (key in commits) printf("%s\t%s\t%s\t%.2f\n", key, commits[key], developers[key], commits[key]/developers[key])}' $rawCommitStats  | sort +0n -1 > $teamCommitStats
 
 # get active days per developer
 # filter out my commits
@@ -122,13 +163,10 @@ echo -en "\e[96mGD3 Stats - v$version\e[39m"
 echo -e " - \e[93mfor period 2018-06-25 - $(date +%Y-%m-%d)\e[39m"
 
 printDeveloperDashboard
+printTeamDashboard
 
 # todo : print team stats scoped to sprint* churn can be calculated with x-ray tool
 # team titans and code instances
-echo "-----------------------------------------------------------------------------------"
-echo -e "Team           | Average Velocity | Average Churn " 
-echo  "-----------------------------------------------------------------------------------"
-
 
 # clean up
-rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper
+#rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper $teamCommitStats
