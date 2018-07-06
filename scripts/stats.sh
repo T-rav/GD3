@@ -1,5 +1,7 @@
 #!/bin/sh
 
+version="0.9.5.2"
+
 function calculateWorkingDays(){
     local startDate="2018-06-25"
     local today=$(date +%Y-%m-%d)
@@ -62,8 +64,8 @@ function printDeveloperDashboard(){
         
         print $developer 18
         print $activeDays 22
-        print $avgActiveDaysPerWeek 24
-        print $commitsPerWorkingDay 17
+        print $(printf "%.2f" $avgActiveDaysPerWeek) 24
+        print $(printf "%.2f" $commitsPerWorkingDay) 17
         echo "todo"
 
         rowCount=$(($rowCount+1))
@@ -104,7 +106,7 @@ function printTeamDashboard(){
         print $date 18
         print $totalCommits 17
         print $activeDevelopers 21
-        print $velocity 
+        print $(printf "%.2f" $velocity)
         echo ""
         totalVelocity=$(($totalVelocity+$(removeDecimal $velocity)))
         lineCount=$(($lineCount+1))
@@ -124,7 +126,6 @@ if [ "$#" -lt 1 ]; then
     exit
 fi
 
-version="0.9.5"
 developerToFilter="T-rav"
 gitDirctory=$1
 currentDirctory=$(pwd)
