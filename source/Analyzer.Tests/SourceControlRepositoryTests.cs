@@ -28,7 +28,7 @@ namespace Analyzer.Tests
                 actual.Count().Should().Be(expected);
             }
 
-            // todo : pull into ctor test or builder test
+            // todo : pull into ctor test or builder test and add test for WithRange
             [Test]
             public void WhenInvalidRepositoryPath_ShouldThrowException()
             {
@@ -94,6 +94,7 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
@@ -111,6 +112,7 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
@@ -132,11 +134,12 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
                 // act
                 var actual = sut.Commits_Per_Day(author);
                 // assert
-                var expectedCommitsPerDay = 4.5;
+                var expectedCommitsPerDay = 4.09;
                 actual.Should().Be(expectedCommitsPerDay);
             }
 
@@ -149,6 +152,7 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
                 // act
                 var actual = sut.Commits_Per_Day(author);

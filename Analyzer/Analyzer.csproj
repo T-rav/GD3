@@ -9,4 +9,9 @@
     <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\source\Analyzer.Data\Analyzer.Data.csproj" />
+    <ProjectReference Include="..\source\Analyzer.Domain\Analyzer.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

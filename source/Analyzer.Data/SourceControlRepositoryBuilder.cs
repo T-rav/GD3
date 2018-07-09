@@ -7,6 +7,8 @@ namespace Analyzer.Data
     public class SourceControlRepositoryBuilder
     {
         private string _repoPath;
+        private DateTime _start;
+        private DateTime _end;
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
         {
@@ -14,11 +16,24 @@ namespace Analyzer.Data
             return this;
         }
 
+        public SourceControlRepositoryBuilder WithRange(DateTime start, DateTime end)
+        {
+            _start = start;
+            _end = end;
+            return this;
+        }
+
         public ISourceControlRepository Build()
         {
-            return NotValidGitRepository(_repoPath) ? 
-                throw new Exception($"Invalid path [{_repoPath}]") : 
-                new SourceControlRepository(new Repository(_repoPath));
+            if (NotValidGitRepository(_repoPath))
+            {
+                throw new Exception($"Invalid path [{_repoPath}]");
+            }
+
+            var reportRange = new ReportingPeriod {Start = _start, End = _end};
+            var repository = new Repository(_repoPath);
+
+            return new SourceControlRepository(repository, reportRange);
         }
 
         private bool NotValidGitRepository(string repository)

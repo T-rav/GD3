@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain;
 using Analyzer.Tests;
@@ -9,10 +10,12 @@ namespace Analyzer.Data
     internal class SourceControlRepository : ISourceControlRepository
     {
         private readonly Repository _repository;
+        private readonly ReportingPeriod _reportingPeriod;
 
-        public SourceControlRepository(Repository repository)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod)
         {
             _repository = repository;
+            _reportingPeriod = reportingPeriod;
         }
 
         public IEnumerable<object> List_Authors()
@@ -43,7 +46,7 @@ namespace Analyzer.Data
         {
             var activeDays = Period_Active_Days(author);
             var weeks = Total_Weeks();
-            return (double)activeDays / weeks;
+            return Math.Round((double)activeDays / weeks, 2);
         }
 
         public double Commits_Per_Day(Author author)
@@ -51,31 +54,23 @@ namespace Analyzer.Data
             var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
             var totalWorkingDays = Working_Days();
 
-            return (double)totalCommits / totalWorkingDays;
+            return Math.Round((double)totalCommits / totalWorkingDays, 2);
         }
+
 
         private int Working_Days()
         {
             var numberOfWeekends = Total_Weeks();
             var weekendDays = numberOfWeekends * 2;
-            var workingDays = Total_Days() - weekendDays;
+            var workingDays = _reportingPeriod.Total_Days() - weekendDays;
             return workingDays;
         }
 
         private int Total_Weeks()
         {
-            var totalDays = Total_Days();
+            var totalDays = _reportingPeriod.Total_Days();
             var numberOfWeekends = totalDays / 7;
             return numberOfWeekends;
-        }
-
-        private int Total_Days()
-        {
-            var latestCommit = _repository.Head.Commits.Max(x => x.Author.When.UtcDateTime.Date);
-            var firstCommit = _repository.Head.Commits.Min(x => x.Author.When.UtcDateTime.Date);
-            var difference = latestCommit.Subtract(firstCommit);
-            var activeDays = difference.Days;
-            return activeDays;
         }
     }
 }
