@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain;
-using Analyzer.Tests;
 using LibGit2Sharp;
 
 namespace Analyzer.Data
@@ -55,6 +54,11 @@ namespace Analyzer.Data
             var totalWorkingDays = Working_Days();
 
             return Math.Round((double)totalCommits / totalWorkingDays, 2);
+        }
+
+        public List<DeveloperStats> Build_Individual_Developer_Stats()
+        {
+            throw new NotImplementedException();
         }
 
 
