@@ -19,7 +19,7 @@ namespace Analyzer.Domain
 
         public override string ToString()
         {
-            return null;
+            return $"{Author.Name}    {PeriodActiveDays}    {ActiveDaysPerWeek}   {CommitsPerDay}  {Efficiency}  {Impact}  {Ptt100}";
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Analyzer.Tests
                     End = DateTime.Parse("2018-07-05")
                 };
                 // act
-                var actual = sut.Total_Days();
+                var actual = sut.Days();
                 // assert
                 actual.Should().Be(5);
             }
@@ -37,7 +37,7 @@ namespace Analyzer.Tests
                     End = end
                 };
                 // act
-                var actual = sut.Total_Days();
+                var actual = sut.Days();
                 // assert
                 actual.Should().Be(0);
             }
@@ -72,7 +72,42 @@ namespace Analyzer.Tests
                     End = end
                 };
                 // act
-                var actual = sut.Total_Days();
+                var actual = sut.Days();
+                // assert
+                actual.Should().Be(0);
+            }
+        }
+
+        [TestFixture]
+        public class Weeks
+        {
+            [Test]
+            public void WhenSingleWeek_ExpectFiveWorkingDays()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-07")
+                };
+                // act
+                var actual = sut.Weeks();
+                // assert
+                actual.Should().Be(1);
+            }
+
+            [TestCase("2018-07-05", "2018-07-01")]
+            [TestCase("2018-07-05", "2018-07-04")]
+            public void WhenEndBeforeStart_ExpectZeroDaysBetween(DateTime start, DateTime end)
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = start,
+                    End = end
+                };
+                // act
+                var actual = sut.Days();
                 // assert
                 actual.Should().Be(0);
             }

@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\source\Analyzer.Data\Analyzer.Data.csproj" />
-    <ProjectReference Include="..\source\Analyzer.Domain\Analyzer.Domain.csproj" />
+    <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
+    <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
   </ItemGroup>
 
 </Project>

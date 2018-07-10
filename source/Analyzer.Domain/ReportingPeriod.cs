@@ -7,7 +7,7 @@ namespace Analyzer.Domain
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 
-        public int Total_Days()
+        public int Days()
         {
             var result = End.Subtract(Start).Days+1;
             if (result <= 0)
@@ -20,16 +20,16 @@ namespace Analyzer.Domain
 
         public int Working_Days()
         {
-            var numberOfWeekends = Total_Weeks();
+            var numberOfWeekends = (int)Math.Floor(Weeks());
             var weekendDays = numberOfWeekends * 2;
-            var workingDays = Total_Days() - weekendDays;
+            var workingDays = Days() - weekendDays;
             return workingDays;
         }
 
-        private int Total_Weeks()
+        public double Weeks()
         {
-            var totalDays = Total_Days();
-            var numberOfWeekends = totalDays / 7;
+            var totalDays = Days();
+            var numberOfWeekends = totalDays / 7.0;
             return numberOfWeekends;
         }
     }

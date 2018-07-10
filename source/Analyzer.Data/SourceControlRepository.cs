@@ -17,7 +17,7 @@ namespace Analyzer.Data
             _reportingPeriod = reportingPeriod;
         }
 
-        public IEnumerable<object> List_Authors()
+        public IEnumerable<Author> List_Authors()
         {
             var commits = _repository.Head.Commits;
             var authors = commits.Select(x => new Author
@@ -31,7 +31,8 @@ namespace Analyzer.Data
         public int Period_Active_Days(Author author)
         {
             var activeDays = _repository.Head.Commits
-                .Where(x => x.Author.Email == author.Email)
+                .Where(x => x.Author.Email == author.Email 
+                            && (x.Author.When.Date >= _reportingPeriod.Start.Date && x.Author.When.Date <= _reportingPeriod.End.Date))
                 .Select(x => new
                 {
                     x.Author.When.UtcDateTime.Date
@@ -44,37 +45,35 @@ namespace Analyzer.Data
         public double Active_Days_Per_Week(Author author)
         {
             var activeDays = Period_Active_Days(author);
-            var weeks = Total_Weeks();
-            return Math.Round((double)activeDays / weeks, 2);
+            var weeks = _reportingPeriod.Weeks();
+            return Math.Round(activeDays / weeks, 2);
         }
 
         public double Commits_Per_Day(Author author)
         {
             var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
-            var totalWorkingDays = Working_Days();
+            var totalWorkingDays = _reportingPeriod.Working_Days();
 
             return Math.Round((double)totalCommits / totalWorkingDays, 2);
         }
 
-        public List<DeveloperStats> Build_Individual_Developer_Stats()
+        public List<DeveloperStats> Build_Individual_Developer_Stats(IEnumerable<Author> authors)
         {
-            throw new NotImplementedException();
-        }
+            var result = new List<DeveloperStats>();
+            foreach (var developer in authors)
+            {
+                var stats = new DeveloperStats {Author = developer,
+                                                PeriodActiveDays = Period_Active_Days(developer),
+                                                ActiveDaysPerWeek = Active_Days_Per_Week(developer),
+                                                CommitsPerDay = Commits_Per_Day(developer),
+                                                Efficiency = 0.0,
+                                                Impact = 0.0,
+                                                Ptt100 = 0
+                };
+                result.Add(stats);
+            }
 
-
-        private int Working_Days()
-        {
-            var numberOfWeekends = Total_Weeks();
-            var weekendDays = numberOfWeekends * 2;
-            var workingDays = _reportingPeriod.Total_Days() - weekendDays;
-            return workingDays;
-        }
-
-        private int Total_Weeks()
-        {
-            var totalDays = _reportingPeriod.Total_Days();
-            var numberOfWeekends = totalDays / 7;
-            return numberOfWeekends;
+            return result;
         }
     }
 }

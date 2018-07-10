@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Analyzer.Data;
@@ -12,7 +13,7 @@ namespace Analyzer.Tests
     public class SourceControlRepositoryTests
     {
         [TestFixture]
-        public class ListDevelopers
+        public class ListAuthors
         {
             [Test]
             public void WhenValidRepositoryPath_ShouldReturnDeveloperList()
@@ -56,6 +57,7 @@ namespace Analyzer.Tests
                 var author = new Author { Name = "Thabani", Email = "thabanitembe@hotmail.com" };
 
                 var sut = new SourceControlRepositoryBuilder()
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .WithPath(repoPath)
                     .Build();
                 // act
@@ -100,7 +102,7 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
                 // assert
-                var expectedActiveDaysPerWeek = 3.5;
+                var expectedActiveDaysPerWeek = 3.27;
                 actual.Should().Be(expectedActiveDaysPerWeek);
             }
 
@@ -160,6 +162,74 @@ namespace Analyzer.Tests
                 // assert
                 var expectedCommitsPerDay = 0.0;
                 actual.Should().Be(expectedCommitsPerDay);
+            }
+        }
+
+        [TestFixture]
+        public class Build_Individual_Developer_Stats
+        {
+            [Test]
+            public void WhenRangeEntireProjectHistory_ShouldReturnStats()
+            {
+                // arrange
+                var author = new Author { Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM" };
+                var repoPath = TestRepoPath();
+
+                var sut = new SourceControlRepositoryBuilder()
+                                .WithPath(repoPath)
+                                .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
+                                .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        ActiveDaysPerWeek = 3.06,
+                        PeriodActiveDays = 7,
+                        CommitsPerDay = 3.75,
+                        Efficiency = 0.0,
+                        Impact = 0.0,
+                        Ptt100 = 0,
+                        Rank = 0
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
+            public void WhenDeveloperActiveAcrossEntireRange_ShouldReturnStats()
+            {
+                // arrange
+                var author = new Author { Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM" };
+                var repoPath = TestRepoPath();
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-04"))
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        ActiveDaysPerWeek = 4.2,
+                        PeriodActiveDays = 6,
+                        CommitsPerDay = 5.62,
+                        Efficiency = 0.0,
+                        Impact = 0.0,
+                        Ptt100 = 0,
+                        Rank = 0
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
             }
         }
 

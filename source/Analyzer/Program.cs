@@ -14,9 +14,7 @@ namespace Analyzer
                 PrintNoGitRepositoryPathError(defaultColor);
                 return;
             }
-
             
-
             var startDate = DateTime.Parse("2018-06-25");
             var endDate = DateTime.Now.Date;
             var repo = new SourceControlRepositoryBuilder()
@@ -26,26 +24,32 @@ namespace Analyzer
 
             PrintApplicationHeader(version, startDate, endDate, defaultColor);
 
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            PrintDashedLine();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Individual Developer Stats");
             Console.ForegroundColor = defaultColor;
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
-            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Efficiency | Impact ");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
-            //todo : developer list here
-            var lineItems = repo.Build_Individual_Developer_Stats();
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            PrintDashedLine();
+            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Efficiency | Impact | PTT100 | TT100 Split");
+            PrintDashedLine();
+            var authors = repo.List_Authors();
+            var stats = repo.Build_Individual_Developer_Stats(authors);
+            foreach (var stat in stats)
+            {
+                Console.WriteLine(stat.ToString());
+            }
+            PrintDashedLine();
             Console.Write("Avarages");
             Console.WriteLine("");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            PrintDashedLine();
             // todo : notes?
-
-
-            
-
             // wait to exit
             Console.ReadKey();
+        }
+
+        private static void PrintDashedLine()
+        {
+            Console.WriteLine(
+                "--------------------------------------------------------------------------------------------------------------------------------");
         }
 
         private static void PrintNoGitRepositoryPathError(ConsoleColor defaultColor)
