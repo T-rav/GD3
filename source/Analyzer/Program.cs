@@ -1,5 +1,6 @@
 ﻿using System;
 using Analyzer.Data;
+using Analyzer.Domain;
 
 namespace Analyzer
 {
@@ -24,6 +25,35 @@ namespace Analyzer
 
             PrintApplicationHeader(version, startDate, endDate, defaultColor);
 
+            PrintDeveloperStatsTableHeader(defaultColor);
+            PrintDeveloperStatsTable(repo);
+            PrintDeveloperAverages();
+
+            // todo : notes?
+            // wait to exit
+            Console.ReadKey();
+        }
+
+        private static void PrintDeveloperAverages()
+        {
+            Console.Write("Averages");
+            Console.WriteLine("");
+            PrintDashedLine();
+        }
+
+        private static void PrintDeveloperStatsTable(ISourceControlRepository repo)
+        {
+            var authors = repo.List_Authors();
+            var stats = repo.Build_Individual_Developer_Stats(authors);
+            foreach (var stat in stats)
+            {
+                Console.WriteLine(stat);
+            }
+            PrintDashedLine();
+        }
+
+        private static void PrintDeveloperStatsTableHeader(ConsoleColor defaultColor)
+        {
             PrintDashedLine();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Individual Developer Stats");
@@ -31,19 +61,6 @@ namespace Analyzer
             PrintDashedLine();
             Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Efficiency | Impact | PTT100 | TT100 Split");
             PrintDashedLine();
-            var authors = repo.List_Authors();
-            var stats = repo.Build_Individual_Developer_Stats(authors);
-            foreach (var stat in stats)
-            {
-                Console.WriteLine(stat.ToString());
-            }
-            PrintDashedLine();
-            Console.Write("Avarages");
-            Console.WriteLine("");
-            PrintDashedLine();
-            // todo : notes?
-            // wait to exit
-            Console.ReadKey();
         }
 
         private static void PrintDashedLine()
