@@ -1,4 +1,4 @@
-﻿namespace Analyzer.Tests
+﻿namespace Analyzer.Domain
 {
     public class Author
     {

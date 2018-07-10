@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Analyzer.Data;
+using Analyzer.Domain;
 using FluentAssertions;
 using NUnit.Framework;
 

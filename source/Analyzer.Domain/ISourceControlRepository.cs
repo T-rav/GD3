@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Analyzer.Tests;
 
 namespace Analyzer.Domain
 {
