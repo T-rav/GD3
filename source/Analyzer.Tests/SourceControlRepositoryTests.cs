@@ -102,7 +102,7 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
                 // assert
-                var expectedActiveDaysPerWeek = 3.27;
+                var expectedActiveDaysPerWeek = 3.73;
                 actual.Should().Be(expectedActiveDaysPerWeek);
             }
 
@@ -142,7 +142,7 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Commits_Per_Day(author);
                 // assert
-                var expectedCommitsPerDay = 4.09;
+                var expectedCommitsPerDay = 4.91;
                 actual.Should().Be(expectedCommitsPerDay);
             }
 
@@ -187,9 +187,9 @@ namespace Analyzer.Tests
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 3.06,
-                        PeriodActiveDays = 7,
-                        CommitsPerDay = 3.75,
+                        ActiveDaysPerWeek = 3.94,
+                        PeriodActiveDays = 9,
+                        CommitsPerDay = 4.5,
                         Efficiency = 0.0,
                         Impact = 0.0,
                         Ptt100 = 0,
@@ -221,7 +221,7 @@ namespace Analyzer.Tests
                         Author = author,
                         ActiveDaysPerWeek = 4.2,
                         PeriodActiveDays = 6,
-                        CommitsPerDay = 5.62,
+                        CommitsPerDay = 6.75,
                         Efficiency = 0.0,
                         Impact = 0.0,
                         Ptt100 = 0,
@@ -236,7 +236,7 @@ namespace Analyzer.Tests
         private static string TestRepoPath()
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            var repoPath = Path.Combine(basePath, "..", "..", "..", "test-repo");
+            var repoPath = Path.Combine(basePath, "..", "..", "..", "..","..", "test-repo");
             return repoPath;
         }
     }

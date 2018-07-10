@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Analyzer.Data;
 using Analyzer.Domain;
 
@@ -45,7 +46,8 @@ namespace Analyzer
         {
             var authors = repo.List_Authors();
             var stats = repo.Build_Individual_Developer_Stats(authors);
-            foreach (var stat in stats)
+            var orderedStats = stats.OrderByDescending(x=>x.PeriodActiveDays);
+            foreach (var stat in orderedStats)
             {
                 Console.WriteLine(stat);
             }
@@ -65,8 +67,7 @@ namespace Analyzer
 
         private static void PrintDashedLine()
         {
-            Console.WriteLine(
-                "--------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------");
         }
 
         private static void PrintNoGitRepositoryPathError(ConsoleColor defaultColor)
