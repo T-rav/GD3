@@ -6,10 +6,14 @@ namespace Analyzer.Domain
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public int HoursPerWeek { get; set; }
+        public double DaysPerWeek { get; set; }
 
-        public int Days()
+        private const double DaysInWeek = 7.0;
+
+        public int Period_Days()
         {
-            var result = End.Subtract(Start).Days+1;
+            var result = End.Subtract(Start).Days + 1;
             if (result <= 0)
             {
                 return 0;
@@ -18,19 +22,34 @@ namespace Analyzer.Domain
             return result;
         }
 
-        public int Working_Days()
+        public double Period_Working_Days()
         {
-            var numberOfWeekends = (int)Math.Floor(Weeks());
-            var weekendDays = numberOfWeekends * 2;
-            var workingDays = Days() - weekendDays;
-            return workingDays;
+            var weeks = Period_Weeks();
+            var result = DaysPerWeek * weeks;
+            if (NoPartialWeek(weeks))
+            {
+                return Math.Round(result, 1);
+            }
+
+            return Math.Ceiling(result);
         }
 
-        public double Weeks()
+        public double Period_Weeks()
         {
-            var totalDays = Days();
-            var numberOfWeekends = totalDays / 7.0;
-            return numberOfWeekends;
+            var totalDays = End.Subtract(Start).Days + 1;
+            var weeks = totalDays / DaysInWeek;
+            return Math.Round(weeks,0);
+        }
+
+        public double Period_Working_Hours()
+        {
+            var weeks = Period_Weeks();
+            return weeks * HoursPerWeek;
+        }
+
+        private static bool NoPartialWeek(double weeks)
+        {
+            return (int)weeks == weeks;
         }
     }
 }

@@ -45,14 +45,14 @@ namespace Analyzer.Data
         public double Active_Days_Per_Week(Author author)
         {
             var activeDays = Period_Active_Days(author);
-            var weeks = _reportingPeriod.Weeks();
+            var weeks = _reportingPeriod.Period_Weeks();
             return Math.Round(activeDays / weeks, 2);
         }
 
         public double Commits_Per_Day(Author author)
         {
             var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
-            var totalWorkingDays = _reportingPeriod.Working_Days();
+            var totalWorkingDays = _reportingPeriod.Period_Working_Days();
 
             return Math.Round((double)totalCommits / totalWorkingDays, 2);
         }
@@ -68,12 +68,40 @@ namespace Analyzer.Data
                                                 CommitsPerDay = Commits_Per_Day(developer),
                                                 Efficiency = 0.0,
                                                 Impact = 0.0,
-                                                Ptt100 = 0
+                                                Ptt100 = Calculate_Raw_Ptt100(developer),
+                                                Sptt100 = 0
                 };
                 result.Add(stats);
             }
 
             return result;
+        }
+
+        private double Calculate_Raw_Ptt100(Author developer)
+        {
+            var linesChanged = 0.0;
+            var targetedNumberOfLine = 100;
+            var developerCommits = _repository.Commits
+                .Where(x => x.Author.Email == developer.Email
+                            && x.Author.When > _reportingPeriod.Start.Date
+                            && x.Author.When < _reportingPeriod.End.Date).OrderBy(x=>x.Author.When.Date);
+            foreach (var commit in developerCommits)
+            {
+                foreach (var parent in commit.Parents)
+                {
+                    foreach (var change in _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree))
+                    {
+                        //var qqqq= change.Patch; // save the lines that change per file
+                        linesChanged += (change.LinesAdded + change.LinesDeleted);
+                    }
+                }
+            }
+
+            var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
+            var linesPerHour = (linesChanged / periodHoursWorked);
+            var rtt100 = targetedNumberOfLine / linesPerHour;
+
+            return Math.Round(rtt100,2);
         }
     }
 }

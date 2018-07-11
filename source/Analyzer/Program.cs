@@ -22,6 +22,8 @@ namespace Analyzer
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithRange(startDate, endDate)
+                            .WithWorkingWeekHours(32)
+                            .WithWorkingDaysPerWeek(4)
                             .Build();
 
             PrintApplicationHeader(version, startDate, endDate, defaultColor);
@@ -61,13 +63,13 @@ namespace Analyzer
             Console.WriteLine("Individual Developer Stats");
             Console.ForegroundColor = defaultColor;
             PrintDashedLine();
-            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Efficiency | Impact | PTT100 | TT100 Split");
+            Console.WriteLine("Developer               | Period Active Period_Days | Active Period_Days Per Week | Commits / Day | Efficiency | Impact | PTT100 | TT100 Split");
             PrintDashedLine();
         }
 
         private static void PrintDashedLine()
         {
-            Console.WriteLine("--------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------------------------------");
         }
 
         private static void PrintNoGitRepositoryPathError(ConsoleColor defaultColor)

@@ -9,6 +9,14 @@ namespace Analyzer.Data
         private string _repoPath;
         private DateTime _start;
         private DateTime _end;
+        private int _workWeekHours;
+        private int _workingDaysPerWeek;
+
+        public SourceControlRepositoryBuilder()
+        {
+            _workWeekHours = 40;
+            _workingDaysPerWeek = 5;
+        }
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
         {
@@ -30,7 +38,7 @@ namespace Analyzer.Data
                 throw new Exception($"Invalid path [{_repoPath}]");
             }
 
-            var reportRange = new ReportingPeriod {Start = _start, End = _end};
+            var reportRange = new ReportingPeriod {Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek};
             var repository = new Repository(_repoPath);
 
             return new SourceControlRepository(repository, reportRange);
@@ -41,5 +49,16 @@ namespace Analyzer.Data
             return !Repository.IsValid(repository);
         }
 
+        public SourceControlRepositoryBuilder WithWorkingWeekHours(int workWeekHours)
+        {
+            _workWeekHours = workWeekHours;
+            return this;
+        }
+
+        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(int workingDaysPerWeek)
+        {
+            _workingDaysPerWeek = workingDaysPerWeek;
+            return this;
+        }
     }
 }

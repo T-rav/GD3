@@ -98,11 +98,13 @@ namespace Analyzer.Tests
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
                 // assert
-                var expectedActiveDaysPerWeek = 3.73;
+                var expectedActiveDaysPerWeek = 4.0;
                 actual.Should().Be(expectedActiveDaysPerWeek);
             }
 
@@ -138,11 +140,13 @@ namespace Analyzer.Tests
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Commits_Per_Day(author);
                 // assert
-                var expectedCommitsPerDay = 4.91;
+                var expectedCommitsPerDay = 6.75;
                 actual.Should().Be(expectedCommitsPerDay);
             }
 
@@ -178,6 +182,8 @@ namespace Analyzer.Tests
                 var sut = new SourceControlRepositoryBuilder()
                                 .WithPath(repoPath)
                                 .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
+                                .WithWorkingDaysPerWeek(4)
+                                .WithWorkingWeekHours(32)
                                 .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});
@@ -187,12 +193,13 @@ namespace Analyzer.Tests
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 3.94,
+                        ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
-                        CommitsPerDay = 4.5,
+                        CommitsPerDay = 6.75,
                         Efficiency = 0.0,
                         Impact = 0.0,
-                        Ptt100 = 0,
+                        Ptt100 = 4.22,
+                        Sptt100 = 0,
                         Rank = 0
                     }
                 };
@@ -210,6 +217,8 @@ namespace Analyzer.Tests
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-04"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -219,12 +228,12 @@ namespace Analyzer.Tests
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 4.2,
+                        ActiveDaysPerWeek = 6.0,
                         PeriodActiveDays = 6,
-                        CommitsPerDay = 6.75,
+                        CommitsPerDay = 13.5,
                         Efficiency = 0.0,
                         Impact = 0.0,
-                        Ptt100 = 0,
+                        Ptt100 = 3.06,
                         Rank = 0
                     }
                 };

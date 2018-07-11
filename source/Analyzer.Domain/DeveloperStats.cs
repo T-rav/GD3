@@ -22,8 +22,8 @@ namespace Analyzer.Domain
         {
             // 25
             return $"{PaddedPrint(Author.Name,26)}" +
-                   $"{PaddedPrint(PeriodActiveDays,21)}" +
-                   $"{PaddedPrint(ActiveDaysPerWeek,23)}" +
+                   $"{PaddedPrint(PeriodActiveDays,28)}" +
+                   $"{PaddedPrint(ActiveDaysPerWeek,30)}" +
                    $"{PaddedPrint(CommitsPerDay,16)}" +
                    $"{PaddedPrint(Efficiency,13)}" +
                    $"{PaddedPrint(Impact,9)}" +

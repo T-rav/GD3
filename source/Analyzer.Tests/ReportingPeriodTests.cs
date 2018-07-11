@@ -9,7 +9,7 @@ namespace Analyzer.Tests
     public class ReportingPeriodTests
     {
         [TestFixture]
-        public class TotalDays
+        public class Period_Days
         {
             [Test]
             public void WhenStartBeforeEnd_ExpectNumberOfDaysBetween()
@@ -21,7 +21,7 @@ namespace Analyzer.Tests
                     End = DateTime.Parse("2018-07-05")
                 };
                 // act
-                var actual = sut.Days();
+                var actual = sut.Period_Days();
                 // assert
                 actual.Should().Be(5);
             }
@@ -37,79 +37,122 @@ namespace Analyzer.Tests
                     End = end
                 };
                 // act
-                var actual = sut.Days();
+                var actual = sut.Period_Days();
                 // assert
                 actual.Should().Be(0);
             }
         }
 
         [TestFixture]
-        public class WorkingDays
+        public class Period_Working_Days
         {
             [Test]
-            public void WhenSingleWeek_ExpectFiveWorkingDays()
+            public void WhenSingleWeek_ExpectOneWeekOfWorkingDays()
             {
                 // arrange
                 var sut = new ReportingPeriod
                 {
                     Start = DateTime.Parse("2018-07-01"),
-                    End = DateTime.Parse("2018-07-07")
+                    End = DateTime.Parse("2018-07-07"),
+                    DaysPerWeek = 4.5
                 };
                 // act
-                var actual = sut.Working_Days();
+                var actual = sut.Period_Working_Days();
                 // assert
-                actual.Should().Be(5);
+                actual.Should().Be(4.5);
             }
 
-            [TestCase("2018-07-05", "2018-07-01")]
-            [TestCase("2018-07-05", "2018-07-04")]
-            public void WhenEndBeforeStart_ExpectZeroDaysBetween(DateTime start, DateTime end)
+            [Test]
+            public void WhenTwoWeeks_ExpectTwoWeekOfWorkingDays()
             {
                 // arrange
                 var sut = new ReportingPeriod
                 {
-                    Start = start,
-                    End = end
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-14"),
+                    DaysPerWeek = 4.5
                 };
                 // act
-                var actual = sut.Days();
+                var actual = sut.Period_Working_Days();
                 // assert
-                actual.Should().Be(0);
+                actual.Should().Be(9);
+            }
+
+            [Test]
+            public void WhenThreeAndHalfWeeks_ExpectThreeAndHalfWeeksOfWorkingDays()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-18"),
+                    DaysPerWeek = 4.5
+                };
+                // act
+                var actual = sut.Period_Working_Days();
+                // assert
+                actual.Should().Be(13.5);
             }
         }
 
         [TestFixture]
-        public class Weeks
+        public class Period_Weeks
         {
-            [Test]
-            public void WhenSingleWeek_ExpectFiveWorkingDays()
-            {
-                // arrange
-                var sut = new ReportingPeriod
-                {
-                    Start = DateTime.Parse("2018-07-01"),
-                    End = DateTime.Parse("2018-07-07")
-                };
-                // act
-                var actual = sut.Weeks();
-                // assert
-                actual.Should().Be(1);
-            }
-
-            [TestCase("2018-07-05", "2018-07-01")]
-            [TestCase("2018-07-05", "2018-07-04")]
-            public void WhenEndBeforeStart_ExpectZeroDaysBetween(DateTime start, DateTime end)
+            [TestCase("2018-07-01", "2018-07-07", 1)]
+            [TestCase("2018-07-01", "2018-07-18", 3.0)]
+            public void WhenFourDayWeek_ExpectNumberOfDaysBetween(DateTime start, DateTime end, double expectedWeeks)
             {
                 // arrange
                 var sut = new ReportingPeriod
                 {
                     Start = start,
-                    End = end
+                    End = end,
+                    DaysPerWeek = 4
                 };
                 // act
-                var actual = sut.Days();
+                var actual = sut.Period_Weeks();
                 // assert
-                actual.Should().Be(0);
+                actual.Should().Be(expectedWeeks);
+            }
+        }
+
+        [TestFixture]
+        public class Period_Working_Hours
+        {
+            [Test]
+            public void WhenWholeNumberOfWeeks_ExpectHoursPerWeekTimesWeeks()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-14"),
+                    DaysPerWeek = 4.0,
+                    HoursPerWeek = 32
+
+                };
+                // act
+                var actual = sut.Period_Working_Hours();
+                // assert
+                actual.Should().Be(64);
+            }
+
+            [Test]
+            public void WhenFractionalNumberOfWeeks_ExpectHoursForNearestWholeWeekNumber()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-18"),
+                    DaysPerWeek = 4.0,
+                    HoursPerWeek = 32
+
+                };
+                // act
+                var actual = sut.Period_Working_Hours();
+                // assert
+                actual.Should().Be(96.0);
             }
         }
     }
