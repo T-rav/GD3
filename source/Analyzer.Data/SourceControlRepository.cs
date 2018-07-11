@@ -54,7 +54,7 @@ namespace Analyzer.Data
             var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
             var totalWorkingDays = _reportingPeriod.Period_Working_Days();
 
-            return Math.Round((double)totalCommits / totalWorkingDays, 2);
+            return Math.Round(totalCommits / totalWorkingDays, 2);
         }
 
         public List<DeveloperStats> Build_Individual_Developer_Stats(IEnumerable<Author> authors)
@@ -66,10 +66,8 @@ namespace Analyzer.Data
                                                 PeriodActiveDays = Period_Active_Days(developer),
                                                 ActiveDaysPerWeek = Active_Days_Per_Week(developer),
                                                 CommitsPerDay = Commits_Per_Day(developer),
-                                                Efficiency = 0.0,
-                                                Impact = 0.0,
-                                                Ptt100 = Calculate_Raw_Ptt100(developer),
-                                                Sptt100 = 0
+                                                Impact = Impact(developer),
+                                                LinesOfChangePerHour = Lines_Of_Change_Per_Hour(developer)
                 };
                 result.Add(stats);
             }
@@ -77,10 +75,15 @@ namespace Analyzer.Data
             return result;
         }
 
-        private double Calculate_Raw_Ptt100(Author developer)
+        private double Impact(Author developer)
+        {
+
+            return 0;
+        }
+
+        private double Lines_Of_Change_Per_Hour(Author developer)
         {
             var linesChanged = 0.0;
-            var targetedNumberOfLine = 100;
             var developerCommits = _repository.Commits
                 .Where(x => x.Author.Email == developer.Email
                             && x.Author.When > _reportingPeriod.Start.Date
@@ -89,19 +92,15 @@ namespace Analyzer.Data
             {
                 foreach (var parent in commit.Parents)
                 {
-                    foreach (var change in _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree))
-                    {
-                        //var qqqq= change.Patch; // save the lines that change per file
-                        linesChanged += (change.LinesAdded + change.LinesDeleted);
-                    }
+                    var stats = _repository.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
+                    linesChanged += stats.TotalLinesAdded + stats.TotalLinesDeleted;
                 }
             }
 
             var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
-            var rtt100 = targetedNumberOfLine / linesPerHour;
 
-            return Math.Round(rtt100,2);
+            return Math.Round(linesPerHour, 2);
         }
     }
 }

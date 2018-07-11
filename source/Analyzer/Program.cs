@@ -63,13 +63,13 @@ namespace Analyzer
             Console.WriteLine("Individual Developer Stats");
             Console.ForegroundColor = defaultColor;
             PrintDashedLine();
-            Console.WriteLine("Developer               | Period Active Period_Days | Active Period_Days Per Week | Commits / Day | Efficiency | Impact | PTT100 | TT100 Split");
+            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor");
             PrintDashedLine();
         }
 
         private static void PrintDashedLine()
         {
-            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------");
         }
 
         private static void PrintNoGitRepositoryPathError(ConsoleColor defaultColor)

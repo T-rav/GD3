@@ -176,7 +176,7 @@ namespace Analyzer.Tests
             public void WhenRangeEntireProjectHistory_ShouldReturnStats()
             {
                 // arrange
-                var author = new Author { Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM" };
+                var author = new Author { Name = "Sinothilem", Email = "sinothilem@D987321" };
                 var repoPath = TestRepoPath();
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -193,13 +193,11 @@ namespace Analyzer.Tests
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 4.5,
-                        PeriodActiveDays = 9,
-                        CommitsPerDay = 6.75,
-                        Efficiency = 0.0,
+                        ActiveDaysPerWeek = 4.0,
+                        PeriodActiveDays = 8,
+                        CommitsPerDay = 4.0,
                         Impact = 0.0,
-                        Ptt100 = 4.22,
-                        Sptt100 = 0,
+                        LinesOfChangePerHour = 15.75,
                         Rank = 0
                     }
                 };
@@ -216,7 +214,7 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-04"))
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -228,12 +226,11 @@ namespace Analyzer.Tests
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 6.0,
-                        PeriodActiveDays = 6,
-                        CommitsPerDay = 13.5,
-                        Efficiency = 0.0,
+                        ActiveDaysPerWeek = 4.5,
+                        PeriodActiveDays = 9,
+                        CommitsPerDay = 6.75,
                         Impact = 0.0,
-                        Ptt100 = 3.06,
+                        LinesOfChangePerHour = 23.68,
                         Rank = 0
                     }
                 };
