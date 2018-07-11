@@ -196,7 +196,7 @@ namespace Analyzer.Tests
                         ActiveDaysPerWeek = 4.0,
                         PeriodActiveDays = 8,
                         CommitsPerDay = 4.0,
-                        Impact = 0.0,
+                        Impact = 1.81,
                         LinesOfChangePerHour = 15.75,
                         Rank = 0
                     }
@@ -229,7 +229,7 @@ namespace Analyzer.Tests
                         ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
                         CommitsPerDay = 6.75,
-                        Impact = 0.0,
+                        Impact = 1.49,
                         LinesOfChangePerHour = 23.68,
                         Rank = 0
                     }

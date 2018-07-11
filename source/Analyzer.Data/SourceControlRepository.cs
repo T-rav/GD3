@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Analyzer.Domain;
 using LibGit2Sharp;
@@ -75,15 +76,51 @@ namespace Analyzer.Data
             return result;
         }
 
+        /*
+         *  The amount of code in the change
+            What percentage of the work is edits to old code
+            The surface area of the change (think ‘number of edit locations’)
+            The number of files affected
+            The severity of changes when old code is modified   
+         */
         private double Impact(Author developer)
         {
+            var totalScore = 0.0;
+            var developerCommits = _repository.Commits
+                .Where(x => x.Author.Email == developer.Email
+                            && x.Author.When > _reportingPeriod.Start.Date
+                            && x.Author.When < _reportingPeriod.End.Date).OrderBy(x => x.Author.When.Date);
+            foreach (var commit in developerCommits)
+            {
+                foreach (var parent in commit.Parents)
+                {
+                    var fileChanges = _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree);
+                    foreach (var file in fileChanges)
+                    {
+                        var linesChanged = file.LinesDeleted + file.LinesAdded;
+                        var changeLocations = (file.Patch.Split("@@").Length-1)/2;
 
-            return 0;
+                        var impactScore = ((double)changeLocations/linesChanged);
+                        if (!impactScore.Equals(Double.NaN))
+                        {
+                            var multiplier = 1.0;
+                            if (file.Status == ChangeKind.Modified)
+                            {
+                                multiplier = 1.5;
+                            }
+                            totalScore += impactScore * multiplier;
+                        }
+                    }
+                }
+            }
+            
+            return Math.Round(totalScore/100,2);
         }
 
         private double Lines_Of_Change_Per_Hour(Author developer)
         {
             var linesChanged = 0.0;
+
             var developerCommits = _repository.Commits
                 .Where(x => x.Author.Email == developer.Email
                             && x.Author.When > _reportingPeriod.Start.Date
@@ -96,7 +133,7 @@ namespace Analyzer.Data
                     linesChanged += stats.TotalLinesAdded + stats.TotalLinesDeleted;
                 }
             }
-
+            
             var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
 

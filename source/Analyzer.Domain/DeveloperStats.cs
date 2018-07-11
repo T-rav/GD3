@@ -11,8 +11,9 @@ namespace Analyzer.Domain
         public double CommitsPerDay { get; set; } // do they push often
         public double Impact { get; set; } // congative load
         public double LinesOfChangePerHour { get; set; } // how much of a wake to they cause?
-        public double RiskFactor => Math.Round(LinesOfChangePerHour / CommitsPerDay,2 );             // do they move quick, make a mess and cause high churn?! (LinesOfChangePerHour/CommitsPerDay)*Impact
+        public double RiskFactor => Math.Round( (LinesOfChangePerHour / CommitsPerDay),2 );// do they move quick, make a mess and cause high churn?! (LinesOfChangePerHour/CommitsPerDay)*Impact
 
+        // todo : track which lines the developer changed over the period
         // todo: would still like to know what % of recent technical debt they contributed (based on period of reporting)
 
         public override string ToString()
