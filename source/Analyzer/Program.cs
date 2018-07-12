@@ -17,12 +17,12 @@ namespace Analyzer
                 return;
             }
             
-            var startDate = DateTime.Parse("2018-07-11");
+            var startDate = DateTime.Parse("2018-07-10");
             var endDate = DateTime.Now.Date;
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithRange(startDate, endDate)
-                            .WithBranch("origin/TusaniG")
+                            .WithBranch("origin/Monique")
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();
@@ -64,13 +64,13 @@ namespace Analyzer
             Console.WriteLine("Individual Developer Stats");
             Console.ForegroundColor = defaultColor;
             PrintDashedLine();
-            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
+            Console.WriteLine("Rank | Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
             PrintDashedLine();
         }
 
         private static void PrintDashedLine()
         {
-            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         }
 
         private static void PrintNoGitRepositoryPathError(ConsoleColor defaultColor)

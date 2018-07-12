@@ -5,7 +5,6 @@ namespace Analyzer.Domain
     public class DeveloperStats
     {
         public Author Author { get; set; }
-        public int Rank { get; set; } // a score on Effieiceny, Impact and Bandwidth
         public int PeriodActiveDays { get; set; }
         public double ActiveDaysPerWeek { get; set; } // todo : make this / sprint and allow user to set sprint size (default to week)
         public double CommitsPerDay { get; set; } // do they push often
@@ -20,24 +19,39 @@ namespace Analyzer.Domain
 
         public double Dtt100 => Ptt100 - Rtt100;
 
+        public double Rank
+        {
+            get
+            {
+                var rank =  (int) Math.Round(Impact * RiskFactor * Churn, 0) + 1;
+                if (rank < 0)
+                {
+                    return double.PositiveInfinity;
+                }
+                return rank;
+            }
+        }
+
+
         // todo : track which lines the developer changed over the period
         // todo: would still like to know what % of recent technical debt they contributed (based on period of reporting)
 
         public override string ToString()
         {
-            return $"{PaddedPrint(Author.Name, 26)}" +
+            return $"{PaddedPrint(Rank, 7)}" +
+                   $"{PaddedPrint(Author.Name, 26)}" +
                    $"{PaddedPrint(PeriodActiveDays, 21)}" +
                    $"{PaddedPrint(ActiveDaysPerWeek, 23)}" +
                    $"{PaddedPrint(CommitsPerDay, 16)}" +
                    $"{PaddedPrint(LinesOfChangePerHour, 27)}" +
                    $"{PaddedPrint(Impact, 9)}" +
-                   $"{PaddedPrint(RiskFactor,14)}" +
+                   $"{PaddedPrint(RiskFactor, 14)}" +
                    $"{PaddedPrint(LinesAdded, 14)}" +
                    $"{PaddedPrint(LinesRemoved, 16)}" +
                    $"{PaddedPrint(Churn, 8)}" +
                    $"{PaddedPrint(Rtt100, 9)}" +
                    $"{PaddedPrint(Ptt100, 9)}" +
-                   $"{PaddedPrint(Dtt100,0)}";
+                   $"{PaddedPrint(Dtt100, 0)}";
         }
 
         private string PaddedPrint(object value, int fieldWidth)
