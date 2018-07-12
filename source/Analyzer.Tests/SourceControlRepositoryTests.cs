@@ -44,29 +44,48 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.List_Authors();
                 // assert
-                var expected = 4;
+                var expected = 2;
                 actual.Count().Should().Be(expected);
             }
         }
 
         [TestFixture]
         public class ListPeriodActivity
-        {
-            [Test]
-            public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays()
+        { 
+            [TestCase("2018-06-25", "2018-07-09", 8)]
+            [TestCase("2018-07-10", "2018-07-12", 1)]
+            public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
+            {
+                // arrange
+                var repoPath = TestRepoPath();
+                var author = new Author { Name = "Monique", Email = "MoniqueG@SAHOMELOANS.COM" };
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithRange(start, end)
+                    .WithPath(repoPath)
+                    .Build();
+                // act
+                var actual = sut.Period_Active_Days(author);
+                // assert
+                actual.Should().Be(expected);
+            }
+
+            [TestCase("2018-06-25", "2018-07-09", 6)]
+            [TestCase("2018-07-10", "2018-07-12", 1)]
+            public void NotHeadBranch_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
                 var repoPath = TestRepoPath();
                 var author = new Author { Name = "Thabani", Email = "thabanitembe@hotmail.com" };
 
                 var sut = new SourceControlRepositoryBuilder()
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithRange(start, end)
                     .WithPath(repoPath)
+                    .WithBranch("origin/thabani")
                     .Build();
                 // act
                 var actual = sut.Period_Active_Days(author);
                 // assert
-                var expected = 6;
                 actual.Should().Be(expected);
             }
 
@@ -149,7 +168,7 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Commits_Per_Day(author);
                 // assert
-                var expectedCommitsPerDay = 6.75;
+                var expectedCommitsPerDay = 6.25;
                 actual.Should().Be(expectedCommitsPerDay);
             }
 
@@ -198,10 +217,15 @@ namespace Analyzer.Tests
                         Author = author,
                         ActiveDaysPerWeek = 4.0,
                         PeriodActiveDays = 8,
-                        CommitsPerDay = 4.0,
-                        Impact = 1.81,
-                        LinesOfChangePerHour = 15.75,
-                        Rank = 0
+                        CommitsPerDay = 4.12,
+                        Impact = 1.86,
+                        LinesOfChangePerHour = 16.43,
+                        Rank = 0,
+                        LinesAdded = 3514,
+                        LinesRemoved = 693,
+                        Rtt100 = 6.09,
+                        Ptt100 = 9.07,
+                        Churn = 0.2
                     }
                 };
 
@@ -232,12 +256,53 @@ namespace Analyzer.Tests
                         ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
                         CommitsPerDay = 6.0,
-                        Impact = 1.49,
-                        LinesOfChangePerHour = 23.68,
-                        Rank = 0
+                        Impact = 1.68,
+                        LinesOfChangePerHour = 24.32,
+                        Rank = 0,
+                        LinesAdded = 5189,
+                        LinesRemoved = 1816,
+                        Churn = 0.35,
+                        Rtt100 = 4.11,
+                        Ptt100 = 8.54
                     }
                 };
 
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
+            public void WhenDeveloperBranch_ShouldReturnAllActiveDeveloper()
+            {
+                // arrange
+                var author = new Author { Name = "Tusani", Email = "tusanig@sahomeloans.com" };
+                var repoPath = TestRepoPath();
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithBranch("origin/TusaniG")
+                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-12"))
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        ActiveDaysPerWeek = 1.0,
+                        PeriodActiveDays = 1,
+                        CommitsPerDay = 1.0,
+                        Impact = 0.01,
+                        LinesOfChangePerHour = 0.25,
+                        Rank = 0,
+                        LinesAdded = 9,
+                        LinesRemoved = 1,
+                        Churn = 0.11,
+                        Rtt100 = 400,
+                        Ptt100 = 500
+                    }
+                };
                 actual.Should().BeEquivalentTo(expected);
             }
         }

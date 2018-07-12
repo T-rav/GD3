@@ -38,6 +38,10 @@ namespace Analyzer.Domain
         {
             var totalDays = End.Subtract(Start).Days + 1;
             var weeks = totalDays / DaysInWeek;
+            if (weeks < 1)
+            {
+                weeks = 1;
+            }
             return Math.Round(weeks,0);
         }
 

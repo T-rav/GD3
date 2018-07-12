@@ -6,7 +6,7 @@ using LibGit2Sharp;
 
 namespace Analyzer.Data
 {
-    internal class SourceControlRepository : ISourceControlRepository
+    public class SourceControlRepository : ISourceControlRepository
     {
         private readonly Repository _repository;
         private readonly ReportingPeriod _reportingPeriod;
@@ -22,13 +22,11 @@ namespace Analyzer.Data
         public IEnumerable<Author> List_Authors()
         {
             var authors = GetBranchCommits()
-                .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
-                            x.Author.When.Date <= _reportingPeriod.End.Date)
-                .Select(x => new Author
-                 {
-                     Name = x.Author.Name,
-                     Email = x.Author.Email
-                 }).GroupBy(x => x.Name).Select(x => x.First());
+                            .Select(x => new Author
+                             {
+                                 Name = x.Author.Name,
+                                 Email = x.Author.Email
+                             }).GroupBy(x => x.Name).Select(x => x.First());
             return authors;
         }
 
@@ -37,12 +35,18 @@ namespace Analyzer.Data
             var result = new List<DeveloperStats>();
             foreach (var developer in authors)
             {
+                var changeStats = Change_Stats(developer);
                 var stats = new DeveloperStats {Author = developer,
                                                 PeriodActiveDays = Period_Active_Days(developer),
                                                 ActiveDaysPerWeek = Active_Days_Per_Week(developer),
                                                 CommitsPerDay = Commits_Per_Day(developer),
                                                 Impact = Impact(developer),
-                                                LinesOfChangePerHour = Lines_Of_Change_Per_Hour(developer)
+                                                LinesOfChangePerHour = changeStats.ChangePerHour,
+                                                LinesAdded = changeStats.Added,
+                                                LinesRemoved = changeStats.Removed,
+                                                Churn = changeStats.Churn,
+                                                Rtt100 = changeStats.Rtt100,
+                                                Ptt100 = changeStats.Ptt100
                 };
                 result.Add(stats);
             }
@@ -53,12 +57,11 @@ namespace Analyzer.Data
         public int Period_Active_Days(Author author)
         {
             var activeDays = GetBranchCommits()
-                .Where(x => x.Author.Email == author.Email
-                            && (x.Author.When.Date >= _reportingPeriod.Start.Date && x.Author.When.Date <= _reportingPeriod.End.Date))
+                .Where(x => x.Author.Email == author.Email)
                 .Select(x => new
-                {
-                    x.Author.When.UtcDateTime.Date
-                }).GroupBy(x => x.Date)
+                 {
+                     x.Author.When.UtcDateTime.Date
+                 }).GroupBy(x => x.Date)
                 .Select(x => x.First());
 
             return activeDays.Count();
@@ -74,7 +77,8 @@ namespace Analyzer.Data
         public double Commits_Per_Day(Author author)
         {
             var periodActiveDays = (double)Period_Active_Days(author);
-            var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
+            var totalCommits = GetBranchCommits()
+                              .Count(x => x.Author.Email == author.Email);
 
             if (periodActiveDays == 0 || totalCommits == 0)
             {
@@ -95,9 +99,7 @@ namespace Analyzer.Data
         {
             var totalScore = 0.0;
             var developerCommits = GetBranchCommits()
-                .Where(x => x.Author.Email == developer.Email
-                            && x.Author.When > _reportingPeriod.Start.Date
-                            && x.Author.When < _reportingPeriod.End.Date).OrderBy(x => x.Author.When.Date);
+                                   .Where(x => x.Author.Email == developer.Email);
             foreach (var commit in developerCommits)
             {
                 foreach (var parent in commit.Parents)
@@ -125,32 +127,45 @@ namespace Analyzer.Data
             return Math.Round(totalScore/100,2);
         }
 
-        private double Lines_Of_Change_Per_Hour(Author developer)
+        private LinesOfChange Change_Stats(Author developer)
         {
-            var linesChanged = 0.0;
+            var result = new LinesOfChange();
 
             var developerCommits = GetBranchCommits()
-                .Where(x => x.Author.Email == developer.Email
-                            && x.Author.When > _reportingPeriod.Start.Date
-                            && x.Author.When < _reportingPeriod.End.Date).OrderBy(x=>x.Author.When.Date);
+                .Where(x => x.Author.Email == developer.Email)
+                .OrderBy(x=>x.Author.When.Date);
             foreach (var commit in developerCommits)
             {
                 foreach (var parent in commit.Parents)
                 {
                     var stats = _repository.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
-                    linesChanged += stats.TotalLinesAdded + stats.TotalLinesDeleted;
+                    result.Added += stats.TotalLinesAdded;
+                    result.Removed += stats.TotalLinesDeleted;
                 }
             }
-            
-            var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
-            var linesPerHour = (linesChanged / periodHoursWorked);
 
-            return Math.Round(linesPerHour, 2);
+            var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
+            result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines);
+            result.Rtt100 = Math.Round(100.0 / result.ChangePerHour,2);
+            result.Ptt100 = Math.Round(100.0 / productionLinesPerHour ,2);
+
+            return result;
         }
 
-        private ICommitLog GetBranchCommits()
+        // todo : extract on to domain entity
+        private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
         {
-            return _repository.Branches[_branch].Commits;
+            var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
+            var linesPerHour = (linesChanged / periodHoursWorked);
+            return Math.Round(linesPerHour,2);
+        }
+
+        private IEnumerable<Commit> GetBranchCommits()
+        {
+            return _repository.Branches[_branch]
+                              .Commits
+                              .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
+                                          x.Author.When.Date <= _reportingPeriod.End.Date);
         }
     }
 }

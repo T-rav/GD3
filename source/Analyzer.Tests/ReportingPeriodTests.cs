@@ -114,6 +114,25 @@ namespace Analyzer.Tests
                 // assert
                 actual.Should().Be(expectedWeeks);
             }
+
+            [Test]
+            public void WhenLessThanOneWeek_ExpectOneWeek()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-13"),
+                    End = DateTime.Parse("2018-07-14"),
+                    DaysPerWeek = 4.0,
+                    HoursPerWeek = 32
+
+                };
+                // act
+                var actual = sut.Period_Weeks();
+                // assert
+                var expected = 1;
+                actual.Should().Be(expected);
+            }
         }
 
         [TestFixture]
@@ -134,7 +153,8 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Period_Working_Hours();
                 // assert
-                actual.Should().Be(64);
+                var expected = 64;
+                actual.Should().Be(expected);
             }
 
             [Test]
@@ -152,7 +172,8 @@ namespace Analyzer.Tests
                 // act
                 var actual = sut.Period_Working_Hours();
                 // assert
-                actual.Should().Be(96.0);
+                var expected = 96;
+                actual.Should().Be(expected);
             }
         }
     }
