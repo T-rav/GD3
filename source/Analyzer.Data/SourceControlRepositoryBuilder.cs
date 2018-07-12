@@ -43,9 +43,17 @@ namespace Analyzer.Data
             var reportRange = new ReportingPeriod {Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek};
             var repository = new Repository(_repoPath);
 
-            // todo: check _branch is valid
+            if (InvalidBranchName(repository))
+            {
+                throw new Exception($"Invalid branch [{_branch}]");
+            }
 
             return new SourceControlRepository(repository, reportRange, _branch);
+        }
+
+        private bool InvalidBranchName(Repository repository)
+        {
+            return repository.Branches[_branch] == null;
         }
 
         private bool NotValidGitRepository(string repository)
@@ -65,9 +73,9 @@ namespace Analyzer.Data
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithBranch()
+        public SourceControlRepositoryBuilder WithBranch(string branch)
         {
-            _branch = "HEAD";
+            _branch = branch;
             return this;
         }
     }

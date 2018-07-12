@@ -16,7 +16,7 @@ namespace Analyzer.Tests
         public class ListAuthors
         {
             [Test]
-            public void WhenValidRepositoryPath_ShouldReturnDeveloperList()
+            public void WhenBranchHEAD_ShouldReturnAllActiveDeveloper()
             {
                 // arrange
                 var repoPath = TestRepoPath();
@@ -31,19 +31,21 @@ namespace Analyzer.Tests
                 actual.Count().Should().Be(expected);
             }
 
-            // todo : pull into ctor test or builder test and add test for WithRange
             [Test]
-            public void WhenInvalidRepositoryPath_ShouldThrowException()
+            public void WhenDeveloperBranch_ShouldReturnAllActiveDeveloper()
             {
                 // arrange
-                var repoPath = "x:\\invalid_repo";
-                var builder = new SourceControlRepositoryBuilder()
-                                  .WithPath(repoPath);
+                var repoPath = TestRepoPath();
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithBranch("origin/thabani")
+                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-12"))
+                    .Build();
                 // act
-                var actual = Assert.Throws<Exception>(() => builder.Build());
+                var actual = sut.List_Authors();
                 // assert
-                var expected = "Invalid path [x:\\invalid_repo]";
-                actual.Message.Should().Be(expected);
+                var expected = 4;
+                actual.Count().Should().Be(expected);
             }
         }
 

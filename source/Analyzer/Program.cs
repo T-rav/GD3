@@ -17,12 +17,12 @@ namespace Analyzer
                 return;
             }
             
-            var startDate = DateTime.Parse("2017-06-25");
+            var startDate = DateTime.Parse("2017-07-11");
             var endDate = DateTime.Now.Date;
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithRange(startDate, endDate)
-                            .WithBranch()
+                            .WithBranch("origin/thabani")
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();
