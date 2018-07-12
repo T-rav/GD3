@@ -5,6 +5,15 @@ using Analyzer.Domain;
 
 namespace Analyzer
 {
+    /*
+     * todo
+     * 1) get technical debt per file and see what % author is resonsible for
+     *   1a) then narrow into hotspots? - not sure this is applicable. 
+     * 2) check to see if file moves = deletes
+     * 3) find out how to catalog the '10x' factor (pairing)
+     *   3a) Tusani and Siphenathi pair quite a bit. Sindi recieved a lot of help.
+     * 4) make churn personal?
+     */
     class Program
     {
         static void Main(string[] args)
