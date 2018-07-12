@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Analyzer.Domain;
 using LibGit2Sharp;
@@ -11,51 +10,26 @@ namespace Analyzer.Data
     {
         private readonly Repository _repository;
         private readonly ReportingPeriod _reportingPeriod;
+        private readonly string _branch;
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch)
         {
             _repository = repository;
             _reportingPeriod = reportingPeriod;
+            _branch = branch;
         }
 
         public IEnumerable<Author> List_Authors()
         {
-            var commits = _repository.Head.Commits;
-            var authors = commits.Select(x => new Author
-            {
-                Name = x.Author.Name,
-                Email = x.Author.Email
-            }).GroupBy(x => x.Name).Select(x => x.First());
+            var authors = GetBranchCommits()
+                .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
+                            x.Author.When.Date <= _reportingPeriod.End.Date)
+                .Select(x => new Author
+                 {
+                     Name = x.Author.Name,
+                     Email = x.Author.Email
+                 }).GroupBy(x => x.Name).Select(x => x.First());
             return authors;
-        }
-
-        public int Period_Active_Days(Author author)
-        {
-            var activeDays = _repository.Head.Commits
-                .Where(x => x.Author.Email == author.Email 
-                            && (x.Author.When.Date >= _reportingPeriod.Start.Date && x.Author.When.Date <= _reportingPeriod.End.Date))
-                .Select(x => new
-                {
-                    x.Author.When.UtcDateTime.Date
-                }).GroupBy(x => x.Date)
-                .Select(x => x.First());
-
-            return activeDays.Count();
-        }
-
-        public double Active_Days_Per_Week(Author author)
-        {
-            var activeDays = Period_Active_Days(author);
-            var weeks = _reportingPeriod.Period_Weeks();
-            return Math.Round(activeDays / weeks, 2);
-        }
-
-        public double Commits_Per_Day(Author author)
-        {
-            var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
-            var totalWorkingDays = _reportingPeriod.Period_Working_Days();
-
-            return Math.Round(totalCommits / totalWorkingDays, 2);
         }
 
         public List<DeveloperStats> Build_Individual_Developer_Stats(IEnumerable<Author> authors)
@@ -76,6 +50,40 @@ namespace Analyzer.Data
             return result;
         }
 
+        public int Period_Active_Days(Author author)
+        {
+            var activeDays = GetBranchCommits()
+                .Where(x => x.Author.Email == author.Email
+                            && (x.Author.When.Date >= _reportingPeriod.Start.Date && x.Author.When.Date <= _reportingPeriod.End.Date))
+                .Select(x => new
+                {
+                    x.Author.When.UtcDateTime.Date
+                }).GroupBy(x => x.Date)
+                .Select(x => x.First());
+
+            return activeDays.Count();
+        }
+
+        public double Active_Days_Per_Week(Author author)
+        {
+            var activeDays = Period_Active_Days(author);
+            var weeks = _reportingPeriod.Period_Weeks();
+            return Math.Round(activeDays / weeks, 2);
+        }
+
+        public double Commits_Per_Day(Author author)
+        {
+            var periodActiveDays = (double)Period_Active_Days(author);
+            var totalCommits = _repository.Head.Commits.Count(x => x.Author.Email == author.Email);
+
+            if (periodActiveDays == 0 || totalCommits == 0)
+            {
+                return 0.0;
+            }
+
+            return Math.Round(totalCommits / periodActiveDays, 2);
+        }
+
         /*
          *  The amount of code in the change
             What percentage of the work is edits to old code
@@ -86,7 +94,7 @@ namespace Analyzer.Data
         private double Impact(Author developer)
         {
             var totalScore = 0.0;
-            var developerCommits = _repository.Commits
+            var developerCommits = GetBranchCommits()
                 .Where(x => x.Author.Email == developer.Email
                             && x.Author.When > _reportingPeriod.Start.Date
                             && x.Author.When < _reportingPeriod.End.Date).OrderBy(x => x.Author.When.Date);
@@ -121,7 +129,7 @@ namespace Analyzer.Data
         {
             var linesChanged = 0.0;
 
-            var developerCommits = _repository.Commits
+            var developerCommits = GetBranchCommits()
                 .Where(x => x.Author.Email == developer.Email
                             && x.Author.When > _reportingPeriod.Start.Date
                             && x.Author.When < _reportingPeriod.End.Date).OrderBy(x=>x.Author.When.Date);
@@ -138,6 +146,11 @@ namespace Analyzer.Data
             var linesPerHour = (linesChanged / periodHoursWorked);
 
             return Math.Round(linesPerHour, 2);
+        }
+
+        private ICommitLog GetBranchCommits()
+        {
+            return _repository.Branches[_branch].Commits;
         }
     }
 }

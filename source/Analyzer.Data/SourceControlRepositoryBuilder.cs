@@ -11,11 +11,13 @@ namespace Analyzer.Data
         private DateTime _end;
         private int _workWeekHours;
         private int _workingDaysPerWeek;
+        private string _branch;
 
         public SourceControlRepositoryBuilder()
         {
             _workWeekHours = 40;
             _workingDaysPerWeek = 5;
+            _branch = "HEAD";
         }
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
@@ -41,7 +43,9 @@ namespace Analyzer.Data
             var reportRange = new ReportingPeriod {Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek};
             var repository = new Repository(_repoPath);
 
-            return new SourceControlRepository(repository, reportRange);
+            // todo: check _branch is valid
+
+            return new SourceControlRepository(repository, reportRange, _branch);
         }
 
         private bool NotValidGitRepository(string repository)
@@ -58,6 +62,12 @@ namespace Analyzer.Data
         public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(int workingDaysPerWeek)
         {
             _workingDaysPerWeek = workingDaysPerWeek;
+            return this;
+        }
+
+        public SourceControlRepositoryBuilder WithBranch()
+        {
+            _branch = "HEAD";
             return this;
         }
     }

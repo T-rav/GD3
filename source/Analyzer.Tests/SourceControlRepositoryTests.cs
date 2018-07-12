@@ -22,6 +22,7 @@ namespace Analyzer.Tests
                 var repoPath = TestRepoPath();
                 var sut = new SourceControlRepositoryBuilder()
                              .WithPath(repoPath)
+                             .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                              .Build();
                 // act
                 var actual = sut.List_Authors();
@@ -228,7 +229,7 @@ namespace Analyzer.Tests
                         Author = author,
                         ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
-                        CommitsPerDay = 6.75,
+                        CommitsPerDay = 6.0,
                         Impact = 1.49,
                         LinesOfChangePerHour = 23.68,
                         Rank = 0
