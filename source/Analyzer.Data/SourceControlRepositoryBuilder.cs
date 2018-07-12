@@ -40,13 +40,13 @@ namespace Analyzer.Data
                 throw new Exception($"Invalid path [{_repoPath}]");
             }
 
-            var reportRange = new ReportingPeriod {Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek};
             var repository = new Repository(_repoPath);
-
             if (InvalidBranchName(repository))
             {
                 throw new Exception($"Invalid branch [{_branch}]");
             }
+            
+            var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek };
 
             return new SourceControlRepository(repository, reportRange, _branch);
         }
