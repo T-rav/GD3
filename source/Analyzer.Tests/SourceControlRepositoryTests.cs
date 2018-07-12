@@ -38,7 +38,7 @@ namespace Analyzer.Tests
                 var repoPath = TestRepoPath();
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithBranch("origin/thabani")
+                    .WithBranch("origin/TusaniG")
                     .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-12"))
                     .Build();
                 // act
