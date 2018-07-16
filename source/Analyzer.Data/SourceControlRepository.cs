@@ -11,12 +11,14 @@ namespace Analyzer.Data
         private readonly Repository _repository;
         private readonly ReportingPeriod _reportingPeriod;
         private readonly string _branch;
+        private readonly List<string> _ignorePatterns;
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns)
         {
             _repository = repository;
             _reportingPeriod = reportingPeriod;
             _branch = branch;
+            _ignorePatterns = ignorePatterns;
         }
 
         public IEnumerable<Author> List_Authors()
@@ -175,7 +177,10 @@ namespace Analyzer.Data
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
 
-            var commitLog = _repository.Commits.QueryBy(filter);
+            var commitLog = _repository.Commits.QueryBy(filter).Where(x=>!x.Tree.Any(y =>
+            {
+                return _ignorePatterns.Any(pattern => y.Path.Contains(pattern));
+            }));
 
              return commitLog
             .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&

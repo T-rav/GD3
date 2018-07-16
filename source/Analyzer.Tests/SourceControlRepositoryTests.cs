@@ -307,7 +307,7 @@ namespace Analyzer.Tests
             }
 
             [Test]
-            public void WhenDeveloperBranch_ShouldReturnAllActiveDeveloper()
+            public void WhenBranch_ShouldReturnAllActiveDeveloperForBranch()
             {
                 // arrange
                 var author = new Author { Name = "Tusani", Email = "tusanig@sahomeloans.com" };
@@ -341,42 +341,43 @@ namespace Analyzer.Tests
                 actual.Should().BeEquivalentTo(expected);
             }
 
-            [Test]
-            public void LearningTest_Goal_GetCorrectStats()
+            [TestFixture]
+            public class With_Ignored_Directory
             {
-                // arrange
-                var author = new Author { Name = "T-rav", Email = "tmfrisinger@gmail.com" };
-                var basePath = TestContext.CurrentContext.TestDirectory;
-                var repoPath = Path.Combine(basePath, "..", "..", "..", "..", "..", "gd3-testoperations");
-
-                var linesAdded = 0;
-                var executions = 0;
-
-                var sut = new Repository(repoPath);
-                // act
-                var commits = sut.Commits;
-                foreach(var commit in commits)
+                [Test]
+                public void WhenFolderIgnored_ShouldIgnoreFilesInFolderWhenCalculatingDeveloperStats()
                 {
-                    foreach (var parent in commit.Parents)
-                    {
-                        // patch stats wrong
-                        var stats = sut.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
-                        linesAdded += stats.TotalLinesAdded;
-                        executions +=1; 
-                    }
-                    if (!commit.Parents.Any())
-                    {
-                        Tree commitFrom = null;
-                        //var commitFrom = sut.Head.Tip;
-                        var stats = sut.Diff.Compare<PatchStats>(commitFrom, commit.Tree);
-                        linesAdded += stats.TotalLinesAdded;
-                        executions += 1;
+                    // arrange
+                    var author = new Author { Name = "T-rav", Email = "tmfrisinger@gmail.com" };
+                    var repoPath = TestRepoPath("test-repo");
 
-                    }
+                    var sut = new SourceControlRepositoryBuilder()
+                        .WithPath(repoPath)
+                        .WithIgnoredDirectory("documents")
+                        .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-12"))
+                        .Build();
+                    // act
+                    var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                    // assert
+                    var expected = new List<DeveloperStats>
+                    {
+                        new DeveloperStats
+                        {
+                            Author = author,
+                            ActiveDaysPerWeek = 1.0,
+                            PeriodActiveDays = 1,
+                            CommitsPerDay = 1.0,
+                            Impact = 0.01,
+                            LinesOfChangePerHour = 0.25,
+                            LinesAdded = 9,
+                            LinesRemoved = 1,
+                            Churn = 0.11,
+                            Rtt100 = 400,
+                            Ptt100 = 500
+                        }
+                    };
+                    actual.Should().BeEquivalentTo(expected);
                 }
-                // assert
-                executions.Should().Be(3);
-                linesAdded.Should().Be(2);
             }
         }
 

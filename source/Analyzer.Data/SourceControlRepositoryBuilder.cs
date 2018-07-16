@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Analyzer.Domain;
 using LibGit2Sharp;
 
@@ -13,11 +14,14 @@ namespace Analyzer.Data
         private int _workingDaysPerWeek;
         private string _branch;
 
+        private readonly List<string> _ignorePatterns;
+
         public SourceControlRepositoryBuilder()
         {
             _workWeekHours = 40;
             _workingDaysPerWeek = 5;
             _branch = "HEAD";
+            _ignorePatterns = new List<string>();
         }
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
@@ -30,6 +34,30 @@ namespace Analyzer.Data
         {
             _start = start;
             _end = end;
+            return this;
+        }
+        
+        public SourceControlRepositoryBuilder WithWorkingWeekHours(int workWeekHours)
+        {
+            _workWeekHours = workWeekHours;
+            return this;
+        }
+
+        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(int workingDaysPerWeek)
+        {
+            _workingDaysPerWeek = workingDaysPerWeek;
+            return this;
+        }
+
+        public SourceControlRepositoryBuilder WithBranch(string branch)
+        {
+            _branch = branch;
+            return this;
+        }
+
+        public SourceControlRepositoryBuilder WithIgnoredDirectory(string pattern)
+        {
+            _ignorePatterns.Add(pattern);
             return this;
         }
 
@@ -48,7 +76,7 @@ namespace Analyzer.Data
             
             var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek };
 
-            return new SourceControlRepository(repository, reportRange, _branch);
+            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns);
         }
 
         private bool InvalidBranchName(Repository repository)
@@ -59,24 +87,6 @@ namespace Analyzer.Data
         private bool NotValidGitRepository(string repository)
         {
             return !Repository.IsValid(repository);
-        }
-
-        public SourceControlRepositoryBuilder WithWorkingWeekHours(int workWeekHours)
-        {
-            _workWeekHours = workWeekHours;
-            return this;
-        }
-
-        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(int workingDaysPerWeek)
-        {
-            _workingDaysPerWeek = workingDaysPerWeek;
-            return this;
-        }
-
-        public SourceControlRepositoryBuilder WithBranch(string branch)
-        {
-            _branch = branch;
-            return this;
         }
     }
 }

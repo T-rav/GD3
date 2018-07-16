@@ -34,6 +34,17 @@ namespace Analyzer
             Console.WriteLine($"For period {start:yyyy-MM-dd} - {end:yyyy-MM-dd}");
             Console.ForegroundColor = DefaultColor;
         }
+        
+        private void PrintDeveloperStatsTableHeader()
+        {
+            PrintDashedLine();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("Individual Developer Stats");
+            Console.ForegroundColor = DefaultColor;
+            PrintDashedLine();
+            Console.WriteLine("Rank | Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
+            PrintDashedLine();
+        }
 
         private void PrintDeveloperAverages()
         {
@@ -51,17 +62,6 @@ namespace Analyzer
             {
                 Console.WriteLine(stat);
             }
-            PrintDashedLine();
-        }
-
-        private void PrintDeveloperStatsTableHeader()
-        {
-            PrintDashedLine();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Individual Developer Stats");
-            Console.ForegroundColor = DefaultColor;
-            PrintDashedLine();
-            Console.WriteLine("Rank | Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
             PrintDashedLine();
         }
 
