@@ -1,3 +1,6 @@
 [submodule "test-repo"]
 	path = test-repo
 	url = https://MrTtheMiner@bitbucket.org/MrTtheMiner/sahl-graduate-project.git
+[submodule "gd3-testoperations"]
+	path = gd3-testoperations
+	url = https://MrTtheMiner@bitbucket.org/MrTtheMiner/gd3-testoperations.git
