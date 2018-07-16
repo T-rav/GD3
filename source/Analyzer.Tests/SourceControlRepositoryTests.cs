@@ -5,6 +5,7 @@ using System.Linq;
 using Analyzer.Data;
 using Analyzer.Domain;
 using FluentAssertions;
+using LibGit2Sharp;
 using NUnit.Framework;
 
 namespace Analyzer.Tests

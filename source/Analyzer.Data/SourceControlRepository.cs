@@ -138,6 +138,7 @@ namespace Analyzer.Data
             {
                 foreach (var parent in commit.Parents)
                 {
+                    // todo : does not account for first commit correctly
                     var stats = _repository.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
                     result.Added += stats.TotalLinesAdded;
                     result.Removed += stats.TotalLinesDeleted;
@@ -162,10 +163,16 @@ namespace Analyzer.Data
 
         private IEnumerable<Commit> GetBranchCommits()
         {
-            return _repository.Branches[_branch]
-                              .Commits
-                              .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
-                                          x.Author.When.Date <= _reportingPeriod.End.Date);
+            var filter = new CommitFilter
+            {
+                IncludeReachableFrom = _repository.Branches[_branch]
+            };
+
+            var commitLog = _repository.Commits.QueryBy(filter);
+
+             return commitLog
+            .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
+                                                      x.Author.When.Date <= _reportingPeriod.End.Date);
         }
     }
 }
