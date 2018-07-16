@@ -109,6 +109,11 @@ namespace Analyzer.Data
                     var fileChanges = _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree);
                     foreach (var file in fileChanges)
                     {
+                        if (_ignorePatterns.Any(pattern => file.Path.Contains(pattern)))
+                        {
+                            continue;
+                        }
+
                         var linesChanged = file.LinesDeleted + file.LinesAdded;
                         var changeLocations = (file.Patch.Split("@@").Length-1)/2;
 
@@ -177,10 +182,8 @@ namespace Analyzer.Data
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
 
-            var commitLog = _repository.Commits.QueryBy(filter).Where(x=>!x.Tree.Any(y =>
-            {
-                return _ignorePatterns.Any(pattern => y.Path.Contains(pattern));
-            }));
+            // todo : this in wrong place, need to filter when building various status
+            var commitLog = _repository.Commits.QueryBy(filter);
 
              return commitLog
             .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&

@@ -364,16 +364,16 @@ namespace Analyzer.Tests
                         new DeveloperStats
                         {
                             Author = author,
-                            ActiveDaysPerWeek = 1.0,
-                            PeriodActiveDays = 1,
-                            CommitsPerDay = 1.0,
-                            Impact = 0.01,
-                            LinesOfChangePerHour = 0.25,
-                            LinesAdded = 9,
-                            LinesRemoved = 1,
-                            Churn = 0.11,
-                            Rtt100 = 400,
-                            Ptt100 = 500
+                            ActiveDaysPerWeek = 3.67,
+                            PeriodActiveDays = 11,
+                            CommitsPerDay = 10.18,
+                            Impact = 3.0,
+                            LinesOfChangePerHour = 13.79,
+                            LinesAdded = 4427,
+                            LinesRemoved = 1639,
+                            Churn = 0.37,
+                            Rtt100 = 7.25,
+                            Ptt100 = 15.77
                         }
                     };
                     actual.Should().BeEquivalentTo(expected);
