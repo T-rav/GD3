@@ -20,7 +20,7 @@ namespace Analyzer.Tests
             public void WhenBranchHEAD_ShouldReturnAllActiveDeveloper()
             {
                 // arrange
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
                 var sut = new SourceControlRepositoryBuilder()
                              .WithPath(repoPath)
                              .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
@@ -36,7 +36,7 @@ namespace Analyzer.Tests
             public void WhenDeveloperBranch_ShouldReturnAllActiveDeveloper()
             {
                 // arrange
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/TusaniG")
@@ -58,7 +58,7 @@ namespace Analyzer.Tests
             public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
                 var author = new Author { Name = "Monique", Email = "MoniqueG@SAHOMELOANS.COM" };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -76,7 +76,7 @@ namespace Analyzer.Tests
             public void NotHeadBranch_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
                 var author = new Author { Name = "Thabani", Email = "thabanitembe@hotmail.com" };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -94,7 +94,7 @@ namespace Analyzer.Tests
             public void WhenEmailNotForActiveDeveloper_ShouldReturnZero()
             {
                 // arrange
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
                 var author = new Author { Name = "no-one", Email = "solo@nothere.io" };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -116,7 +116,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author { Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -136,7 +136,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author { Name = "Moo", Email = "invalid@buddy.io" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -158,7 +158,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author {Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM"};
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -178,7 +178,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author { Name = "boo", Email = "noone@moonbase.co" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -200,7 +200,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author { Name = "Sinothilem", Email = "sinothilem@D987321" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                                 .WithPath(repoPath)
@@ -237,7 +237,7 @@ namespace Analyzer.Tests
             {
                 // arrange
                 var author = new Author { Name = "Siphenathi", Email = "SiphenathiP@SAHOMELOANS.COM" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -270,11 +270,48 @@ namespace Analyzer.Tests
             }
 
             [Test]
+            public void WhenDeveloperMadeFirstCommit_ShouldReturnStats()
+            {
+                // arrange
+                var author = new Author { Name = "T-rav", Email = "tmfrisinger@gmail.com" };
+                var repoPath = TestRepoPath("gd3-testoperations");
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-16"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        ActiveDaysPerWeek = 1.0,
+                        PeriodActiveDays = 1,
+                        CommitsPerDay = 3.0,
+                        Impact = 0.0,
+                        LinesOfChangePerHour = 0.06,
+                        LinesAdded = 2,
+                        LinesRemoved = 0,
+                        Churn = 0.0,
+                        Rtt100 = 1666.67,
+                        Ptt100 = 1666.67
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
             public void WhenDeveloperBranch_ShouldReturnAllActiveDeveloper()
             {
                 // arrange
                 var author = new Author { Name = "Tusani", Email = "tusanig@sahomeloans.com" };
-                var repoPath = TestRepoPath();
+                var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -303,12 +340,50 @@ namespace Analyzer.Tests
                 };
                 actual.Should().BeEquivalentTo(expected);
             }
+
+            [Test]
+            public void LearningTest_Goal_GetCorrectStats()
+            {
+                // arrange
+                var author = new Author { Name = "T-rav", Email = "tmfrisinger@gmail.com" };
+                var basePath = TestContext.CurrentContext.TestDirectory;
+                var repoPath = Path.Combine(basePath, "..", "..", "..", "..", "..", "gd3-testoperations");
+
+                var linesAdded = 0;
+                var executions = 0;
+
+                var sut = new Repository(repoPath);
+                // act
+                var commits = sut.Commits;
+                foreach(var commit in commits)
+                {
+                    foreach (var parent in commit.Parents)
+                    {
+                        // patch stats wrong
+                        var stats = sut.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
+                        linesAdded += stats.TotalLinesAdded;
+                        executions +=1; 
+                    }
+                    if (!commit.Parents.Any())
+                    {
+                        Tree commitFrom = null;
+                        //var commitFrom = sut.Head.Tip;
+                        var stats = sut.Diff.Compare<PatchStats>(commitFrom, commit.Tree);
+                        linesAdded += stats.TotalLinesAdded;
+                        executions += 1;
+
+                    }
+                }
+                // assert
+                executions.Should().Be(3);
+                linesAdded.Should().Be(2);
+            }
         }
 
-        private static string TestRepoPath()
+        private static string TestRepoPath(string repo)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            var repoPath = Path.Combine(basePath, "..", "..", "..", "..","..", "test-repo");
+            var repoPath = Path.Combine(basePath, "..", "..", "..", "..","..", repo);
             return repoPath;
         }
     }

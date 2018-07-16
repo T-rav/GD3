@@ -136,9 +136,16 @@ namespace Analyzer.Data
                 .OrderBy(x=>x.Author.When.Date);
             foreach (var commit in developerCommits)
             {
+                if (!commit.Parents.Any())
+                {
+                    var stats = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
+                    result.Added += stats.TotalLinesAdded;
+                    result.Removed += stats.TotalLinesDeleted;
+                    continue;
+                }
+
                 foreach (var parent in commit.Parents)
                 {
-                    // todo : does not account for first commit correctly
                     var stats = _repository.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
                     result.Added += stats.TotalLinesAdded;
                     result.Removed += stats.TotalLinesDeleted;

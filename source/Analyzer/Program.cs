@@ -19,19 +19,19 @@ namespace Analyzer
         static void Main(string[] args)
         {
             var defaultColor = Console.ForegroundColor;
-            var version = "0.9.0";
+            var version = "0.9.1";
             if (args.Length < 1)
             {
                 PrintNoGitRepositoryPathError(defaultColor);
                 return;
             }
             
-            var startDate = DateTime.Parse("2018-07-10");
+            var startDate = DateTime.Parse("2018-07-12");
             var endDate = DateTime.Now.Date;
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithRange(startDate, endDate)
-                            .WithBranch("origin/Monique")
+                            .WithBranch("origin/SindisiweK")
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();
