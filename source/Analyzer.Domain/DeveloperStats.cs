@@ -35,7 +35,6 @@ namespace Analyzer.Domain
 
         // todo : track which lines the developer changed over the period
         // todo: would still like to know what % of recent technical debt they contributed (based on period of reporting)
-
         public override string ToString()
         {
             return $"{PaddedPrint(Rank, 7)}" +
