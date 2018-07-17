@@ -107,6 +107,11 @@ namespace Analyzer.Data
                 IncludeReachableFrom = repository.Branches[_branch]
             };
 
+            if (_branch != "HEAD")
+            {
+                filter.ExcludeReachableFrom = repository.Head;
+            }
+
             var commitLog = repository.Commits.QueryBy(filter);
             commitLog.OrderBy(x => x.Author.When.Date);
             return commitLog;
@@ -130,6 +135,11 @@ namespace Analyzer.Data
         private bool NotValidGitRepository(string repository)
         {
             return !Repository.IsValid(repository);
+        }
+
+        public object WithAlias(string v1, string v2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,15 @@
-﻿namespace Analyzer.Domain
+﻿using System.Collections.Generic;
+
+namespace Analyzer.Domain
 {
     public class Author
     {
         public string Name { get; set; }
-        public string Email { get; set; }
+        public List<string> Emails { get; set; }
+
+        public Author()
+        {
+            Emails = new List<string>();
+        }
     }
 }

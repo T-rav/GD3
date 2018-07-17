@@ -23,13 +23,14 @@ namespace Analyzer.Data
             ReportingRange = reportingPeriod;
         }
 
+        // todo : pass alias mapping into here
         public IEnumerable<Author> List_Authors()
         {
             var authors = GetCommits()
                             .Select(x => new Author
                              {
                                  Name = x.Author.Name,
-                                 Email = x.Author.Email
+                                 Emails = new List<string> { x.Author.Email }
                              }).GroupBy(x => x.Name).Select(x => x.First());
             return authors;
         }
@@ -61,7 +62,7 @@ namespace Analyzer.Data
         public int Period_Active_Days(Author author)
         {
             var activeDays = GetCommits()
-                .Where(x => x.Author.Email == author.Email)
+                .Where(x => author.Emails.Contains(x.Author.Email))
                 .Select(x => new
                  {
                      x.Author.When.UtcDateTime.Date
@@ -82,7 +83,7 @@ namespace Analyzer.Data
         {
             var periodActiveDays = (double)Period_Active_Days(author);
             var totalCommits = GetCommits()
-                              .Count(x => x.Author.Email == author.Email);
+                              .Count(x => author.Emails.Contains(x.Author.Email));
 
             if (periodActiveDays == 0 || totalCommits == 0)
             {
@@ -103,7 +104,7 @@ namespace Analyzer.Data
         {
             var totalScore = 0.0;
             var developerCommits = GetCommits()
-                                   .Where(x => x.Author.Email == developer.Email);
+                                   .Where(x => developer.Emails.Contains(x.Author.Email));
             foreach (var commit in developerCommits)
             {
                 foreach (var parent in commit.Parents)
@@ -141,7 +142,7 @@ namespace Analyzer.Data
             var result = new LinesOfChange();
 
             var developerCommits = GetCommits()
-                .Where(x => x.Author.Email == developer.Email)
+                .Where(x => developer.Emails.Contains(x.Author.Email))
                 .OrderBy(x=>x.Author.When.Date);
             foreach (var commit in developerCommits)
             {
@@ -182,6 +183,11 @@ namespace Analyzer.Data
             {
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
+
+            if(_branch != "HEAD")
+            {
+                filter.ExcludeReachableFrom = _repository.Head;
+            }
 
             var commitLog = _repository.Commits.QueryBy(filter);
 
