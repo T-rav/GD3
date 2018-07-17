@@ -80,7 +80,7 @@ namespace Analyzer
             Console.WriteLine(renderedLine);
             PrintDashedLine();
             Console.WriteLine("* Global average is 3.2 days per week");
-            Console.WriteLine("^ Approximation of congative load carried when contributing.");
+            Console.WriteLine("^ Approximation of congative load carried when contributing");
             PrintDashedLine();
         }
 
