@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Analyzer.Data;
-using Analyzer.Domain;
 
 namespace Analyzer
 {

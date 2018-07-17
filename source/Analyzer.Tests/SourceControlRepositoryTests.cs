@@ -379,6 +379,44 @@ namespace Analyzer.Tests
                     actual.Should().BeEquivalentTo(expected);
                 }
             }
+
+            [TestFixture]
+            public class With_Entire_History
+            {
+                [Test]
+                public void WhenFolderIgnored_ShouldIgnoreFilesInFolderWhenCalculatingDeveloperStats()
+                {
+                    // arrange
+                    var author = new Author { Name = "T-rav", Email = "tmfrisinger@gmail.com" };
+                    var repoPath = TestRepoPath("gd3-testoperations");
+
+                    var sut = new SourceControlRepositoryBuilder()
+                        .WithPath(repoPath)
+                        .WithEntireHistory()
+                        .Build();
+                    // act
+                    var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                    // assert
+                    var expected = new List<DeveloperStats>
+                    {
+                        new DeveloperStats
+                        {
+                            Author = author,
+                            ActiveDaysPerWeek = 1.0,
+                            PeriodActiveDays = 1,
+                            CommitsPerDay = 3.0,
+                            Impact = 0.0,
+                            LinesOfChangePerHour = 0.05,
+                            LinesAdded = 2,
+                            LinesRemoved = 0,
+                            Churn = 0.0,
+                            Rtt100 = 2000.0,
+                            Ptt100 = 2000.0
+                        }
+                    };
+                    actual.Should().BeEquivalentTo(expected);
+                }
+            }
         }
 
         private static string TestRepoPath(string repo)
