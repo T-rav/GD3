@@ -26,23 +26,19 @@ namespace Analyzer.Data
         public IEnumerable<Author> List_Authors(List<Alias> aliases)
         {
             var authors = List_Authors();
-            var toRemove = new List<Author>();
 
-            foreach(var author in authors)
+            // todo : if null or empty
+            var authorMap = new Dictionary<Guid, List<string>>();
+            // iterate over each entry
+            // create a dictionay with alias.id and email that matched developer list
+            // if not in alias list add as new alias
+            // then combine all keys into a new result
+            foreach (var author in authors)
             {
-                foreach(var alias in aliases)
-                {
-                    foreach(var email in alias.Emails)
-                    {
-                        if (author.Emails.Contains(email))
-                        {
-                            toRemove.Add(author);
-                        }
-                    }
-                }
+                
             }
 
-            return toRemove;
+            return authors;
         }
 
         public IEnumerable<Author> List_Authors()
