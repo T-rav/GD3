@@ -38,6 +38,22 @@ namespace Analyzer.Tests
             actual.Message.Should().Be("Invalid branch [--Never-Existed--]");
         }
 
+        [Test]
+        public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
+        {
+            // arrange
+            var repoPath = TestRepoPath();
+            var sut = new SourceControlRepositoryBuilder()
+                .WithPath(repoPath)
+                .WithEntireHistory()
+                .Build();
+            // act
+            var actual = sut.ReportingRange;
+            // assert
+            actual.Start.Should().Be(DateTime.Parse("2018-06-25"));
+            actual.End.Should().Be(DateTime.Parse("2018-07-12"));
+        }
+
         private static string TestRepoPath()
         {
             var basePath = TestContext.CurrentContext.TestDirectory;

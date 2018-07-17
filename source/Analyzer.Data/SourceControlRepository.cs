@@ -9,21 +9,23 @@ namespace Analyzer.Data
     public class SourceControlRepository : ISourceControlRepository
     {
         private readonly Repository _repository;
-        private readonly ReportingPeriod _reportingPeriod;
         private readonly string _branch;
         private readonly List<string> _ignorePatterns;
+
+        public ReportingPeriod ReportingRange { get; private set; }
 
         public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns)
         {
             _repository = repository;
-            _reportingPeriod = reportingPeriod;
             _branch = branch;
             _ignorePatterns = ignorePatterns;
+
+            ReportingRange = reportingPeriod;
         }
 
         public IEnumerable<Author> List_Authors()
         {
-            var authors = GetBranchCommits()
+            var authors = GetCommits()
                             .Select(x => new Author
                              {
                                  Name = x.Author.Name,
@@ -58,7 +60,7 @@ namespace Analyzer.Data
 
         public int Period_Active_Days(Author author)
         {
-            var activeDays = GetBranchCommits()
+            var activeDays = GetCommits()
                 .Where(x => x.Author.Email == author.Email)
                 .Select(x => new
                  {
@@ -72,14 +74,14 @@ namespace Analyzer.Data
         public double Active_Days_Per_Week(Author author)
         {
             var activeDays = Period_Active_Days(author);
-            var weeks = _reportingPeriod.Period_Weeks();
+            var weeks = ReportingRange.Period_Weeks();
             return Math.Round(activeDays / weeks, 2);
         }
 
         public double Commits_Per_Day(Author author)
         {
             var periodActiveDays = (double)Period_Active_Days(author);
-            var totalCommits = GetBranchCommits()
+            var totalCommits = GetCommits()
                               .Count(x => x.Author.Email == author.Email);
 
             if (periodActiveDays == 0 || totalCommits == 0)
@@ -100,7 +102,7 @@ namespace Analyzer.Data
         private double Impact(Author developer)
         {
             var totalScore = 0.0;
-            var developerCommits = GetBranchCommits()
+            var developerCommits = GetCommits()
                                    .Where(x => x.Author.Email == developer.Email);
             foreach (var commit in developerCommits)
             {
@@ -138,7 +140,7 @@ namespace Analyzer.Data
         {
             var result = new LinesOfChange();
 
-            var developerCommits = GetBranchCommits()
+            var developerCommits = GetCommits()
                 .Where(x => x.Author.Email == developer.Email)
                 .OrderBy(x=>x.Author.When.Date);
             foreach (var commit in developerCommits)
@@ -167,27 +169,25 @@ namespace Analyzer.Data
             return result;
         }
 
-        // todo : extract on to domain entity
         private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
         {
-            var periodHoursWorked = _reportingPeriod.HoursPerWeek * Period_Active_Days(developer);
+            var periodHoursWorked = ReportingRange.HoursPerWeek * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
             return Math.Round(linesPerHour,2);
         }
 
-        private IEnumerable<Commit> GetBranchCommits()
+        public IEnumerable<Commit> GetCommits()
         {
             var filter = new CommitFilter
             {
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
 
-            // todo : this in wrong place, need to filter when building various status
             var commitLog = _repository.Commits.QueryBy(filter);
 
-             return commitLog
-            .Where(x => x.Author.When.Date >= _reportingPeriod.Start.Date &&
-                                                      x.Author.When.Date <= _reportingPeriod.End.Date);
+            return commitLog
+                .Where(x => x.Author.When.Date >= ReportingRange.Start.Date &&
+                        x.Author.When.Date <= ReportingRange.End.Date);
         }
     }
 }

@@ -29,8 +29,11 @@ namespace Analyzer
             var endDate = DateTime.Parse("2017-06-15");
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
-                            .WithRange(startDate, endDate)
+                            .WithEntireHistory()
+                            //.WithRange(startDate, endDate)
                             //.WithBranch("origin/SindisiweK")
+                            .WithIgnoredDirectory("node_modules")
+                            .WithIgnoredDirectory("packages")
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();

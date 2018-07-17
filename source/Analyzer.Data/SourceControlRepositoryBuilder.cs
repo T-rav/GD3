@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Analyzer.Domain;
 using LibGit2Sharp;
 
@@ -13,7 +14,7 @@ namespace Analyzer.Data
         private int _workWeekHours;
         private int _workingDaysPerWeek;
         private string _branch;
-
+        private bool _isEntireHistory;
         private readonly List<string> _ignorePatterns;
 
         public SourceControlRepositoryBuilder()
@@ -34,6 +35,7 @@ namespace Analyzer.Data
         {
             _start = start;
             _end = end;
+            _isEntireHistory = false;
             return this;
         }
         
@@ -61,6 +63,12 @@ namespace Analyzer.Data
             return this;
         }
 
+        public SourceControlRepositoryBuilder WithEntireHistory()
+        {
+            _isEntireHistory = true;
+            return this;
+        }
+
         public ISourceControlRepository Build()
         {
             if (NotValidGitRepository(_repoPath))
@@ -76,7 +84,42 @@ namespace Analyzer.Data
             
             var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek };
 
+            if (_isEntireHistory)
+            {
+                MakeRangeEntireHistory(repository, reportRange);
+            }
+
             return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns);
+        }
+
+        private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)
+        {
+            var commits = GetCommitsForSelectedBranch(repository);
+
+            reportRange.Start = GetFirstCommit(commits);
+            reportRange.End = GetLastCommit(commits);
+        }
+
+        private ICommitLog GetCommitsForSelectedBranch(Repository repository)
+        {
+            var filter = new CommitFilter
+            {
+                IncludeReachableFrom = repository.Branches[_branch]
+            };
+
+            var commitLog = repository.Commits.QueryBy(filter);
+            commitLog.OrderBy(x => x.Author.When.Date);
+            return commitLog;
+        }
+
+        private static DateTime GetLastCommit(ICommitLog commitLog)
+        {
+            return commitLog.First().Author.When.Date;
+        }
+
+        private static DateTime GetFirstCommit(ICommitLog commitLog)
+        {
+            return commitLog.Last().Author.When.Date;
         }
 
         private bool InvalidBranchName(Repository repository)
