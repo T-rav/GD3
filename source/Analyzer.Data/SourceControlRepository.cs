@@ -23,15 +23,38 @@ namespace Analyzer.Data
             ReportingRange = reportingPeriod;
         }
 
-        // todo : pass alias mapping into here
+        public IEnumerable<Author> List_Authors(List<Alias> aliases)
+        {
+            var authors = List_Authors();
+            var toRemove = new List<Author>();
+
+            foreach(var author in authors)
+            {
+                foreach(var alias in aliases)
+                {
+                    foreach(var email in alias.Emails)
+                    {
+                        if (author.Emails.Contains(email))
+                        {
+                            toRemove.Add(author);
+                        }
+                    }
+                }
+            }
+
+            return toRemove;
+        }
+
         public IEnumerable<Author> List_Authors()
         {
             var authors = GetCommits()
+                            .GroupBy(x=>x.Author.Email)
+                            .Select(x=>x.First())
                             .Select(x => new Author
                              {
                                  Name = x.Author.Name,
                                  Emails = new List<string> { x.Author.Email }
-                             }).GroupBy(x => x.Name).Select(x => x.First());
+                             });
             return authors;
         }
 

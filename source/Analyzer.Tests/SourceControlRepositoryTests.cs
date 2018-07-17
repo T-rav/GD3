@@ -47,6 +47,29 @@ namespace Analyzer.Tests
                 var expected = 1;
                 actual.Count().Should().Be(expected);
             }
+
+            [Test]
+            [Ignore("wip")]
+            public void WhenUsingAlias_ShouldReturnSingleDeveloperWithTwoEmails()
+            {
+                // arrange
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var aliasMap = new List<Alias>
+                {
+                    new Alias {Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" } }
+                };
+
+                var sut = new SourceControlRepositoryBuilder()
+                             .WithPath(repoPath)
+                             .WithEntireHistory()
+                             .WithBranch("origin/my-branch")
+                             .Build();
+                // act
+                var actual = sut.List_Authors(aliasMap);
+                // assert
+                var expected = 1;
+                actual.Count().Should().Be(expected);
+            }
         }
 
         [TestFixture]
