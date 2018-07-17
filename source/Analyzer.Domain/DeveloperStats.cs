@@ -19,25 +19,12 @@ namespace Analyzer.Domain
 
         public double Dtt100 => Ptt100 - Rtt100;
 
-        public double Rank
-        {
-            get
-            {
-                var rank =  (int) Math.Round(Impact * RiskFactor * Churn, 0) + 1;
-                if (rank < 0)
-                {
-                    return double.PositiveInfinity;
-                }
-                return rank;
-            }
-        }
-
 
         // todo : track which lines the developer changed over the period
         // todo: would still like to know what % of recent technical debt they contributed (based on period of reporting)
         public override string ToString()
         {
-            return $"{PaddedPrint(Rank, 7)}" +
+            return //$"{PaddedPrint(Rank, 7)}" +
                    $"{PaddedPrint(Author.Name, 26)}" +
                    $"{PaddedPrint(PeriodActiveDays, 21)}" +
                    $"{PaddedPrint(ActiveDaysPerWeek, 23)}" +

@@ -49,7 +49,7 @@ namespace Analyzer.Tests
             }
 
             [Test]
-            //[Ignore("wip")]
+            [Ignore("wip")]
             public void WhenUsingAlias_ShouldReturnSingleDeveloperWithTwoEmails()
             {
                 // arrange

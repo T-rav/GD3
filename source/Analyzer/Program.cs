@@ -37,7 +37,7 @@ namespace Analyzer
                             .Build();
 
             var dashboard = new DeveloperStatsDashboard();
-            dashboard.RenderDashboard(startDate, endDate, repo);
+            dashboard.RenderDashboard(repo);
 
             Console.ReadKey();
         }

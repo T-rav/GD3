@@ -196,7 +196,7 @@ namespace Analyzer.Data
             return Math.Round(linesPerHour,2);
         }
 
-        public IEnumerable<Commit> GetCommits()
+        private IEnumerable<Commit> GetCommits()
         {
             var filter = new CommitFilter
             {
