@@ -37,7 +37,7 @@ namespace Analyzer
                             .WithWorkingDaysPerWeek(4)
                             .Build();
 
-            var dashboard = new DeveloperStatsDashboard();
+            var dashboard = new CodeStatsDashboard();
             dashboard.RenderDashboard(repo);
 
             Console.ReadKey();
@@ -47,7 +47,7 @@ namespace Analyzer
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Error : Need to enter a git repository path");
-            Console.ForegroundColor = DeveloperStatsDashboard.DefaultColor;
+            Console.ForegroundColor = CodeStatsDashboard.DefaultColor;
             Console.ReadKey();
         }
     }

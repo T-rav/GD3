@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.SourceRepository;
+using Analyzer.Domain.Team;
 
 namespace Analyzer
 {
-    public class DeveloperStatsDashboard
+    public class CodeStatsDashboard
     {
-        public static string Version => "0.9.2";
+        public static string Version => "0.9.3";
         public static ConsoleColor DefaultColor { get; private set; }
 
-        public DeveloperStatsDashboard()
+        public CodeStatsDashboard()
         {
             DefaultColor = Console.ForegroundColor;
         }
@@ -20,11 +21,14 @@ namespace Analyzer
         {
             var authors = repo.List_Authors();
             var stats = repo.Build_Individual_Developer_Stats(authors);
+            var teamStats = repo.Build_Team_Stats();
 
             PrintApplicationHeader(repo.ReportingRange.Start, repo.ReportingRange.End);
             PrintDeveloperStatsTableHeader();
             PrintDeveloperStatsTable(stats);
             PrintDeveloperAverages(stats, repo.ReportingRange.Period_Days());
+            PrintTeamStatsTableHeader();
+            PrintTeamStatsTable(teamStats);
         }
 
         private void PrintApplicationHeader(DateTime start, DateTime end)
@@ -88,6 +92,27 @@ namespace Analyzer
         private void PrintDeveloperStatsTable(List<DeveloperStats> stats)
         {
             var orderedStats = stats.OrderByDescending(x => x.PeriodActiveDays);
+            foreach (var stat in orderedStats)
+            {
+                Console.WriteLine(stat);
+            }
+            PrintDashedLine();
+        }
+
+        private void PrintTeamStatsTableHeader()
+        {
+            PrintDashedLine();
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("Team Stats");
+            Console.ForegroundColor = DefaultColor;
+            PrintDashedLine();
+            Console.WriteLine("Date           | Total Commits | Active Developers | Velocity");
+            PrintDashedLine();
+        }
+
+        private void PrintTeamStatsTable(List<TeamStats> teamStats)
+        {
+            var orderedStats = teamStats.OrderBy(x => x.DateOf);
             foreach (var stat in orderedStats)
             {
                 Console.WriteLine(stat);
