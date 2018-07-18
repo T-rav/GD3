@@ -11,7 +11,19 @@ namespace Analyzer.Domain.Developer
         public double Impact { get; set; } // congative load
         public double LinesOfChangePerHour { get; set; } // how much of a wake to they cause?
         public double Churn { get; set; } // how much code is deleted?
-        public double RiskFactor => Math.Round( (LinesOfChangePerHour / CommitsPerDay),2 ); // do they move quick, make a mess and cause high churn?! (LinesOfChangePerHour/CommitsPerDay)*Impact
+        public double RiskFactor
+        {
+            get
+            {
+                var result = Math.Round((LinesOfChangePerHour / CommitsPerDay), 2);
+                if (result.Equals(Double.NaN) || result.Equals(Double.PositiveInfinity))
+                {
+                    return 0.0;
+                }
+                return result;
+            }
+        }
+
         public int LinesAdded { get; set; }
         public int LinesRemoved { get; set; }
         public double Rtt100 { get; set; }
