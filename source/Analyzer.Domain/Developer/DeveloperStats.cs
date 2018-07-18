@@ -11,6 +11,12 @@ namespace Analyzer.Domain.Developer
         public double Impact { get; set; } // congative load
         public double LinesOfChangePerHour { get; set; } // how much of a wake to they cause?
         public double Churn { get; set; } // how much code is deleted?
+        public int LinesAdded { get; set; }
+        public int LinesRemoved { get; set; }
+        public double Rtt100 { get; set; }
+        public double Ptt100 { get; set; }
+        public double Dtt100 => Ptt100 - Rtt100;
+
         public double RiskFactor
         {
             get
@@ -23,14 +29,6 @@ namespace Analyzer.Domain.Developer
                 return result;
             }
         }
-
-        public int LinesAdded { get; set; }
-        public int LinesRemoved { get; set; }
-        public double Rtt100 { get; set; }
-        public double Ptt100 { get; set; }
-
-        public double Dtt100 => Ptt100 - Rtt100;
-
 
         // todo : track which lines the developer changed over the period
         // todo: would still like to know what % of recent technical debt they contributed (based on period of reporting)
