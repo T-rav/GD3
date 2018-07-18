@@ -264,6 +264,7 @@ namespace Analyzer.Tests
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
+                    .WithIgnorePattern(".orig")
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -373,7 +374,8 @@ namespace Analyzer.Tests
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithIgnoredDirectory("documents")
+                    .WithIgnorePattern("documents")
+                    .WithIgnorePattern(".orig")
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-12"))
                     .Build();
                 // act

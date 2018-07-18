@@ -30,8 +30,8 @@ namespace Analyzer
                             .WithEntireHistory()
                             //.WithRange(startDate, endDate)
                             //.WithBranch("origin/SindisiweK")
-                            .WithIgnoredDirectory("node_modules")
-                            .WithIgnoredDirectory("packages")
+                            .WithIgnorePattern("node_modules")
+                            .WithIgnorePattern("packages")
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();

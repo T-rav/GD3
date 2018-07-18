@@ -161,7 +161,7 @@ namespace Analyzer.Data
 
         private bool FileShouldBeIgnored(PatchEntryChanges file)
         {
-            return _ignorePatterns.Any(pattern => file.Path.Contains(pattern)) || file.Path.EndsWith(".orig");
+            return _ignorePatterns.Any(pattern => file.Path.Contains(pattern));
         }
 
         private LinesOfChange Change_Stats(Author developer)

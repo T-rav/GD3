@@ -57,7 +57,7 @@ namespace Analyzer.Data
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithIgnoredDirectory(string pattern)
+        public SourceControlRepositoryBuilder WithIgnorePattern(string pattern)
         {
             _ignorePatterns.Add(pattern);
             return this;
