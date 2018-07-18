@@ -187,19 +187,47 @@ namespace Analyzer.Tests.Reporting
                 // arrange
                 var sut = new ReportingPeriod
                 {
-                    Start = DateTime.Parse("2018-07-01"),
-                    End = DateTime.Parse("2018-07-05")
+                    Start = DateTime.Parse("2018-07-02"),
+                    End = DateTime.Parse("2018-07-06")
                 };
                 // act
                 var actual = sut.Generate_Dates_For_Range();
                 // assert
                 var expected = new List<DateTime>
                 {
-                    DateTime.Parse("2018-07-01"),
                     DateTime.Parse("2018-07-02"),
                     DateTime.Parse("2018-07-03"),
                     DateTime.Parse("2018-07-04"),
-                    DateTime.Parse("2018-07-05")
+                    DateTime.Parse("2018-07-05"),
+                    DateTime.Parse("2018-07-06")
+                };
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
+            public void WhenRangeTwoWeeks_ExpectListOfDaysExcludingWeekends()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-15")
+                };
+                // act
+                var actual = sut.Generate_Dates_For_Range();
+                // assert
+                var expected = new List<DateTime>
+                {
+                    DateTime.Parse("2018-07-02"),
+                    DateTime.Parse("2018-07-03"),
+                    DateTime.Parse("2018-07-04"),
+                    DateTime.Parse("2018-07-05"),
+                    DateTime.Parse("2018-07-06"),
+                    DateTime.Parse("2018-07-09"),
+                    DateTime.Parse("2018-07-10"),
+                    DateTime.Parse("2018-07-11"),
+                    DateTime.Parse("2018-07-12"),
+                    DateTime.Parse("2018-07-13")
                 };
                 actual.Should().BeEquivalentTo(expected);
             }

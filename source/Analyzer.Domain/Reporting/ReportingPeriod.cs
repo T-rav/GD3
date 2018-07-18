@@ -64,7 +64,13 @@ namespace Analyzer.Domain.Reporting
             var totalDays = (End - Start).Days;
             for (var i = 0; i <= totalDays; i++)
             {
-                result.Add(seed.AddDays(i));
+                var canidateDate = seed.AddDays(i);
+                // todo : make this configurable
+                if (canidateDate.DayOfWeek != DayOfWeek.Sunday 
+                    && canidateDate.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    result.Add(canidateDate);
+                }
             }
             return result;
         }
