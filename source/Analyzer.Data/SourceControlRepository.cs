@@ -129,31 +129,39 @@ namespace Analyzer.Data
                 foreach (var parent in commit.Parents)
                 {
                     var fileChanges = _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree);
-                    foreach (var file in fileChanges)
-                    {
-                        if (_ignorePatterns.Any(pattern => file.Path.Contains(pattern)))
-                        {
-                            continue;
-                        }
-
-                        var linesChanged = file.LinesDeleted + file.LinesAdded;
-                        var changeLocations = (file.Patch.Split("@@").Length-1)/2;
-
-                        var impactScore = ((double)changeLocations/linesChanged);
-                        if (!impactScore.Equals(Double.NaN))
-                        {
-                            var multiplier = 1.0;
-                            if (file.Status == ChangeKind.Modified)
-                            {
-                                multiplier = 1.5;
-                            }
-                            totalScore += impactScore * multiplier;
-                        }
-                    }
+                    var changeImpactData = CalculateImpactStats(fileChanges);
+                    totalScore += changeImpactData.Calculate();
                 }
             }
             
             return Math.Round(totalScore/100,2);
+        }
+
+        private Impact CalculateImpactStats(Patch fileChanges)
+        {
+            var result = new Impact();
+            foreach (var file in fileChanges)
+            {
+                if (FileShouldBeIgnored(file))
+                {
+                    continue;
+                }
+
+                result.TotalFiles += 1;
+                result.TotalEditLocations += (file.Patch.Split("@@").Length - 1) / 2;
+                result.TotalLinesEdited += file.LinesAdded + file.LinesDeleted;
+                if (file.Status == ChangeKind.Modified)
+                {
+                    result.TotalLinesOfOldCode += file.LinesAdded + file.LinesDeleted;
+                }
+            }
+
+            return result;
+        }
+
+        private bool FileShouldBeIgnored(PatchEntryChanges file)
+        {
+            return _ignorePatterns.Any(pattern => file.Path.Contains(pattern)) || file.Path.EndsWith(".orig");
         }
 
         private LinesOfChange Change_Stats(Author developer)
