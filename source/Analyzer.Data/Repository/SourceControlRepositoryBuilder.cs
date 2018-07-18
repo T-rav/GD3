@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Analyzer.Domain;
+using Analyzer.Domain.Reporting;
+using Analyzer.Domain.Repository;
 using LibGit2Sharp;
 
-namespace Analyzer.Data
+namespace Analyzer.Data.Repository
 {
     public class SourceControlRepositoryBuilder
     {

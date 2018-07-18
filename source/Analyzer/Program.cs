@@ -1,5 +1,6 @@
 ﻿using System;
 using Analyzer.Data;
+using Analyzer.Data.Repository;
 
 namespace Analyzer
 {

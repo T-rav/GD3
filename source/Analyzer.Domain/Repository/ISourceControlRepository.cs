@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Analyzer.Domain.Developer;
+using Analyzer.Domain.Reporting;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Repository
 {
     public interface ISourceControlRepository
     {

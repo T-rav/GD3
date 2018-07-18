@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain;
+using Analyzer.Domain.Developer;
+using Analyzer.Domain.Reporting;
+using Analyzer.Domain.Repository;
 using LibGit2Sharp;
 
-namespace Analyzer.Data
+namespace Analyzer.Data.Repository
 {
     public class SourceControlRepository : ISourceControlRepository
     {
-        private readonly Repository _repository;
+        private readonly LibGit2Sharp.Repository _repository;
         private readonly string _branch;
         private readonly List<string> _ignorePatterns;
 
         public ReportingPeriod ReportingRange { get; private set; }
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns)
+        public SourceControlRepository(LibGit2Sharp.Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns)
         {
             _repository = repository;
             _branch = branch;

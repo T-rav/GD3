@@ -1,9 +1,9 @@
 ﻿using System;
-using Analyzer.Domain;
+using Analyzer.Domain.Reporting;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Analyzer.Tests
+namespace Analyzer.Tests.Reporting
 {
     [TestFixture]
     public class ReportingPeriodTests

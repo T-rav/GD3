@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using Analyzer.Data;
+using Analyzer.Data.Repository;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Analyzer.Tests
+namespace Analyzer.Tests.Repository
 {
     [TestFixture]
     public class SourceControlRepositoryBuilderTests

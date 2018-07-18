@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Developer
 {
     public class Author
     {

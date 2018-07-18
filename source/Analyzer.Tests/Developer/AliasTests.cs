@@ -1,4 +1,5 @@
 ﻿using Analyzer.Domain;
+using Analyzer.Domain.Developer;
 using FluentAssertions;
 using NUnit.Framework;
 

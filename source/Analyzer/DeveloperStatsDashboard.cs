@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain;
+using Analyzer.Domain.Developer;
+using Analyzer.Domain.Repository;
 
 namespace Analyzer
 {

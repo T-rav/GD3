@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Developer
 {
     public class DeveloperStats
     {
         public Author Author { get; set; }
         public int PeriodActiveDays { get; set; }
-        public double ActiveDaysPerWeek { get; set; } // todo : make this / sprint and allow user to set sprint size (default to week)
+        public double ActiveDaysPerWeek { get; set; }
         public double CommitsPerDay { get; set; } // do they push often
         public double Impact { get; set; } // congative load
         public double LinesOfChangePerHour { get; set; } // how much of a wake to they cause?

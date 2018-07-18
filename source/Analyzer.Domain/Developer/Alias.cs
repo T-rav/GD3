@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Developer
 {
     public class Alias
     {

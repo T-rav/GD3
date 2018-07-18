@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Reporting
 {
     public class ReportingPeriod
     {
