@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Reporting;
-using Analyzer.Domain.Repository;
+using Analyzer.Domain.SourceRepository;
 using LibGit2Sharp;
 
-namespace Analyzer.Data.Repository
+namespace Analyzer.Data.SourceRepository
 {
     public class SourceControlRepositoryBuilder
     {
@@ -77,7 +77,7 @@ namespace Analyzer.Data.Repository
                 throw new Exception($"Invalid path [{_repoPath}]");
             }
 
-            var repository = new Repository(_repoPath);
+            var repository = new LibGit2Sharp.Repository(_repoPath);
             if (InvalidBranchName(repository))
             {
                 throw new Exception($"Invalid branch [{_branch}]");
@@ -93,7 +93,7 @@ namespace Analyzer.Data.Repository
             return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns);
         }
 
-        private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)
+        private void MakeRangeEntireHistory(LibGit2Sharp.Repository repository, ReportingPeriod reportRange)
         {
             var commits = GetCommitsForSelectedBranch(repository);
 
@@ -101,7 +101,7 @@ namespace Analyzer.Data.Repository
             reportRange.End = GetLastCommit(commits);
         }
 
-        private ICommitLog GetCommitsForSelectedBranch(Repository repository)
+        private ICommitLog GetCommitsForSelectedBranch(LibGit2Sharp.Repository repository)
         {
             var filter = new CommitFilter
             {

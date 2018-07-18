@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Analyzer.Domain;
 using Analyzer.Domain.Developer;
-using Analyzer.Domain.Repository;
+using Analyzer.Domain.SourceRepository;
 
 namespace Analyzer
 {

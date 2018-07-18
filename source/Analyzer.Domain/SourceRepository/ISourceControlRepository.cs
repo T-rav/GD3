@@ -2,7 +2,7 @@
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 
-namespace Analyzer.Domain.Repository
+namespace Analyzer.Domain.SourceRepository
 {
     public interface ISourceControlRepository
     {

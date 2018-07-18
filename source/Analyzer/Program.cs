@@ -1,6 +1,6 @@
 ﻿using System;
 using Analyzer.Data;
-using Analyzer.Data.Repository;
+using Analyzer.Data.SourceRepository;
 
 namespace Analyzer
 {
