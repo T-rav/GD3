@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Analyzer.Domain.Reporting
 {
@@ -54,6 +55,18 @@ namespace Analyzer.Domain.Reporting
         private static bool NoPartialWeek(double weeks)
         {
             return (int)weeks == weeks;
+        }
+
+        public List<DateTime> Generate_Dates_For_Range()
+        {
+            var result = new List<DateTime>();
+            var seed = Start.Date;
+            var totalDays = (End - Start).Days;
+            for (var i = 0; i <= totalDays; i++)
+            {
+                result.Add(seed.AddDays(i));
+            }
+            return result;
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Analyzer.Domain.Team
 {
     public class TeamStats
     {
+        public DateTime DateOf { get; set; }
+
         public int TotalCommits { get; set; }
         public int ActiveDevelopers { get; set; }
 

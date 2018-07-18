@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Analyzer.Domain.Reporting;
 using FluentAssertions;
 using NUnit.Framework;
@@ -174,6 +175,49 @@ namespace Analyzer.Tests.Reporting
                 // assert
                 var expected = 96;
                 actual.Should().Be(expected);
+            }
+        }
+
+        [TestFixture]
+        public class Generate_Dates_For_Range
+        {
+            [Test]
+            public void WhenStartBeforeEnd_ExpectListOfDaysBetweenAndIncludingStartAndEnd()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-01"),
+                    End = DateTime.Parse("2018-07-05")
+                };
+                // act
+                var actual = sut.Generate_Dates_For_Range();
+                // assert
+                var expected = new List<DateTime>
+                {
+                    DateTime.Parse("2018-07-01"),
+                    DateTime.Parse("2018-07-02"),
+                    DateTime.Parse("2018-07-03"),
+                    DateTime.Parse("2018-07-04"),
+                    DateTime.Parse("2018-07-05")
+                };
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [TestCase("2018-07-05", "2018-07-01")]
+            [TestCase("2018-07-05", "2018-07-04")]
+            public void WhenEndBeforeStart_ExpectEmptyList(DateTime start, DateTime end)
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = start,
+                    End = end
+                };
+                // act
+                var actual = sut.Generate_Dates_For_Range();
+                // assert
+                actual.Should().BeEmpty();
             }
         }
     }

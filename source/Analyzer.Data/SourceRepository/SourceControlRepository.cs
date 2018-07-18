@@ -5,6 +5,7 @@ using Analyzer.Domain;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
+using Analyzer.Domain.Team;
 using LibGit2Sharp;
 
 namespace Analyzer.Data.SourceRepository
@@ -76,6 +77,31 @@ namespace Analyzer.Data.SourceRepository
                                                 Ptt100 = changeStats.Ptt100
                 };
                 result.Add(stats);
+            }
+
+            return result;
+        }
+
+        public List<TeamStats> Build_Team_Stats()
+        {
+            var result = new List<TeamStats>();
+
+            var dateRange = ReportingRange.Generate_Dates_For_Range();
+            var commits = GetCommits();
+
+            foreach (var date in dateRange)
+            {
+                var daysCommits = commits
+                                  .Where(x => x.Author.When.Date == date.Date);
+                var developers = daysCommits
+                                .GroupBy(x => x.Author.Email)
+                                .Select(x => x.First());
+                result.Add(new TeamStats
+                {
+                    DateOf = date.Date,
+                    TotalCommits = daysCommits.Count(),
+                    ActiveDevelopers = developers.Count()
+                });
             }
 
             return result;

@@ -185,4 +185,4 @@ printTeamDashboard
 # team titans and code instances
 
 # clean up
-rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper $teamCommitStats
+#rm $dataPath $rawCommitStats $individualCommitStats $activeDaysPerDeveloper $teamCommitStats
