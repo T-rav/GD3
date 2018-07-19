@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Analyzer.Domain.Developer
 {
@@ -10,6 +11,16 @@ namespace Analyzer.Domain.Developer
         public Author()
         {
             Emails = new List<string>();
+        }
+
+        public override string ToString()
+        {
+            if (Name.ToLower() == "unknown")
+            {
+                return Emails.First();
+            }
+
+            return Name;
         }
     }
 }

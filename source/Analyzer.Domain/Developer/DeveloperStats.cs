@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Analyzer.Domain.Developer
 {
@@ -35,7 +36,7 @@ namespace Analyzer.Domain.Developer
         public override string ToString()
         {
             return //$"{PaddedPrint(Rank, 7)}" +
-                   $"{PaddedPrint(Author.Name, 26)}" +
+                   $"{PaddedPrint(Author, 26)}" +
                    $"{PaddedPrint(PeriodActiveDays, 21)}" +
                    $"{PaddedPrint(ActiveDaysPerWeek, 23)}" +
                    $"{PaddedPrint(CommitsPerDay, 16)}" +
@@ -52,7 +53,7 @@ namespace Analyzer.Domain.Developer
 
         private string PaddedPrint(object value, int fieldWidth)
         {
-            return value.ToString().PadRight(fieldWidth,  ' ');
+            return value.ToString().PadRight(fieldWidth, ' ');
         }
     }
 }

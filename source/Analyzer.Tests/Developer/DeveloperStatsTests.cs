@@ -11,7 +11,7 @@ namespace Analyzer.Tests.Developer
         public void RiskFactor_WhenLinesOfchangePerHourAndCommitsPerDayZero_ShouldReturnZero()
         {
             // arragne
-            var sut = new DeveloperStats {LinesOfChangePerHour = 0, CommitsPerDay = 0};
+            var sut = new DeveloperStats { LinesOfChangePerHour = 0, CommitsPerDay = 0 };
             // act
             var actual = sut.RiskFactor;
             // assert
