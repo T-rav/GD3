@@ -10,6 +10,20 @@ namespace Analyzer.Tests.Reporting
     public class ReportingPeriodTests
     {
         [TestFixture]
+        public class Construction
+        {
+            [Test]
+            public void Should_Initalize_Weekends()
+            {
+                // arrange
+                // act
+                var sut = new ReportingPeriod();
+                // assert
+                sut.Weekends.Should().NotBeNull();
+            }
+        }
+
+        [TestFixture]
         public class Period_Days
         {
             [Test]
@@ -211,7 +225,8 @@ namespace Analyzer.Tests.Reporting
                 var sut = new ReportingPeriod
                 {
                     Start = DateTime.Parse("2018-07-01"),
-                    End = DateTime.Parse("2018-07-15")
+                    End = DateTime.Parse("2018-07-15"),
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
                 };
                 // act
                 var actual = sut.Generate_Dates_For_Range();

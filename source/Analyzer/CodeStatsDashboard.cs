@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
+using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
 using Analyzer.Domain.Team;
 
@@ -26,7 +27,7 @@ namespace Analyzer
             PrintApplicationHeader(repo.ReportingRange.Start, repo.ReportingRange.End);
             PrintDeveloperStatsTableHeader();
             PrintDeveloperStatsTable(stats);
-            PrintDeveloperAverages(stats, repo.ReportingRange.Period_Days());
+            PrintDeveloperAverages(stats, repo.ReportingRange);
             PrintTeamStatsTableHeader();
             PrintTeamStatsTable(teamStats);
         }
@@ -39,7 +40,7 @@ namespace Analyzer
             Console.WriteLine($"For period {start:yyyy-MM-dd} - {end:yyyy-MM-dd}");
             Console.ForegroundColor = DefaultColor;
         }
-        
+
         private void PrintDeveloperStatsTableHeader()
         {
             PrintDashedLine();
@@ -51,27 +52,27 @@ namespace Analyzer
             PrintDashedLine();
         }
 
-        private void PrintDeveloperAverages(List<DeveloperStats> stats, int totalPeriodDays)
+        private void PrintDeveloperAverages(List<DeveloperStats> stats, ReportingPeriod reportingPeriod)
         {
-            var totalDevelopers = stats.Count*1.0;
+            var totalDevelopers = stats.Count * 1.0;
 
-            var periodActiveDays = Math.Round(stats.Sum(x => x.PeriodActiveDays) / totalDevelopers,2);
-            var activeDays = Math.Round(stats.Sum(x => x.ActiveDaysPerWeek) / totalDevelopers,2);
-            var commitsPerDay = Math.Round(stats.Sum(x => x.CommitsPerDay) / totalDevelopers,2);
-            var linesOfChange = Math.Round(stats.Sum(x => x.LinesOfChangePerHour) / totalDevelopers,2);
-            var impact = Math.Round(stats.Sum(x => x.Impact) / totalDevelopers,2);
-            var riskFactor = Math.Round(stats.Sum(x => x.RiskFactor) / totalDevelopers,2);
-            var linesAdded = Math.Round(stats.Sum(x => x.LinesAdded) / totalDevelopers,2);
-            var linesRemoved = Math.Round(stats.Sum(x => x.LinesRemoved) / totalDevelopers,2);
-            var churn = Math.Round(stats.Sum(x => x.Churn) / totalDevelopers,2);
-            var rtt100 = Math.Round(stats.Sum(x => x.Rtt100) / totalDevelopers,2);
-            var ptt100 = Math.Round(stats.Sum(x => x.Ptt100) / totalDevelopers,2);
-            var dtt100 = Math.Round(stats.Sum(x => x.Dtt100) / totalDevelopers,2);
+            var periodActiveDays = Math.Round(stats.Sum(x => x.PeriodActiveDays) / totalDevelopers, 2);
+            var activeDays = Math.Round(stats.Sum(x => x.ActiveDaysPerWeek) / totalDevelopers, 2);
+            var commitsPerDay = Math.Round(stats.Sum(x => x.CommitsPerDay) / totalDevelopers, 2);
+            var linesOfChange = Math.Round(stats.Sum(x => x.LinesOfChangePerHour) / totalDevelopers, 2);
+            var impact = Math.Round(stats.Sum(x => x.Impact) / totalDevelopers, 2);
+            var riskFactor = Math.Round(stats.Sum(x => x.RiskFactor) / totalDevelopers, 2);
+            var linesAdded = Math.Round(stats.Sum(x => x.LinesAdded) / totalDevelopers, 2);
+            var linesRemoved = Math.Round(stats.Sum(x => x.LinesRemoved) / totalDevelopers, 2);
+            var churn = Math.Round(stats.Sum(x => x.Churn) / totalDevelopers, 2);
+            var rtt100 = Math.Round(stats.Sum(x => x.Rtt100) / totalDevelopers, 2);
+            var ptt100 = Math.Round(stats.Sum(x => x.Ptt100) / totalDevelopers, 2);
+            var dtt100 = Math.Round(stats.Sum(x => x.Dtt100) / totalDevelopers, 2);
 
-            var renderedLine = $"{PaddedPrint("Averages",26)}" +
-                               $"{PaddedPrint($"{periodActiveDays} of {totalPeriodDays}", 21)}" +
-                               $"{PaddedPrint($"{activeDays}*",23)}" +
-                               $"{PaddedPrint(commitsPerDay,16)}" +
+            var renderedLine = $"{PaddedPrint("Averages", 26)}" +
+                               $"{PaddedPrint($"{periodActiveDays} of {reportingPeriod.Period_Working_Days()}", 21)}" +
+                               $"{PaddedPrint($"{activeDays}*", 23)}" +
+                               $"{PaddedPrint(commitsPerDay, 16)}" +
                                $"{PaddedPrint(linesOfChange, 27)}" +
                                $"{PaddedPrint($"{impact}^", 9)}" +
                                $"{PaddedPrint(riskFactor, 14)}" +
@@ -84,9 +85,17 @@ namespace Analyzer
 
             Console.WriteLine(renderedLine);
             PrintDashedLine();
-            Console.WriteLine("* Global average is 3.2 days per week");
+            var repoAvg = CalculateRepositoryAverageWorkingDaysPerWeek(reportingPeriod);
+            Console.WriteLine($"* Expected average is {repoAvg} days. This is based on global average of 3.2 days per 5 workings days or 5.12 hours per 8 working hours.");
             Console.WriteLine("^ Approximation of congative load carried when contributing");
             PrintDashedLine();
+        }
+
+        private static double CalculateRepositoryAverageWorkingDaysPerWeek(ReportingPeriod reportingPeriod)
+        {
+            var avgHoursPerDay = 5.12;
+            var repoAvg = (reportingPeriod.DaysPerWeek * avgHoursPerDay) / reportingPeriod.Period_Weeks();
+            return repoAvg;
         }
 
         private void PrintDeveloperStatsTable(List<DeveloperStats> stats)

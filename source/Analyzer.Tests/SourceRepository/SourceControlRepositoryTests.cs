@@ -341,7 +341,7 @@ namespace Analyzer.Tests.SourceRepository
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/TusaniG")
-                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-12"))
+                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-11"))
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});

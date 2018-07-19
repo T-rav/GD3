@@ -17,13 +17,13 @@ namespace Analyzer
     {
         static void Main(string[] args)
         {
-           
+
             if (args.Length < 1)
             {
                 PrintNoGitRepositoryPathError();
                 return;
             }
-            
+
             var startDate = DateTime.Parse("2017-01-04");
             var endDate = DateTime.Parse("2017-06-15");
             var repo = new SourceControlRepositoryBuilder()
@@ -33,6 +33,8 @@ namespace Analyzer
                             //.WithBranch("origin/SindisiweK")
                             .WithIgnorePattern("node_modules")
                             .WithIgnorePattern("packages")
+                            .WithWeekend(DayOfWeek.Saturday)
+                            .WithWeekend(DayOfWeek.Sunday)
                             .WithWorkingWeekHours(32)
                             .WithWorkingDaysPerWeek(4)
                             .Build();

@@ -17,6 +17,7 @@ namespace Analyzer.Data.SourceRepository
         private string _branch;
         private bool _isEntireHistory;
         private readonly List<string> _ignorePatterns;
+        private List<DayOfWeek> _weekends;
 
         public SourceControlRepositoryBuilder()
         {
@@ -24,6 +25,7 @@ namespace Analyzer.Data.SourceRepository
             _workingDaysPerWeek = 5;
             _branch = "HEAD";
             _ignorePatterns = new List<string>();
+            _weekends = new List<DayOfWeek>();
         }
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
@@ -39,7 +41,7 @@ namespace Analyzer.Data.SourceRepository
             _isEntireHistory = false;
             return this;
         }
-        
+
         public SourceControlRepositoryBuilder WithWorkingWeekHours(int workWeekHours)
         {
             _workWeekHours = workWeekHours;
@@ -70,6 +72,12 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
+        public SourceControlRepositoryBuilder WithWeekend(DayOfWeek day)
+        {
+            _weekends.Add(day);
+            return this;
+        }
+
         public ISourceControlRepository Build()
         {
             if (NotValidGitRepository(_repoPath))
@@ -82,7 +90,7 @@ namespace Analyzer.Data.SourceRepository
             {
                 throw new Exception($"Invalid branch [{_branch}]");
             }
-            
+
             var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek };
 
             if (_isEntireHistory)
@@ -142,5 +150,6 @@ namespace Analyzer.Data.SourceRepository
         {
             throw new NotImplementedException();
         }
+
     }
 }

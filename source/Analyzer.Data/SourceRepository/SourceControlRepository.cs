@@ -39,7 +39,7 @@ namespace Analyzer.Data.SourceRepository
             // then combine all keys into a new result
             foreach (var author in authors)
             {
-                
+
             }
 
             return authors;
@@ -48,13 +48,13 @@ namespace Analyzer.Data.SourceRepository
         public IEnumerable<Author> List_Authors()
         {
             var authors = GetCommits()
-                            .GroupBy(x=>x.Author.Email)
-                            .Select(x=>x.First())
+                            .GroupBy(x => x.Author.Email)
+                            .Select(x => x.First())
                             .Select(x => new Author
-                             {
-                                 Name = x.Author.Name,
-                                 Emails = new List<string> { x.Author.Email }
-                             });
+                            {
+                                Name = x.Author.Name,
+                                Emails = new List<string> { x.Author.Email }
+                            });
             return authors;
         }
 
@@ -64,17 +64,19 @@ namespace Analyzer.Data.SourceRepository
             foreach (var developer in authors)
             {
                 var changeStats = Change_Stats(developer);
-                var stats = new DeveloperStats {Author = developer,
-                                                PeriodActiveDays = Period_Active_Days(developer),
-                                                ActiveDaysPerWeek = Active_Days_Per_Week(developer),
-                                                CommitsPerDay = Commits_Per_Day(developer),
-                                                Impact = Impact(developer),
-                                                LinesOfChangePerHour = changeStats.ChangePerHour,
-                                                LinesAdded = changeStats.Added,
-                                                LinesRemoved = changeStats.Removed,
-                                                Churn = changeStats.Churn,
-                                                Rtt100 = changeStats.Rtt100,
-                                                Ptt100 = changeStats.Ptt100
+                var stats = new DeveloperStats
+                {
+                    Author = developer,
+                    PeriodActiveDays = Period_Active_Days(developer),
+                    ActiveDaysPerWeek = Active_Days_Per_Week(developer),
+                    CommitsPerDay = Commits_Per_Day(developer),
+                    Impact = Impact(developer),
+                    LinesOfChangePerHour = changeStats.ChangePerHour,
+                    LinesAdded = changeStats.Added,
+                    LinesRemoved = changeStats.Removed,
+                    Churn = changeStats.Churn,
+                    Rtt100 = changeStats.Rtt100,
+                    Ptt100 = changeStats.Ptt100
                 };
                 result.Add(stats);
             }
@@ -112,9 +114,9 @@ namespace Analyzer.Data.SourceRepository
             var activeDays = GetCommits()
                 .Where(x => author.Emails.Contains(x.Author.Email))
                 .Select(x => new
-                 {
-                     x.Author.When.UtcDateTime.Date
-                 }).GroupBy(x => x.Date)
+                {
+                    x.Author.When.UtcDateTime.Date
+                }).GroupBy(x => x.Date)
                 .Select(x => x.First());
 
             return activeDays.Count();
@@ -162,8 +164,8 @@ namespace Analyzer.Data.SourceRepository
                     totalScore += changeImpactData.Calculate();
                 }
             }
-            
-            return Math.Round(totalScore/100,2);
+
+            return Math.Round(totalScore / 100, 2);
         }
 
         private Impact CalculateImpactStats(Patch fileChanges)
@@ -199,7 +201,7 @@ namespace Analyzer.Data.SourceRepository
 
             var developerCommits = GetCommits()
                 .Where(x => developer.Emails.Contains(x.Author.Email))
-                .OrderBy(x=>x.Author.When.Date);
+                .OrderBy(x => x.Author.When.Date);
             foreach (var commit in developerCommits)
             {
                 if (!commit.Parents.Any())
@@ -220,8 +222,8 @@ namespace Analyzer.Data.SourceRepository
 
             var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
             result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines);
-            result.Rtt100 = Math.Round(100.0 / result.ChangePerHour,2);
-            result.Ptt100 = Math.Round(100.0 / productionLinesPerHour ,2);
+            result.Rtt100 = Math.Round(100.0 / result.ChangePerHour, 2);
+            result.Ptt100 = Math.Round(100.0 / productionLinesPerHour, 2);
 
             return result;
         }
@@ -230,7 +232,7 @@ namespace Analyzer.Data.SourceRepository
         {
             var periodHoursWorked = ReportingRange.HoursPerWeek * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
-            return Math.Round(linesPerHour,2);
+            return Math.Round(linesPerHour, 2);
         }
 
         private IEnumerable<Commit> GetCommits()
@@ -240,7 +242,7 @@ namespace Analyzer.Data.SourceRepository
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
 
-            if(_branch != "HEAD")
+            if (NotMaster())
             {
                 filter.ExcludeReachableFrom = _repository.Head;
             }
@@ -250,6 +252,11 @@ namespace Analyzer.Data.SourceRepository
             return commitLog
                 .Where(x => x.Author.When.Date >= ReportingRange.Start.Date &&
                         x.Author.When.Date <= ReportingRange.End.Date);
+        }
+
+        private bool NotMaster()
+        {
+            return _branch != "HEAD";
         }
     }
 }

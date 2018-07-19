@@ -9,8 +9,14 @@ namespace Analyzer.Domain.Reporting
         public DateTime End { get; set; }
         public int HoursPerWeek { get; set; }
         public double DaysPerWeek { get; set; }
+        public List<DayOfWeek> Weekends { get; set; }
 
         private const double DaysInWeek = 7.0;
+
+        public ReportingPeriod()
+        {
+            Weekends = new List<DayOfWeek>();
+        }
 
         public int Period_Days()
         {
@@ -43,7 +49,7 @@ namespace Analyzer.Domain.Reporting
             {
                 weeks = 1;
             }
-            return Math.Round(weeks,0);
+            return Math.Round(weeks, 0);
         }
 
         public double Period_Working_Hours()
@@ -65,14 +71,17 @@ namespace Analyzer.Domain.Reporting
             for (var i = 0; i <= totalDays; i++)
             {
                 var canidateDate = seed.AddDays(i);
-                // todo : make this configurable
-                if (canidateDate.DayOfWeek != DayOfWeek.Sunday 
-                    && canidateDate.DayOfWeek != DayOfWeek.Saturday)
+                if (WorkDay(canidateDate))
                 {
                     result.Add(canidateDate);
                 }
             }
             return result;
+        }
+
+        private bool WorkDay(DateTime canidateDate)
+        {
+            return !Weekends.Contains(canidateDate.DayOfWeek);
         }
     }
 }
