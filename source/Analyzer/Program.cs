@@ -33,6 +33,7 @@ namespace Analyzer
                             //.WithBranch("origin/SindisiweK")
                             .WithIgnorePattern("node_modules")
                             .WithIgnorePattern("packages")
+                            .WithIgnorePattern(".gitignore")
                             .WithWeekend(DayOfWeek.Saturday)
                             .WithWeekend(DayOfWeek.Sunday)
                             .WithWorkingWeekHours(32)
