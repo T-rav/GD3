@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Analyzer.Domain
+namespace Analyzer.Domain.Reporting
 {
     public class LinesOfChange
     {
@@ -15,7 +15,7 @@ namespace Analyzer.Domain
         {
             get
             {
-                var result = Math.Round((double) Removed / Added, 2);
+                var result = Math.Round((double)Removed / Added, 2);
                 if (result.Equals(Double.NaN) || result.Equals(Double.PositiveInfinity))
                 {
                     return 0.0;

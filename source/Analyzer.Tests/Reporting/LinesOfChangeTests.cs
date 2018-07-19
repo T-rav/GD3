@@ -1,4 +1,5 @@
 ﻿using Analyzer.Domain;
+using Analyzer.Domain.Reporting;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace Analyzer.Tests.Reporting
         public void Churn_WhenRemovedAndAddedZero_ShouldReturnZero()
         {
             // arrange
-            var sut = new LinesOfChange {Removed = 0, Added = 0};
+            var sut = new LinesOfChange { Removed = 0, Added = 0 };
             // act
             var actual = sut.Churn;
             // assert

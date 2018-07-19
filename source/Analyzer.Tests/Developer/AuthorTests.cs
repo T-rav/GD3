@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Analyzer.Domain;
 using Analyzer.Domain.Developer;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Analyzer.Tests
+namespace Analyzer.Tests.Developer
 {
     [TestFixture]
     public class AuthorTests

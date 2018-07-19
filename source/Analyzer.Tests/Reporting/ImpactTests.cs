@@ -1,9 +1,8 @@
-﻿using Analyzer.Domain;
-using Analyzer.Domain.Reporting;
+﻿using Analyzer.Domain.Reporting;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Analyzer.Tests
+namespace Analyzer.Tests.Reporting
 {
     [TestFixture]
     public class ImpactTests
@@ -34,7 +33,7 @@ namespace Analyzer.Tests
                 TotalLinesOfOldCode = 0,
                 TotalFiles = 1,
                 TotalEditLocations = 2
-                
+
             };
             // act
             var actual = sut.Calculate();
