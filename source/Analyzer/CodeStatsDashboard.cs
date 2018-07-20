@@ -93,8 +93,8 @@ namespace Analyzer
 
         private static double CalculateRepositoryAverageWorkingDaysPerWeek(ReportingPeriod reportingPeriod)
         {
-            var avgHoursPerDay = 5.12;
-            var repoAvg = (reportingPeriod.DaysPerWeek * avgHoursPerDay) / reportingPeriod.Period_Weeks();
+            var percentDaysWorked = 0.64; // note: based on gitprime's stat of 3.2 for 5 day work week as a global average
+            var repoAvg = (reportingPeriod.DaysPerWeek * percentDaysWorked);
             return repoAvg;
         }
 

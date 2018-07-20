@@ -24,8 +24,8 @@ namespace Analyzer
                 return;
             }
 
-            var startDate = DateTime.Parse("2017-01-04");
-            var endDate = DateTime.Parse("2017-06-15");
+            var startDate = DateTime.Parse("2018-07-16");
+            var endDate = DateTime.Parse("2018-07-20");
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithEntireHistory()
