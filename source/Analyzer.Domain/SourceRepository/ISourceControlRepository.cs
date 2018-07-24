@@ -15,6 +15,6 @@ namespace Analyzer.Domain.SourceRepository
         double Active_Days_Per_Week(Author author);
         double Commits_Per_Day(Author author);
         List<DeveloperStats> Build_Individual_Developer_Stats(IEnumerable<Author> authors);
-        List<TeamStats> Build_Team_Stats();
+        TeamStatsCollection Build_Team_Stats();
     }
 }

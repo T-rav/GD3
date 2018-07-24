@@ -1,5 +1,4 @@
 ﻿using System;
-using Analyzer.Data;
 using Analyzer.Data.SourceRepository;
 
 namespace Analyzer
@@ -24,8 +23,8 @@ namespace Analyzer
                 return;
             }
 
-            var startDate = DateTime.Parse("2018-07-16");
-            var endDate = DateTime.Parse("2018-07-20");
+            var startDate = DateTime.Parse("2018-07-23");
+            var endDate = DateTime.Parse("2018-07-23");
             var repo = new SourceControlRepositoryBuilder()
                             .WithPath(args[0])
                             .WithEntireHistory()

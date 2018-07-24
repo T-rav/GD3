@@ -1,5 +1,4 @@
-﻿using Analyzer.Domain;
-using Analyzer.Domain.Reporting;
+﻿using Analyzer.Domain.Reporting;
 using FluentAssertions;
 using NUnit.Framework;
 

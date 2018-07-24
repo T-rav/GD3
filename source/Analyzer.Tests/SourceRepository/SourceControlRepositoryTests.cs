@@ -5,7 +5,6 @@ using System.Linq;
 using Analyzer.Data.SourceRepository;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Team;
-using Analyzer.Tests.Team;
 using FluentAssertions;
 using NUnit.Framework;
 

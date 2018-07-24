@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Analyzer.Domain;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
@@ -84,9 +83,9 @@ namespace Analyzer.Data.SourceRepository
             return result;
         }
 
-        public List<TeamStats> Build_Team_Stats()
+        public TeamStatsCollection Build_Team_Stats()
         {
-            var result = new List<TeamStats>();
+            var teamStats = new List<TeamStats>();
 
             var dateRange = ReportingRange.Generate_Dates_For_Range();
             var commits = GetCommits();
@@ -98,7 +97,7 @@ namespace Analyzer.Data.SourceRepository
                 var developers = daysCommits
                                 .GroupBy(x => x.Author.Email)
                                 .Select(x => x.First());
-                result.Add(new TeamStats
+                teamStats.Add(new TeamStats
                 {
                     DateOf = date.Date,
                     TotalCommits = daysCommits.Count(),
@@ -106,7 +105,7 @@ namespace Analyzer.Data.SourceRepository
                 });
             }
 
-            return result;
+            return new TeamStatsCollection(teamStats, ReportingRange.Weekends);
         }
 
         public int Period_Active_Days(Author author)

@@ -119,9 +119,11 @@ namespace Analyzer
             PrintDashedLine();
         }
 
-        private void PrintTeamStatsTable(List<TeamStats> teamStats)
+        private void PrintTeamStatsTable(TeamStatsCollection teamStats)
         {
-            var orderedStats = teamStats.OrderBy(x => x.DateOf);
+            var orderedStats = teamStats
+                                .GetWorkDayStats()
+                                .OrderBy(x => x.DateOf);
             foreach (var stat in orderedStats)
             {
                 Console.WriteLine(stat);
