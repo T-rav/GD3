@@ -40,7 +40,6 @@ namespace Analyzer
 
             var dashboard = new CodeStatsDashboard();
             dashboard.RenderDashboard(repo);
-
             return 1;
         }
 
