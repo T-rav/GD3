@@ -560,13 +560,23 @@ namespace Analyzer.Tests.SourceRepository
 
                 actual.Should().BeEquivalentTo(expected);
             }
+
         }
 
         private static string TestRepoPath(string repo)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            var repoPath = Path.Combine(basePath, "..", "..", "..", "..","..", repo);
+            var rootPath = GetRootPath(basePath);
+            var repoPath = Path.Combine(rootPath, repo);
             return repoPath;
+        }
+
+        private static string GetRootPath(string basePath)
+        {
+            var source = "source";
+            var indexOf = basePath.IndexOf(source, StringComparison.Ordinal);
+            var rootPath = basePath.Substring(0, indexOf);
+            return rootPath;
         }
     }
 }
