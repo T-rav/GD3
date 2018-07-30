@@ -16,7 +16,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOps", "DevOps\Tools.csproj", "{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "DevOps\Tools.csproj", "{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F5A543B5-E225-4222-8937-EEB84639D318}"
+	ProjectSection(SolutionItems) = preProject
+		DevOps\coverage.sh = DevOps\coverage.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,7 +54,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A} = {8C007DA0-626F-4821-9AAA-6AC31A454231}
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A} = {F5A543B5-E225-4222-8937-EEB84639D318}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6CB6599C-1738-442C-BE28-A097921B683A}

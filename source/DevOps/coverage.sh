@@ -11,7 +11,7 @@ rm -f coverage.xml
 rm -f coverage.json
 rm -rf coverage-html
 
-cd tools/DevOpsTools
+cd DevOps
 
 # Instrument assemblies inside 'test' folder to detect hits for source files inside 'src' folder
 dotnet minicover instrument --workdir $workingDir --assemblies *.Tests/**/bin/**/*.dll  --sources **/*.cs
