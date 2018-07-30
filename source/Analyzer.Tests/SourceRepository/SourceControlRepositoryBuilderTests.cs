@@ -27,7 +27,7 @@ namespace Analyzer.Tests.SourceRepository
         public void WhenInvalidBranch_ShouldReturnDeveloperList()
         {
             // arrange
-            var repoPath = TestRepoPath();
+            var repoPath = TestRepoPath("test-repo");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
@@ -42,7 +42,7 @@ namespace Analyzer.Tests.SourceRepository
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            var repoPath = TestRepoPath();
+            var repoPath = TestRepoPath("gd3-testoperations");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithEntireHistory()
@@ -50,15 +50,15 @@ namespace Analyzer.Tests.SourceRepository
             // act
             var actual = sut.ReportingRange;
             // assert
-            actual.Start.Should().Be(DateTime.Parse("2018-06-25"));
-            actual.End.Should().Be(DateTime.Parse("2018-07-12"));
+            actual.Start.Should().Be(DateTime.Parse("2018-07-16"));
+            actual.End.Should().Be(DateTime.Parse("2018-07-17"));
         }
 
         [Test]
         public void WhenNullIgnorePatterns_ShouldNotThrowException()
         {
             // arrange
-            var repoPath = TestRepoPath();
+            var repoPath = TestRepoPath("test-repo");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithIgnorePatterns(null);
@@ -67,10 +67,10 @@ namespace Analyzer.Tests.SourceRepository
             Assert.DoesNotThrow(() => sut.Build());
         }
 
-        private static string TestRepoPath()
+        private static string TestRepoPath(string repo)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            var repoPath = Path.Combine(basePath, "..", "..", "..", "..", "..", "test-repo");
+            var repoPath = Path.Combine(basePath, "..", "..", "..", "..", "..", repo);
             return repoPath;
         }
     }
