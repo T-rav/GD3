@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.txt = README.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevOps", "DevOps\Tools.csproj", "{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,9 +40,16 @@ Global
 		{0E93F86A-7F37-459A-B55D-934B1A7B24BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E93F86A-7F37-459A-B55D-934B1A7B24BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E93F86A-7F37-459A-B55D-934B1A7B24BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A} = {8C007DA0-626F-4821-9AAA-6AC31A454231}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6CB6599C-1738-442C-BE28-A097921B683A}
