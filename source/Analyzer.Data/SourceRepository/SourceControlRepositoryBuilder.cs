@@ -124,7 +124,6 @@ namespace Analyzer.Data.SourceRepository
             }
 
             var commitLog = repository.Commits.QueryBy(filter);
-            commitLog.OrderBy(x => x.Author.When.Date);
             return commitLog;
         }
 
