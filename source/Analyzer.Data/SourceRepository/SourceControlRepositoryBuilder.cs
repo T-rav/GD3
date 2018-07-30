@@ -93,7 +93,7 @@ namespace Analyzer.Data.SourceRepository
                 throw new Exception($"Invalid branch [{_branch}]");
             }
 
-            var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek };
+            var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek, Weekends = _weekends};
 
             if (_isEntireHistory)
             {

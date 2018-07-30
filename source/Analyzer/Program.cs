@@ -50,7 +50,7 @@ namespace Analyzer
                             .WithPath(opts.Path)
                             .WithRange(opts.StartDate, opts.EndDate)
                             .WithIgnorePatterns(opts.IgnorePatterns)
-                            //.WithBranch(opts.Branch)
+                            .WithBranch(opts.Branch)
                             .WithWeekends(opts.WeekendDays)
                             .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                             .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
