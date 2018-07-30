@@ -493,7 +493,7 @@ namespace Analyzer.Tests.SourceRepository
                 // act
                 var actual = sut.Build_Team_Stats();
                 // assert
-                var expected = new List<TeamStats>
+                var stats = new List<TeamStats>
                 {
                     new TeamStats
                     {
@@ -502,6 +502,7 @@ namespace Analyzer.Tests.SourceRepository
                         TotalCommits = 8
                     }
                 };
+                var expected = new TeamStatsCollection(stats, new List<DayOfWeek>());
 
                 actual.Should().BeEquivalentTo(expected);
             }
@@ -521,7 +522,7 @@ namespace Analyzer.Tests.SourceRepository
                 // act
                 var actual = sut.Build_Team_Stats();
                 // assert
-                var expected = new List<TeamStats>
+                var stats = new List<TeamStats>
                 {
                     new TeamStats
                     {
@@ -554,6 +555,8 @@ namespace Analyzer.Tests.SourceRepository
                         TotalCommits = 0
                     }
                 };
+
+                var expected = new TeamStatsCollection(stats, new List<DayOfWeek>());
 
                 actual.Should().BeEquivalentTo(expected);
             }
