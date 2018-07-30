@@ -54,6 +54,19 @@ namespace Analyzer.Tests.SourceRepository
             actual.End.Should().Be(DateTime.Parse("2018-07-12"));
         }
 
+        [Test]
+        public void WhenNullIgnorePatterns_ShouldNotThrowException()
+        {
+            // arrange
+            var repoPath = TestRepoPath();
+            var sut = new SourceControlRepositoryBuilder()
+                .WithPath(repoPath)
+                .WithIgnorePatterns(null);
+            // act
+            // assert
+            Assert.DoesNotThrow(() => sut.Build());
+        }
+
         private static string TestRepoPath()
         {
             var basePath = TestContext.CurrentContext.TestDirectory;

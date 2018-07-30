@@ -17,7 +17,7 @@ namespace Analyzer.Data.SourceRepository
         private string _branch;
         private bool _isEntireHistory;
         private readonly List<string> _ignorePatterns;
-        private List<DayOfWeek> _weekends;
+        private readonly List<DayOfWeek> _weekends;
 
         public SourceControlRepositoryBuilder()
         {
@@ -60,9 +60,11 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithIgnorePattern(string pattern)
+        public SourceControlRepositoryBuilder WithIgnorePatterns(IEnumerable<string> patterns)
         {
-            _ignorePatterns.Add(pattern);
+            if (patterns == null) return this;
+
+            _ignorePatterns.AddRange(patterns);
             return this;
         }
 
@@ -72,9 +74,9 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithWeekend(DayOfWeek day)
+        public SourceControlRepositoryBuilder WithWeekends(IEnumerable<DayOfWeek> days)
         {
-            _weekends.Add(day);
+            _weekends.AddRange(days);
             return this;
         }
 
@@ -85,7 +87,7 @@ namespace Analyzer.Data.SourceRepository
                 throw new Exception($"Invalid path [{_repoPath}]");
             }
 
-            var repository = new LibGit2Sharp.Repository(_repoPath);
+            var repository = new Repository(_repoPath);
             if (InvalidBranchName(repository))
             {
                 throw new Exception($"Invalid branch [{_branch}]");
@@ -101,7 +103,7 @@ namespace Analyzer.Data.SourceRepository
             return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns);
         }
 
-        private void MakeRangeEntireHistory(LibGit2Sharp.Repository repository, ReportingPeriod reportRange)
+        private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)
         {
             var commits = GetCommitsForSelectedBranch(repository);
 
@@ -109,7 +111,7 @@ namespace Analyzer.Data.SourceRepository
             reportRange.End = GetLastCommit(commits);
         }
 
-        private ICommitLog GetCommitsForSelectedBranch(LibGit2Sharp.Repository repository)
+        private ICommitLog GetCommitsForSelectedBranch(Repository repository)
         {
             var filter = new CommitFilter
             {

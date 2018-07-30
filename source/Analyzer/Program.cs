@@ -1,5 +1,6 @@
 ﻿using System;
 using Analyzer.Data.SourceRepository;
+using CommandLine;
 
 namespace Analyzer
 {
@@ -16,41 +17,48 @@ namespace Analyzer
     {
         static void Main(string[] args)
         {
+            Parser.Default.ParseArguments<FullHistory, RangedHistory>(args)
+                .MapResult(
+                    (FullHistory opts) => DisplayFullHistory(opts),
+                    (RangedHistory opts) => DisplayRangedHistory(opts),
+                     errors => -1);
 
-            if (args.Length < 1)
-            {
-                PrintNoGitRepositoryPathError();
-                return;
-            }
+            Console.ReadKey();
+        }
 
-            var startDate = DateTime.Parse("2018-07-23");
-            var endDate = DateTime.Parse("2018-07-23");
+        private static int DisplayFullHistory(FullHistory opts)
+        {
             var repo = new SourceControlRepositoryBuilder()
-                            .WithPath(args[0])
+                            .WithPath(opts.Path)
                             .WithEntireHistory()
-                            //.WithRange(startDate, endDate)
-                            //.WithBranch("origin/SindisiweK")
-                            .WithIgnorePattern("node_modules")
-                            .WithIgnorePattern("packages")
-                            .WithIgnorePattern(".gitignore")
-                            .WithWeekend(DayOfWeek.Saturday)
-                            .WithWeekend(DayOfWeek.Sunday)
-                            .WithWorkingWeekHours(32)
-                            .WithWorkingDaysPerWeek(4)
+                            .WithIgnorePatterns(opts.IgnorePatterns)
+                            .WithBranch(opts.Branch)
+                            .WithWeekends(opts.WeekendDays)
+                            .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
+                            .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
                             .Build();
 
             var dashboard = new CodeStatsDashboard();
             dashboard.RenderDashboard(repo);
 
-            Console.ReadKey();
+            return 1;
         }
 
-        private static void PrintNoGitRepositoryPathError()
+        private static int DisplayRangedHistory(RangedHistory opts)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Error : Need to enter a git repository path");
-            Console.ForegroundColor = CodeStatsDashboard.DefaultColor;
-            Console.ReadKey();
+            var repo = new SourceControlRepositoryBuilder()
+                            .WithPath(opts.Path)
+                            .WithRange(opts.StartDate, opts.EndDate)
+                            .WithIgnorePatterns(opts.IgnorePatterns)
+                            //.WithBranch(opts.Branch)
+                            .WithWeekends(opts.WeekendDays)
+                            .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
+                            .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
+                            .Build();
+
+            var dashboard = new CodeStatsDashboard();
+            dashboard.RenderDashboard(repo);
+            return 1;
         }
     }
 }
