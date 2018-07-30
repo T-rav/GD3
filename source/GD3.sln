@@ -7,9 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Tests", "Analyzer.Tests\Analyzer.Tests.csproj", "{C22447E5-9FA9-4930-BBB3-B05702D404E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Domain", "Analyzer.Domain\Analyzer.Domain.csproj", "{A97E7C38-F6B1-4394-A870-DB60A5A08304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Domain", "Analyzer.Domain\Analyzer.Domain.csproj", "{A97E7C38-F6B1-4394-A870-DB60A5A08304}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Data", "Analyzer.Data\Analyzer.Data.csproj", "{0E93F86A-7F37-459A-B55D-934B1A7B24BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Data", "Analyzer.Data\Analyzer.Data.csproj", "{0E93F86A-7F37-459A-B55D-934B1A7B24BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B346C140-FA03-4741-9F96-A695D984E0DD}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
