@@ -256,6 +256,25 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             [Test]
+            public void WhenNegativePtt100_ShouldReturnAbsOfValue()
+            {
+                // arrange
+                var author = new Author { Name = "Monique", Emails = new List<string> { "MoniqueG@SAHOMELOANS.COM" } };
+                var repoPath = TestRepoPath("test-repo");
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-07-31"), DateTime.Parse("2018-07-31"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                actual.FirstOrDefault().Ptt100.Should().Be(1);
+            }
+
+            [Test]
             public void WhenDeveloperActiveAcrossEntireRange_ShouldReturnStats()
             {
                 // arrange
