@@ -21,6 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F5A543B5-E225-4222-8937-EEB84639D318}"
 	ProjectSection(SolutionItems) = preProject
 		DevOps\coverage.sh = DevOps\coverage.sh
+		DevOps\release.sh = DevOps\release.sh
 	EndProjectSection
 EndProject
 Global
