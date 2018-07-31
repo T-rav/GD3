@@ -222,7 +222,7 @@ namespace Analyzer.Data.SourceRepository
             var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
             result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines);
             result.Rtt100 = Math.Round(100.0 / result.ChangePerHour, 2);
-            result.Ptt100 = Math.Round(100.0 / productionLinesPerHour, 2);
+            result.Ptt100 = Math.Abs(Math.Round(100.0 / productionLinesPerHour, 2));
 
             return result;
         }

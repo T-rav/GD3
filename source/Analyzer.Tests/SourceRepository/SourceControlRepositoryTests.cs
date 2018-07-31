@@ -271,7 +271,8 @@ namespace Analyzer.Tests.SourceRepository
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
-                actual.FirstOrDefault().Ptt100.Should().Be(1);
+                var expected = 38.61;
+                actual.FirstOrDefault().Ptt100.Should().Be(expected);
             }
 
             [Test]
