@@ -11,7 +11,7 @@ namespace Analyzer
      * 2) check to see if file moves = deletes
      * 3) find out how to catalog the '10x' factor (pairing)
      *   3a) Tusani and Siphenathi pair quite a bit. Sindi recieved a lot of help.
-     * 4) make churn personal? - Not sure this encurabes collective code ownership
+     * 4) make churn personal? - Not sure this encurrages collective code ownership
      */
     class Program
     {
