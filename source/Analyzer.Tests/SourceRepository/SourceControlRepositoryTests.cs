@@ -493,6 +493,47 @@ namespace Analyzer.Tests.SourceRepository
                 };
                 actual.Should().BeEquivalentTo(expected);
             }
+
+            [Test]
+            [Ignore("wip : flipping hard problem to solve well. might need alias work first")]
+            public void WhenCollaberating_ShouldSplitActivityBetweenCollaberators()
+            {
+                // arrange
+                var author1 = new Author { Name = "Thabani", Emails = new List<string> { "thabanitembe@hotmail.com" } };
+                var author2 = new Author { Name = "MCEBISI", Emails = new List<string> { "mcebisimkhohliwe@gmail.com" } };
+                var repoPath = TestRepoPath("test-repo");
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-08-01"), DateTime.Parse("2018-08-02"))
+                    .WithIgnorePatterns(new[] { ".orig" })
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .WithCollaberation(DateTime.Parse("2018-08-01"), author1, author2)
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author2 });
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author2,
+                        ActiveDaysPerWeek = 2.0,
+                        PeriodActiveDays = 1,
+                        CommitsPerDay = 6.0,
+                        Impact = 0.23,
+                        LinesOfChangePerHour = 5.75,
+                        LinesAdded = 174,
+                        LinesRemoved = 10,
+                        Churn = 0.06,
+                        Rtt100 = 17.39,
+                        Ptt100 = 19.53
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
+            }
         }
 
         [TestFixture]

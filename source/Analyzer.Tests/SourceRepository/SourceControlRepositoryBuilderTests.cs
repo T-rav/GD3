@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Analyzer.Data.SourceRepository;
+using Analyzer.Domain.Developer;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -65,6 +66,21 @@ namespace Analyzer.Tests.SourceRepository
             // act
             // assert
             Assert.DoesNotThrow(() => sut.Build());
+        }
+
+        [Test]
+        public void WithCollaberation_ShouldSplitDayActivityBetweenPair()
+        {
+            // arrange
+            var repoPath = TestRepoPath("test-repo");
+            var sut = new SourceControlRepositoryBuilder()
+                .WithPath(repoPath)
+                .WithCollaberation(DateTime.Parse("2018-08-01"), new Author(), new Author())
+                .Build();
+            // act
+            var actual = sut.Collaberations;
+            // assert
+            Assert.IsNotNull(actual);
         }
 
         private static string TestRepoPath(string repo)

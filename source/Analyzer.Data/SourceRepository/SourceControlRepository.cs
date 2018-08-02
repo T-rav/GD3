@@ -15,13 +15,15 @@ namespace Analyzer.Data.SourceRepository
         private readonly string _branch;
         private readonly List<string> _ignorePatterns;
 
-        public ReportingPeriod ReportingRange { get; private set; }
+        public ReportingPeriod ReportingRange { get; }
+        public List<Collaberation>  Collaberations { get; }
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, List<Collaberation> collaberations)
         {
             _repository = repository;
             _branch = branch;
             _ignorePatterns = ignorePatterns;
+            Collaberations = collaberations;
 
             ReportingRange = reportingPeriod;
         }
@@ -118,7 +120,9 @@ namespace Analyzer.Data.SourceRepository
                 }).GroupBy(x => x.Date)
                 .Select(x => x.First());
 
-            return activeDays.Count();
+            var activeDaysCount =  activeDays.Count();
+
+            return activeDaysCount;
         }
 
         public double Active_Days_Per_Week(Author author)
