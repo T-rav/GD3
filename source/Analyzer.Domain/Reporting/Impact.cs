@@ -11,16 +11,16 @@ namespace Analyzer.Domain.Reporting
 
         public double Calculate()
         {
-            var percentageOldFactor = 1.0;
-            var oldFactor = 2;
+            var percentageOldCode = 1.0;
+            var oldMultiplier = 2;
             if (TotalLinesOfOldCode > 0)
             {
                 var percentageOldEdit = ((double)TotalLinesEdited / TotalLinesOfOldCode);
-                percentageOldFactor = oldFactor * percentageOldEdit;
+                percentageOldCode = oldMultiplier * percentageOldEdit;
             }
 
             var rawImpact = ((double)TotalEditLocations * TotalFiles / TotalLinesEdited);
-            var impact = rawImpact * percentageOldFactor;
+            var impact = rawImpact * percentageOldCode;
 
             if (impact.Equals(Double.NaN))
             {
