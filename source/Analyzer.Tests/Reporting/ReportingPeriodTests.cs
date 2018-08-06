@@ -69,12 +69,30 @@ namespace Analyzer.Tests.Reporting
                 {
                     Start = DateTime.Parse("2018-07-01"),
                     End = DateTime.Parse("2018-07-07"),
-                    DaysPerWeek = 4.5
+                    DaysPerWeek = 4.5,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
                 };
                 // act
                 var actual = sut.Period_Working_Days();
                 // assert
                 actual.Should().Be(4.5);
+            }
+
+            [Test]
+            public void WhenOneWeekAndOneDay_ExpectDaysPerWeekPlusOneWorkingDays()
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-07-30"),
+                    End = DateTime.Parse("2018-08-06"),
+                    DaysPerWeek = 4.0,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday}
+                };
+                // act
+                var actual = sut.Period_Working_Days();
+                // assert
+                actual.Should().Be(5);
             }
 
             [Test]
@@ -85,7 +103,8 @@ namespace Analyzer.Tests.Reporting
                 {
                     Start = DateTime.Parse("2018-07-01"),
                     End = DateTime.Parse("2018-07-14"),
-                    DaysPerWeek = 4.5
+                    DaysPerWeek = 4.5,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
                 };
                 // act
                 var actual = sut.Period_Working_Days();
@@ -94,19 +113,20 @@ namespace Analyzer.Tests.Reporting
             }
 
             [Test]
-            public void WhenThreeAndHalfWeeks_ExpectThreeAndHalfWeeksOfWorkingDays()
+            public void WhenTwoAndHalfWeeks_ExpectThreeWeeksOfWorkingDays()
             {
                 // arrange
                 var sut = new ReportingPeriod
                 {
                     Start = DateTime.Parse("2018-07-01"),
                     End = DateTime.Parse("2018-07-18"),
-                    DaysPerWeek = 4.5
+                    DaysPerWeek = 4.5,
+                    Weekends = new List<DayOfWeek> {  DayOfWeek.Saturday, DayOfWeek.Sunday}
                 };
                 // act
                 var actual = sut.Period_Working_Days();
                 // assert
-                actual.Should().Be(13.5);
+                actual.Should().Be(11.5);
             }
         }
 
@@ -162,7 +182,8 @@ namespace Analyzer.Tests.Reporting
                     Start = DateTime.Parse("2018-07-01"),
                     End = DateTime.Parse("2018-07-14"),
                     DaysPerWeek = 4.0,
-                    HoursPerWeek = 32
+                    HoursPerWeek = 32,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
 
                 };
                 // act
@@ -173,7 +194,7 @@ namespace Analyzer.Tests.Reporting
             }
 
             [Test]
-            public void WhenFractionalNumberOfWeeks_ExpectHoursForNearestWholeWeekNumber()
+            public void WhenFractionalNumberOfWeeks_ExpectHoursToNearestNumberOfDays()
             {
                 // arrange
                 var sut = new ReportingPeriod
@@ -181,13 +202,14 @@ namespace Analyzer.Tests.Reporting
                     Start = DateTime.Parse("2018-07-01"),
                     End = DateTime.Parse("2018-07-18"),
                     DaysPerWeek = 4.0,
-                    HoursPerWeek = 32
+                    HoursPerWeek = 32,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday}
 
                 };
                 // act
                 var actual = sut.Period_Working_Hours();
                 // assert
-                var expected = 96;
+                var expected = 88;
                 actual.Should().Be(expected);
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Analyzer.Domain.Reporting
 {
@@ -12,6 +13,7 @@ namespace Analyzer.Domain.Reporting
         public List<DayOfWeek> Weekends { get; set; }
 
         private const double DaysInWeek = 7.0;
+        private const double WorkDaysInWeek = 5.0;
 
         public ReportingPeriod()
         {
@@ -29,40 +31,25 @@ namespace Analyzer.Domain.Reporting
             return result;
         }
 
+        public double Period_Working_Hours()
+        {
+            var workingDays = Math.Ceiling(Period_Working_Days_With_Rounding(2));
+            var hoursPerDay = HoursPerWeek / DaysPerWeek;
+            var result = workingDays * hoursPerDay;
+
+            return result;
+        }
+
         public double Period_Working_Days()
         {
-            var weeks = Period_Weeks();
-            var result = DaysPerWeek * weeks;
-            if (NoPartialWeek(weeks))
-            {
-                return Math.Round(result, 1);
-            }
-
-            return Math.Ceiling(result);
+            return Period_Working_Days_With_Rounding(0);
         }
 
         public double Period_Weeks()
         {
-            var totalDays = End.Subtract(Start).Days + 1;
-            var weeks = totalDays / DaysInWeek;
-            if (weeks < 1)
-            {
-                weeks = 1;
-            }
-            return Math.Round(weeks, 0);
+            return Period_Weeks_With_Rounding(0);
         }
-
-        public double Period_Working_Hours()
-        {
-            var weeks = Period_Weeks();
-            return weeks * HoursPerWeek;
-        }
-
-        private static bool NoPartialWeek(double weeks)
-        {
-            return (int)weeks == weeks;
-        }
-
+        
         public List<DateTime> Generate_Dates_For_Range()
         {
             var result = new List<DateTime>();
@@ -77,6 +64,32 @@ namespace Analyzer.Domain.Reporting
                 }
             }
             return result;
+        }
+
+        private double Period_Weeks_With_Rounding(int decimals)
+        {
+            var totalDays = End.Subtract(Start).Days + 1;
+            var weeks = totalDays / DaysInWeek;
+            if (weeks < 1)
+            {
+                weeks = 1;
+            }
+            return Math.Round(weeks, decimals);
+        }
+
+        private double Period_Working_Days_With_Rounding(int deciamls)
+        {
+            var totalDays = End.Subtract(Start).Days + 1;
+            var dates = Enumerable.Range(0, totalDays)
+                .Select(i => Start.AddDays(i))
+                .Where(d => !Weekends.Contains(d.DayOfWeek));
+
+            var rawDays = dates.Count();
+            var weeks = Period_Weeks_With_Rounding(deciamls);
+
+            var daysToRemove = WorkDaysInWeek - DaysPerWeek;
+
+            return rawDays - (daysToRemove * weeks);
         }
 
         private bool WorkDay(DateTime canidateDate)
