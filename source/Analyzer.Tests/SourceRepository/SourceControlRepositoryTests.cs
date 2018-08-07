@@ -242,7 +242,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 4.0,
                         PeriodActiveDays = 8,
                         CommitsPerDay = 4.12,
-                        Impact = 3.03,
+                        Impact = 30.35,
                         LinesOfChangePerHour = 16.43,
                         LinesAdded = 3514,
                         LinesRemoved = 693,
@@ -285,7 +285,7 @@ namespace Analyzer.Tests.SourceRepository
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
-                    .WithIgnorePatterns(new []{".orig"})
+                    .WithIgnorePatterns(new []{".orig","BASE","LOCAL","REMOTE"})
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -300,13 +300,13 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
                         CommitsPerDay = 6.0,
-                        Impact = 2.66,
-                        LinesOfChangePerHour = 24.32,
-                        LinesAdded = 5189,
-                        LinesRemoved = 1816,
-                        Churn = 0.35,
-                        Rtt100 = 4.11,
-                        Ptt100 = 8.54
+                        Impact = 26.64,
+                        LinesOfChangePerHour = 23.02,
+                        LinesAdded = 4884,
+                        LinesRemoved = 1745,
+                        Churn = 0.36,
+                        Rtt100 = 4.34,
+                        Ptt100 = 9.17
                     }
                 };
 
@@ -373,7 +373,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.0,
                         PeriodActiveDays = 1,
                         CommitsPerDay = 1.0,
-                        Impact = 0.02,
+                        Impact = 0.18,
                         LinesOfChangePerHour = 0.25,
                         LinesAdded = 9,
                         LinesRemoved = 1,
@@ -395,7 +395,7 @@ namespace Analyzer.Tests.SourceRepository
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithIgnorePatterns(new []{"documents",".orig"})
+                    .WithIgnorePatterns(new []{"documents",".orig","BASE","LOCAL","REMOTE"})
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-12"))
                     .Build();
                 // act
@@ -409,13 +409,13 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 3.67,
                         PeriodActiveDays = 11,
                         CommitsPerDay = 10.18,
-                        Impact = 4.28,
-                        LinesOfChangePerHour = 13.79,
-                        LinesAdded = 4427,
-                        LinesRemoved = 1639,
-                        Churn = 0.37,
-                        Rtt100 = 7.25,
-                        Ptt100 = 15.77
+                        Impact = 42.76,
+                        LinesOfChangePerHour = 13.1,
+                        LinesAdded = 4138,
+                        LinesRemoved = 1625,
+                        Churn = 0.39,
+                        Rtt100 = 7.63,
+                        Ptt100 = 17.51
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -443,7 +443,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 2.0,
                         PeriodActiveDays = 2,
                         CommitsPerDay = 2.0,
-                        Impact = 0.01,
+                        Impact = 0.1,
                         LinesOfChangePerHour = 0.04,
                         LinesAdded = 3,
                         LinesRemoved = 0,
@@ -482,7 +482,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.0,
                         PeriodActiveDays = 1,
                         CommitsPerDay = 4.0,
-                        Impact = 0.02,
+                        Impact = 0.16,
                         LinesOfChangePerHour = 0.52,
                         LinesAdded = 17,
                         LinesRemoved = 4,

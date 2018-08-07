@@ -205,22 +205,16 @@ namespace Analyzer.Data.SourceRepository
             var developerCommits = GetCommits()
                 .Where(x => developer.Emails.Contains(x.Author.Email))
                 .OrderBy(x => x.Author.When.Date);
+
             foreach (var commit in developerCommits)
             {
-                if (!commit.Parents.Any())
+                if (FirstCommit(commit))
                 {
-                    var stats = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
-                    result.Added += stats.TotalLinesAdded;
-                    result.Removed += stats.TotalLinesDeleted;
+                    BuildFirstCommitStats(commit, result);
                     continue;
                 }
 
-                foreach (var parent in commit.Parents)
-                {
-                    var stats = _repository.Diff.Compare<PatchStats>(parent.Tree, commit.Tree);
-                    result.Added += stats.TotalLinesAdded;
-                    result.Removed += stats.TotalLinesDeleted;
-                }
+                BuildCommitStats(commit, result);
             }
 
             var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
@@ -229,6 +223,36 @@ namespace Analyzer.Data.SourceRepository
             result.Ptt100 = Math.Abs(Math.Round(100.0 / productionLinesPerHour, 2));
 
             return result;
+        }
+
+        private void BuildCommitStats(Commit commit, LinesOfChange result)
+        {
+            foreach (var parent in commit.Parents)
+            {
+                var fileChanges = _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree);
+                foreach (var file in fileChanges)
+                {
+                    if (FileShouldBeIgnored(file))
+                    {
+                        continue;
+                    }
+
+                    result.Added += file.LinesAdded;
+                    result.Removed += file.LinesDeleted;
+                }
+            }
+        }
+
+        private void BuildFirstCommitStats(Commit commit, LinesOfChange result)
+        {
+            var stats = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
+            result.Added += stats.TotalLinesAdded;
+            result.Removed += stats.TotalLinesDeleted;
+        }
+
+        private static bool FirstCommit(Commit commit)
+        {
+            return !commit.Parents.Any();
         }
 
         private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
