@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Analyzer.Domain.Developer;
 
-namespace Analyzer.Data.SourceRepository
+namespace Analyzer.Domain.Developer
 {
     public class Collaberation
     {
