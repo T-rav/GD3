@@ -20,7 +20,7 @@ namespace Analyzer.Domain.Reporting
             }
 
             var rawImpact = ((double)TotalEditLocations * TotalFiles / TotalLinesEdited);
-            var impact = rawImpact * percentageOldCode;
+            var impact = (rawImpact * percentageOldCode)*10;
 
             if (impact.Equals(Double.NaN))
             {
