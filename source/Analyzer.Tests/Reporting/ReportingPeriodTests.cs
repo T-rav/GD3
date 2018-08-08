@@ -78,21 +78,58 @@ namespace Analyzer.Tests.Reporting
                 actual.Should().Be(4.5);
             }
 
-            [Test]
-            public void WhenOneWeekAndOneDay_ExpectDaysPerWeekPlusOneWorkingDays()
+            [TestCase(4.5, 1.0)]
+            [TestCase(4.0, 1.0)]
+            public void WhenSingleDay_ExpectOneWorkingDay(double daysPerWeek, double expected)
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-08-08"),
+                    End = DateTime.Parse("2018-08-08"),
+                    DaysPerWeek = daysPerWeek,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
+                };
+                // act
+                var actual = sut.Period_Working_Days();
+                // assert
+                actual.Should().Be(expected);
+            }
+
+            [TestCase(4.5, 2.0)]
+            [TestCase(4.0, 2.0)]
+            public void WhenTwoDays_ExpectTwoWorkingDay(double daysPerWeek, double expected)
+            {
+                // arrange
+                var sut = new ReportingPeriod
+                {
+                    Start = DateTime.Parse("2018-08-08"),
+                    End = DateTime.Parse("2018-08-09"),
+                    DaysPerWeek = daysPerWeek,
+                    Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday }
+                };
+                // act
+                var actual = sut.Period_Working_Days();
+                // assert
+                actual.Should().Be(expected);
+            }
+
+            [TestCase(4.0, 5.0)]
+            [TestCase(4.5, 5.5)]
+            public void WhenOneWeekAndOneDay_ExpectDaysPerWeekPlusOneWorkingDays(double daysPerWeek, double expected)
             {
                 // arrange
                 var sut = new ReportingPeriod
                 {
                     Start = DateTime.Parse("2018-07-30"),
                     End = DateTime.Parse("2018-08-06"),
-                    DaysPerWeek = 4.0,
+                    DaysPerWeek = daysPerWeek,
                     Weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday}
                 };
                 // act
                 var actual = sut.Period_Working_Days();
                 // assert
-                actual.Should().Be(5);
+                actual.Should().Be(expected);
             }
 
             [Test]

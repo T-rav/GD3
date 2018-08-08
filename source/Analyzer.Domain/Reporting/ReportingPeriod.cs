@@ -42,7 +42,13 @@ namespace Analyzer.Domain.Reporting
 
         public double Period_Working_Days()
         {
-            return Period_Working_Days_With_Rounding(0);
+            var result = Period_Working_Days_With_Rounding(0);
+            if (result < DaysPerWeek)
+            {
+                return Math.Ceiling(result);
+            }
+
+            return result;
         }
 
         public double Period_Weeks()
@@ -87,7 +93,11 @@ namespace Analyzer.Domain.Reporting
             var rawDays = dates.Count();
             var weeks = Period_Weeks_With_Rounding(deciamls);
 
-            var daysToRemove = WorkDaysInWeek - DaysPerWeek;
+            var daysToRemove = 0.0;
+            if (totalDays >= DaysPerWeek)
+            {
+                daysToRemove = WorkDaysInWeek - DaysPerWeek;
+            }
 
             return rawDays - (daysToRemove * weeks);
         }
