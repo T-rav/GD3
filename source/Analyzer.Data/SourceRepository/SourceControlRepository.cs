@@ -154,6 +154,7 @@ namespace Analyzer.Data.SourceRepository
             The severity of changes when old code is modified   
          */
         // todo : this almost seems as though it should accumulate then calculate
+        // 13-08 Tusani v Sindi stats
         private double Impact(Author developer)
         {
             var totalScore = 0.0;
