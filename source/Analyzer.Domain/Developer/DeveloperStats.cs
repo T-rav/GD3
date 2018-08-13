@@ -15,7 +15,7 @@ namespace Analyzer.Domain.Developer
         public int LinesRemoved { get; set; }
         public double Rtt100 { get; set; }
         public double Ptt100 { get; set; }
-        public double Dtt100 => Ptt100 - Rtt100;
+        public double Dtt100 => Math.Round(Ptt100 - Rtt100,2);
 
         public double RiskFactor
         {

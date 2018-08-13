@@ -168,7 +168,7 @@ namespace Analyzer.Data.SourceRepository
                 }
             }
 
-            return Math.Round(totalScore / 100, 2);
+            return Math.Round(totalScore, 2);
         }
 
         private Impact CalculateImpactStats(Patch fileChanges)
