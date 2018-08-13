@@ -19,6 +19,7 @@ namespace Analyzer.Domain.Reporting
                 percentageOldCode = oldMultiplier * percentageOldEdit;
             }
 
+            // todo : weight the total surface area of change (lines of change) on a scale too
             var rawImpact = ((double)TotalEditLocations * TotalFiles / TotalLinesEdited);
             var impact = (rawImpact * percentageOldCode)*10;
 
