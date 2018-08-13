@@ -153,6 +153,7 @@ namespace Analyzer.Data.SourceRepository
             The number of files affected
             The severity of changes when old code is modified   
          */
+        // todo : this almost seems as though it should accumulate then calculate
         private double Impact(Author developer)
         {
             var totalScore = 0.0;

@@ -20,7 +20,7 @@ namespace Analyzer.Domain.Reporting
             }
 
             // todo : weight the total surface area of change (lines of change) on a scale too
-            var rawImpact = ((double)TotalEditLocations * (TotalFiles*2) / TotalLinesEdited);
+            var rawImpact = ((double)TotalEditLocations * TotalFiles / TotalLinesEdited);
             var impact = (rawImpact * percentageOldCode);
 
             if (impact.Equals(Double.NaN))
