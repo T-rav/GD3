@@ -9,7 +9,7 @@ namespace Analyzer.Domain.Reporting
         public int TotalLinesEdited { get; set; }
         public int TotalLinesOfOldCode { get; set; }
 
-        private double SurfaceAreaFactor = 100.0;
+        private double SurfaceAreaFactor = 1000.0;
 
         public double Calculate()
         {
@@ -21,8 +21,8 @@ namespace Analyzer.Domain.Reporting
                 percentageOldCode = oldMultiplier * percentageOldEdit;
             }
 
-            // 1 line in new code = 0.010 unit
-            // 1 line in old code = 0.015 unit
+            // 1 line in new code = 0.0010 unit
+            // 1 line in old code = 0.0015 unit
             var surfaceArea = TotalLinesEdited / SurfaceAreaFactor;
             var rawImpact = ((double)TotalEditLocations * TotalFiles * surfaceArea);
             var impact = (rawImpact * percentageOldCode);
@@ -32,7 +32,7 @@ namespace Analyzer.Domain.Reporting
                 return 0.0;
             }
 
-            return Math.Round(impact,3);
+            return Math.Round(impact,4);
         }
     }
 }

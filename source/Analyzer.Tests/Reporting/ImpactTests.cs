@@ -21,7 +21,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.01);
+            actual.Should().Be(0.001);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.015);
+            actual.Should().Be(0.0015);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(1.0);
+            actual.Should().Be(0.1);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(2.0);
+            actual.Should().Be(0.2);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(3.0);
+            actual.Should().Be(0.3);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(6.0);
+            actual.Should().Be(0.6);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(300.0);
+            actual.Should().Be(30.0);
         }
 
         [Test]

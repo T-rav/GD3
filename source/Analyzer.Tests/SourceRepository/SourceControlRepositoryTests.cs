@@ -242,7 +242,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 4.0,
                         PeriodActiveDays = 8,
                         CommitsPerDay = 4.12,
-                        Impact = 169908.72,
+                        Impact = 16990.87,
                         LinesOfChangePerHour = 16.43,
                         LinesAdded = 3514,
                         LinesRemoved = 693,
@@ -300,7 +300,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 4.5,
                         PeriodActiveDays = 9,
                         CommitsPerDay = 6.0,
-                        Impact = 212883.78,
+                        Impact = 21288.38,
                         LinesOfChangePerHour = 23.02,
                         LinesAdded = 4884,
                         LinesRemoved = 1745,
@@ -373,7 +373,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.0,
                         PeriodActiveDays = 1,
                         CommitsPerDay = 1.0,
-                        Impact = 1.35,
+                        Impact = 0.14,
                         LinesOfChangePerHour = 0.25,
                         LinesAdded = 9,
                         LinesRemoved = 1,
@@ -409,7 +409,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 3.67,
                         PeriodActiveDays = 11,
                         CommitsPerDay = 10.18,
-                        Impact = 210163.94,
+                        Impact = 21016.39,
                         LinesOfChangePerHour = 13.1,
                         LinesAdded = 4138,
                         LinesRemoved = 1625,
@@ -443,7 +443,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 2.0,
                         PeriodActiveDays = 2,
                         CommitsPerDay = 2.0,
-                        Impact = 0.01,
+                        Impact = 0.00,
                         LinesOfChangePerHour = 0.04,
                         LinesAdded = 3,
                         LinesRemoved = 0,
@@ -456,7 +456,6 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             // todo: with help and my churn calculations
-
             [Test]
             public void WhenUsingAliasMapping_ShouldReturnOneDeveloperStats()
             {
@@ -482,7 +481,7 @@ namespace Analyzer.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.0,
                         PeriodActiveDays = 1,
                         CommitsPerDay = 4.0,
-                        Impact = 0.27,
+                        Impact = 0.03,
                         LinesOfChangePerHour = 0.52,
                         LinesAdded = 17,
                         LinesRemoved = 4,
