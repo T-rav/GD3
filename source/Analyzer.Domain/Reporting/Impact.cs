@@ -9,18 +9,22 @@ namespace Analyzer.Domain.Reporting
         public int TotalLinesEdited { get; set; }
         public int TotalLinesOfOldCode { get; set; }
 
+        private double SurfaceAreaFactor = 100.0;
+
         public double Calculate()
         {
             var percentageOldCode = 1.0;
-            var oldMultiplier = 2;
+            var oldMultiplier = 1.5;
             if (TotalLinesOfOldCode > 0)
             {
                 var percentageOldEdit = ((double)TotalLinesEdited / TotalLinesOfOldCode);
                 percentageOldCode = oldMultiplier * percentageOldEdit;
             }
 
-            // todo : weight the total surface area of change (lines of change) on a scale too
-            var rawImpact = ((double)TotalEditLocations * TotalFiles / TotalLinesEdited);
+            // 1 line in new code = 0.010 unit
+            // 1 line in old code = 0.015 unit
+            var surfaceArea = TotalLinesEdited / SurfaceAreaFactor;
+            var rawImpact = ((double)TotalEditLocations * TotalFiles * surfaceArea);
             var impact = (rawImpact * percentageOldCode);
 
             if (impact.Equals(Double.NaN))
@@ -28,7 +32,7 @@ namespace Analyzer.Domain.Reporting
                 return 0.0;
             }
 
-            return impact;
+            return Math.Round(impact,3);
         }
     }
 }

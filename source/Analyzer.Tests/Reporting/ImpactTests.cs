@@ -8,6 +8,40 @@ namespace Analyzer.Tests.Reporting
     public class ImpactTests
     {
         [Test]
+        public void When1NewLinesIn1NewFile_ShouldReturn100thOfBaseLineImpact()
+        {
+            // arrange
+            var sut = new Impact
+            {
+                TotalLinesEdited = 1,
+                TotalLinesOfOldCode = 0,
+                TotalFiles = 1,
+                TotalEditLocations = 1
+            };
+            // act
+            var actual = sut.Calculate();
+            // assert
+            actual.Should().Be(0.01);
+        }
+
+        [Test]
+        public void When1NewLinesIn1OldFile_ShouldReturn50thOfBaseLineImpact()
+        {
+            // arrange
+            var sut = new Impact
+            {
+                TotalLinesEdited = 1,
+                TotalLinesOfOldCode = 1,
+                TotalFiles = 1,
+                TotalEditLocations = 1
+            };
+            // act
+            var actual = sut.Calculate();
+            // assert
+            actual.Should().Be(0.015);
+        }
+
+        [Test]
         public void When100NewLinesIn1NewFile_ShouldReturnBaseLineImpact()
         {
             // arrange
@@ -21,7 +55,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.1);
+            actual.Should().Be(1.0);
         }
 
         [Test]
@@ -38,7 +72,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.2);
+            actual.Should().Be(2.0);
         }
 
         [Test]
@@ -55,7 +89,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.4);
+            actual.Should().Be(3.0);
         }
 
         [Test]
@@ -72,7 +106,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(0.8);
+            actual.Should().Be(6.0);
         }
 
         [Test]
@@ -89,7 +123,7 @@ namespace Analyzer.Tests.Reporting
             // act
             var actual = sut.Calculate();
             // assert
-            actual.Should().Be(40.0);
+            actual.Should().Be(300.0);
         }
 
         [Test]
