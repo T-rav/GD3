@@ -48,7 +48,7 @@ namespace Analyzer
             Console.WriteLine("Individual Developer Stats");
             Console.ForegroundColor = DefaultColor;
             PrintDashedLine();
-            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
+            Console.WriteLine("Developer               | Period Active Days | Active Days Per Week | Commits / Day | Lines of Change Per Hour | Impact     | Risk Factor | Lines Added | Lines Removed | Churn | Rtt100 | Ptt100 | Dtt100");
             PrintDashedLine();
         }
 
@@ -74,7 +74,7 @@ namespace Analyzer
                                $"{PaddedPrint($"{activeDays}*", 23)}" +
                                $"{PaddedPrint(commitsPerDay, 16)}" +
                                $"{PaddedPrint(linesOfChange, 27)}" +
-                               $"{PaddedPrint($"{impact}^", 9)}" +
+                               $"{PaddedPrint($"{impact}^",13)}" +
                                $"{PaddedPrint(riskFactor, 14)}" +
                                $"{PaddedPrint(linesAdded, 14)}" +
                                $"{PaddedPrint(linesRemoved, 16)}" +
