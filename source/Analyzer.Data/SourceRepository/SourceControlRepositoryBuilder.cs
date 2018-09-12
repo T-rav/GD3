@@ -25,7 +25,7 @@ namespace Analyzer.Data.SourceRepository
         {
             _workWeekHours = 40;
             _workingDaysPerWeek = 5;
-            _branch = "HEAD";
+            _branch = "master";
             _ignorePatterns = new List<string>();
             _weekends = new List<DayOfWeek>();
             _collaberations = new List<Collaberation>();
@@ -102,7 +102,7 @@ namespace Analyzer.Data.SourceRepository
                 throw new Exception($"Invalid branch [{_branch}]");
             }
 
-            var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek, Weekends = _weekends};
+            var reportRange = new ReportingPeriod { Start = _start, End = _end, HoursPerWeek = _workWeekHours, DaysPerWeek = _workingDaysPerWeek, Weekends = _weekends };
 
             if (_isEntireHistory)
             {
@@ -127,9 +127,9 @@ namespace Analyzer.Data.SourceRepository
                 IncludeReachableFrom = repository.Branches[_branch]
             };
 
-            if (_branch != "HEAD")
+            if (_branch != "master")
             {
-                filter.ExcludeReachableFrom = repository.Head;
+                filter.ExcludeReachableFrom = repository.Branches["master"];
             }
 
             var commitLog = repository.Commits.QueryBy(filter);

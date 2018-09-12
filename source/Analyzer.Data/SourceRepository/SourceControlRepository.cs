@@ -16,7 +16,7 @@ namespace Analyzer.Data.SourceRepository
         private readonly List<string> _ignorePatterns;
 
         public ReportingPeriod ReportingRange { get; }
-        public List<Collaberation>  Collaberations { get; }
+        public List<Collaberation> Collaberations { get; }
 
         public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, List<Collaberation> collaberations)
         {
@@ -120,7 +120,7 @@ namespace Analyzer.Data.SourceRepository
                 }).GroupBy(x => x.Date)
                 .Select(x => x.First());
 
-            var activeDaysCount =  activeDays.Count();
+            var activeDaysCount = activeDays.Count();
 
             return activeDaysCount;
         }
@@ -273,7 +273,7 @@ namespace Analyzer.Data.SourceRepository
 
             if (NotMaster())
             {
-                filter.ExcludeReachableFrom = _repository.Head;
+                filter.ExcludeReachableFrom = _repository.Branches["master"];
             }
 
             var commitLog = _repository.Commits.QueryBy(filter);
@@ -285,7 +285,7 @@ namespace Analyzer.Data.SourceRepository
 
         private bool NotMaster()
         {
-            return _branch != "HEAD";
+            return _branch != "master";
         }
     }
 }

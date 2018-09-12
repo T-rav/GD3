@@ -10,7 +10,7 @@ namespace Analyzer
         [Option('p', "Location of the git repository", Default = "", HelpText = "Path on the filesystem to the repository")]
         public string Path { get; set; }
 
-        [Option('b', "Branch to examine", Default = "HEAD", HelpText = "Which branch to build stats for. Defaults to master")]
+        [Option('b', "Branch to examine", Default = "master", HelpText = "Which branch to build stats for. Defaults to master")]
         public string Branch { get; set; }
 
         [Option('i', "Patterns to ignore when building stats", Default = null, Separator = ';', HelpText = "Patterns to ignore when building stats")]
