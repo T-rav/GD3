@@ -14,7 +14,7 @@ namespace Analyzer.Data.SourceRepository
         private DateTime _start;
         private DateTime _end;
         private int _workWeekHours;
-        private int _workingDaysPerWeek;
+        private double _workingDaysPerWeek;
         private string _branch;
         private bool _isEntireHistory;
         private readonly List<string> _ignorePatterns;
@@ -51,7 +51,7 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(int workingDaysPerWeek)
+        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(double workingDaysPerWeek)
         {
             _workingDaysPerWeek = workingDaysPerWeek;
             return this;

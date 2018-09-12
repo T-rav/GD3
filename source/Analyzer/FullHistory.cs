@@ -16,13 +16,13 @@ namespace Analyzer
         [Option('i', "Patterns to ignore when building stats", Default = null, Separator = ';', HelpText = "Patterns to ignore when building stats")]
         public IEnumerable<string> IgnorePatterns { get; set; }
 
-        [Option('w', "Weekend days", Default = new[]{DayOfWeek.Saturday,DayOfWeek.Sunday}, Separator = ';', HelpText = "Weekend days")]
+        [Option('w', "Weekend days", Default = new[] { DayOfWeek.Saturday, DayOfWeek.Sunday }, Separator = ';', HelpText = "Weekend days")]
         public IEnumerable<DayOfWeek> WeekendDays { get; set; }
 
         [Option('h', "Working hours per week", Default = 40, HelpText = "Number of working hours per week")]
         public int WorkingHoursPerWeek { get; set; }
 
         [Option('d', "Working days per week", Default = 5, HelpText = "Number of working days per week")]
-        public int WorkingDaysPerWeek { get; set; }
+        public double WorkingDaysPerWeek { get; set; }
     }
 }
