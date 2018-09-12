@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Analyzer.Domain.SourceRepository
+﻿namespace Analyzer.Domain.SourceRepository
 {
     public class Branches
     {
