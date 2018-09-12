@@ -23,7 +23,7 @@ namespace Analyzer
         public int WorkingHoursPerWeek { get; set; }
 
         [Option('d', "Working days per week", Default = 5, HelpText = "Number of working days per week")]
-        public int WorkingDaysPerWeek { get; set; }
+        public double WorkingDaysPerWeek { get; set; }
 
         [Option('s', "Start date of analysis", Default = 5, HelpText = "Start day of analysis")]
         public DateTime StartDate { get; set; }
