@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
-using Analyzer.Domain.SourceRepository;
 using Analyzer.Domain.Team;
 
 namespace Analyzer
 {
     public class CodeStatsDashboard
     {
-        public static string Version => "0.9.3";
+        public static string Version => "0.9.4";
         public static ConsoleColor DefaultColor { get; private set; }
 
         public CodeStatsDashboard()
@@ -18,16 +17,12 @@ namespace Analyzer
             DefaultColor = Console.ForegroundColor;
         }
 
-        public void RenderDashboard(ISourceControlRepository repo)
+        public void RenderDashboard(IList<DeveloperStats> developerStats, TeamStatsCollection teamStats, ReportingPeriod reportingPeriod)
         {
-            var authors = repo.List_Authors();
-            var stats = repo.Build_Individual_Developer_Stats(authors);
-            var teamStats = repo.Build_Team_Stats();
-
-            PrintApplicationHeader(repo.ReportingRange.Start, repo.ReportingRange.End);
+            PrintApplicationHeader(reportingPeriod.Start, reportingPeriod.End);
             PrintDeveloperStatsTableHeader();
-            PrintDeveloperStatsTable(stats);
-            PrintDeveloperAverages(stats, repo.ReportingRange);
+            PrintDeveloperStatsTable(developerStats);
+            PrintDeveloperAverages(developerStats, reportingPeriod);
             PrintTeamStatsTableHeader();
             PrintTeamStatsTable(teamStats);
         }
@@ -52,7 +47,7 @@ namespace Analyzer
             PrintDashedLine();
         }
 
-        private void PrintDeveloperAverages(List<DeveloperStats> stats, ReportingPeriod reportingPeriod)
+        private void PrintDeveloperAverages(IList<DeveloperStats> stats, ReportingPeriod reportingPeriod)
         {
             var totalDevelopers = stats.Count * 1.0;
 
@@ -74,7 +69,7 @@ namespace Analyzer
                                $"{PaddedPrint($"{activeDays}*", 23)}" +
                                $"{PaddedPrint(commitsPerDay, 16)}" +
                                $"{PaddedPrint(linesOfChange, 27)}" +
-                               $"{PaddedPrint($"{impact}^",13)}" +
+                               $"{PaddedPrint($"{impact}^", 13)}" +
                                $"{PaddedPrint(riskFactor, 14)}" +
                                $"{PaddedPrint(linesAdded, 14)}" +
                                $"{PaddedPrint(linesRemoved, 16)}" +
@@ -98,7 +93,7 @@ namespace Analyzer
             return repoAvg;
         }
 
-        private void PrintDeveloperStatsTable(List<DeveloperStats> stats)
+        private void PrintDeveloperStatsTable(IList<DeveloperStats> stats)
         {
             var orderedStats = stats.OrderByDescending(x => x.PeriodActiveDays);
             foreach (var stat in orderedStats)

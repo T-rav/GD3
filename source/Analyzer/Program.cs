@@ -39,7 +39,11 @@ namespace Analyzer
                             .Build();
 
             var dashboard = new CodeStatsDashboard();
-            dashboard.RenderDashboard(repo);
+            var authors = repo.List_Authors();
+            var stats = repo.Build_Individual_Developer_Stats(authors);
+            var teamStats = repo.Build_Team_Stats();
+            dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+
             return 1;
         }
 
@@ -56,7 +60,11 @@ namespace Analyzer
                             .Build();
 
             var dashboard = new CodeStatsDashboard();
-            dashboard.RenderDashboard(repo);
+            var authors = repo.List_Authors();
+            var stats = repo.Build_Individual_Developer_Stats(authors);
+            var teamStats = repo.Build_Team_Stats();
+            dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+
             return 1;
         }
     }
