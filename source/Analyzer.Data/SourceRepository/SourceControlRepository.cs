@@ -271,9 +271,9 @@ namespace Analyzer.Data.SourceRepository
                 IncludeReachableFrom = _repository.Branches[_branch]
             };
 
-            if (NotMaster())
+            if (Branches.MasterNotSelected(_branch))
             {
-                filter.ExcludeReachableFrom = _repository.Branches["master"];
+                filter.ExcludeReachableFrom = _repository.Branches[Branches.Master.Value];
             }
 
             var commitLog = _repository.Commits.QueryBy(filter);
@@ -281,11 +281,6 @@ namespace Analyzer.Data.SourceRepository
             return commitLog
                 .Where(x => x.Author.When.Date >= ReportingRange.Start.Date &&
                         x.Author.When.Date <= ReportingRange.End.Date);
-        }
-
-        private bool NotMaster()
-        {
-            return _branch != "master";
         }
     }
 }

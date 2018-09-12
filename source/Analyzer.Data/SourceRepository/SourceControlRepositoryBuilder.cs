@@ -25,7 +25,7 @@ namespace Analyzer.Data.SourceRepository
         {
             _workWeekHours = 40;
             _workingDaysPerWeek = 5;
-            _branch = "master";
+            _branch = Branches.Master.Value;
             _ignorePatterns = new List<string>();
             _weekends = new List<DayOfWeek>();
             _collaberations = new List<Collaberation>();
@@ -127,9 +127,9 @@ namespace Analyzer.Data.SourceRepository
                 IncludeReachableFrom = repository.Branches[_branch]
             };
 
-            if (_branch != "master")
+            if (Branches.MasterNotSelected(_branch))
             {
-                filter.ExcludeReachableFrom = repository.Branches["master"];
+                filter.ExcludeReachableFrom = repository.Branches[Branches.Master.Value];
             }
 
             var commitLog = repository.Commits.QueryBy(filter);
