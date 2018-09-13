@@ -267,12 +267,12 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenNegativePtt100_ShouldReturnAbsOfValue()
             {
                 // arrange
-                var author = new Author { Name = "Monique", Emails = new List<string> { "MoniqueG@SAHOMELOANS.COM" } };
-                var repoPath = TestRepoPath("test-repo");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-07-31"), DateTime.Parse("2018-07-31"))
+                    .WithRange(DateTime.Parse("2018-09-13"), DateTime.Parse("2018-09-13"))
                     .WithBranch("origin/negative-commits")
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
@@ -280,7 +280,7 @@ namespace Analyzer.Tests.SourceRepository
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
-                var expected = 38.61;
+                var expected = 81.97;
                 actual.FirstOrDefault().Ptt100.Should().Be(expected);
             }
 
