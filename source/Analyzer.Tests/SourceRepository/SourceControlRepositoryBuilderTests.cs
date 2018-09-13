@@ -28,7 +28,7 @@ namespace Analyzer.Tests.SourceRepository
         public void WhenInvalidBranch_ShouldReturnDeveloperList()
         {
             // arrange
-            var repoPath = TestRepoPath("gd3-testoperations");
+            var repoPath = TestRepoPath("git-test-operations");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
@@ -43,7 +43,7 @@ namespace Analyzer.Tests.SourceRepository
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            var repoPath = TestRepoPath("gd3-testoperations");
+            var repoPath = TestRepoPath("git-test-operations");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithEntireHistory()
@@ -59,7 +59,7 @@ namespace Analyzer.Tests.SourceRepository
         public void WhenNullIgnorePatterns_ShouldNotThrowException()
         {
             // arrange
-            var repoPath = TestRepoPath("gd3-testoperations");
+            var repoPath = TestRepoPath("git-test-operations");
             var sut = new SourceControlRepositoryBuilder()
                 .WithPath(repoPath)
                 .WithIgnorePatterns(null);

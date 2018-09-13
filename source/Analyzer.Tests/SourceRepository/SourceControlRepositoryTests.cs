@@ -20,7 +20,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenMaster_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var sut = new SourceControlRepositoryBuilder()
                              .WithPath(repoPath)
                              .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
@@ -39,7 +39,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperBranch_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/my-branch")
@@ -61,7 +61,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenUsingAlias_ShouldReturnSingleDeveloperWithTwoEmails()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var aliasMap = new List<Alias>
                 {
                     new Alias {Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" } }
@@ -88,7 +88,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -106,7 +106,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenNotMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -124,7 +124,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenEmailNotForActiveDeveloper_ShouldReturnZero()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "no-one", Emails = new List<string> { "solo@nothere.io" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -145,7 +145,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActiveDuringPeriod_ShouldReturnTotalWorkingDays()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -166,7 +166,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "Moo", Emails = new List<string> { "invalid@buddy.io" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -187,7 +187,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActive_ShouldReturnCommitsPerDay()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -208,7 +208,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "boo", Emails = new List<string> { "noone@moonbase.co" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -229,7 +229,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeEntireProjectHistory_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -287,7 +287,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActiveAcrossEntireRange_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -325,7 +325,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -361,7 +361,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenBranchSelected_ShouldReturnAllActiveDeveloperForBranch()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -398,7 +398,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -433,7 +433,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -472,7 +472,7 @@ namespace Analyzer.Tests.SourceRepository
                     Name = "T-rav",
                     Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
                 };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -509,7 +509,7 @@ namespace Analyzer.Tests.SourceRepository
                 // arrange
                 var author1 = new Author { Name = "Thabani", Emails = new List<string> { "thabanitembe@hotmail.com" } };
                 var author2 = new Author { Name = "MCEBISI", Emails = new List<string> { "mcebisimkhohliwe@gmail.com" } };
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -551,7 +551,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeOneDay_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -580,7 +580,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeOneWeek_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("gd3-testoperations");
+                var repoPath = TestRepoPath("git-test-operations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
