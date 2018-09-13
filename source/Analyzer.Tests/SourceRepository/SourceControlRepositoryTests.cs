@@ -263,7 +263,7 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             [Test]
-            [Ignore("Need to find if this tested else where")]
+            //[Ignore("Need to find if this tested else where")]
             public void WhenNegativePtt100_ShouldReturnAbsOfValue()
             {
                 // arrange
@@ -273,6 +273,7 @@ namespace Analyzer.Tests.SourceRepository
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-07-31"), DateTime.Parse("2018-07-31"))
+                    .WithBranch("origin/negative-commits")
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
