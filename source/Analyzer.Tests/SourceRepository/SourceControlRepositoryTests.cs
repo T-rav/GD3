@@ -83,13 +83,13 @@ namespace Analyzer.Tests.SourceRepository
         [TestFixture]
         public class ListPeriodActivity
         {
-            [TestCase("2018-06-25", "2018-07-09", 8)]
-            [TestCase("2018-07-10", "2018-07-12", 1)]
+            [TestCase("2018-09-10", "2018-09-14", 4)]
+            [TestCase("2018-09-12", "2018-09-12", 1)]
             public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
-                var author = new Author { Name = "Monique", Emails = new List<string> { "MoniqueG@SAHOMELOANS.COM" } };
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithRange(start, end)
@@ -101,13 +101,13 @@ namespace Analyzer.Tests.SourceRepository
                 actual.Should().Be(expected);
             }
 
-            [TestCase("2018-06-25", "2018-07-09", 0)]
-            [TestCase("2018-07-10", "2018-07-12", 1)]
+            [TestCase("2018-09-11", "2018-09-11", 0)]
+            [TestCase("2018-09-10", "2018-09-10", 1)]
             public void WhenNotMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
-                var author = new Author { Name = "Thabani", Emails = new List<string> { "thabanitembe@hotmail.com" } };
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithRange(start, end)
