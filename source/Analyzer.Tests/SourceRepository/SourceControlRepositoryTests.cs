@@ -83,9 +83,9 @@ namespace Analyzer.Tests.SourceRepository
         [TestFixture]
         public class ListPeriodActivity
         {
-            [TestCase("2018-09-10", "2018-09-14", 4)]
+            [TestCase("2018-09-10", "2018-09-14", 3)]
             [TestCase("2018-09-12", "2018-09-12", 1)]
-            public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
+            public void WhenMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
                 var repoPath = TestRepoPath("gd3-testoperations");
@@ -112,7 +112,7 @@ namespace Analyzer.Tests.SourceRepository
                 var sut = new SourceControlRepositoryBuilder()
                     .WithRange(start, end)
                     .WithPath(repoPath)
-                    .WithBranch("origin/thabani")
+                    .WithBranch("origin/my-branch")
                     .Build();
                 // act
                 var actual = sut.Period_Active_Days(author);
@@ -145,19 +145,19 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActiveDuringPeriod_ShouldReturnTotalWorkingDays()
             {
                 // arrange
-                var author = new Author { Name = "Siphenathi", Emails = new List<string> { "SiphenathiP@SAHOMELOANS.COM" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-14"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Active_Days_Per_Week(author);
                 // assert
-                var expectedActiveDaysPerWeek = 4.0;
+                var expectedActiveDaysPerWeek = 3.0;
                 actual.Should().Be(expectedActiveDaysPerWeek);
             }
 
@@ -187,19 +187,19 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActive_ShouldReturnCommitsPerDay()
             {
                 // arrange
-                var author = new Author { Name = "Siphenathi", Emails = new List<string> { "SiphenathiP@SAHOMELOANS.COM" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-14"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Commits_Per_Day(author);
                 // assert
-                var expectedCommitsPerDay = 6.25;
+                var expectedCommitsPerDay = 1.67;
                 actual.Should().Be(expectedCommitsPerDay);
             }
 
@@ -229,12 +229,12 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeEntireProjectHistory_ShouldReturnStats()
             {
                 // arrange
-                var author = new Author { Name = "Sinothilem", Emails = new List<string> { "sinothilem@D987321" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                                 .WithPath(repoPath)
-                                .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
+                                .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-12"))
                                 .WithWorkingDaysPerWeek(4)
                                 .WithWorkingWeekHours(32)
                                 .Build();
@@ -246,16 +246,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 4.0,
-                        PeriodActiveDays = 8,
-                        CommitsPerDay = 4.12,
-                        Impact = 16990.87,
-                        LinesOfChangePerHour = 16.43,
-                        LinesAdded = 3514,
-                        LinesRemoved = 693,
-                        Rtt100 = 6.09,
-                        Ptt100 = 9.07,
-                        Churn = 0.2
+                        ActiveDaysPerWeek = 0.5,
+                        PeriodActiveDays = 4,
+                        CommitsPerDay = 2.0,
+                        Impact = 0.02,
+                        LinesOfChangePerHour = 0.13,
+                        LinesAdded = 13,
+                        LinesRemoved = 4,
+                        Rtt100 = 769.23,
+                        Ptt100 = 1428.57,
+                        Churn = 0.31
                     }
                 };
 
@@ -263,6 +263,7 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             [Test]
+            [Ignore("Need to find if this tested else where")]
             public void WhenNegativePtt100_ShouldReturnAbsOfValue()
             {
                 // arrange
@@ -286,13 +287,12 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActiveAcrossEntireRange_ShouldReturnStats()
             {
                 // arrange
-                var author = new Author { Name = "Siphenathi", Emails = new List<string> { "SiphenathiP@SAHOMELOANS.COM" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
-                    .WithIgnorePatterns(new[] { ".orig", "BASE", "LOCAL", "REMOTE" })
+                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-12"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -304,16 +304,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 4.5,
-                        PeriodActiveDays = 9,
-                        CommitsPerDay = 6.0,
-                        Impact = 21288.38,
-                        LinesOfChangePerHour = 23.02,
-                        LinesAdded = 4884,
-                        LinesRemoved = 1745,
-                        Churn = 0.36,
-                        Rtt100 = 4.34,
-                        Ptt100 = 9.17
+                        ActiveDaysPerWeek = 0.5,
+                        PeriodActiveDays = 4,
+                        CommitsPerDay = 2.0,
+                        Impact = 0.02,
+                        LinesOfChangePerHour = 0.13,
+                        LinesAdded = 13,
+                        LinesRemoved = 4,
+                        Churn = 0.31,
+                        Rtt100 = 769.23,
+                        Ptt100 = 1428.57
                     }
                 };
 
@@ -358,16 +358,16 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             [Test]
-            public void WhenBranch_ShouldReturnAllActiveDeveloperForBranch()
+            public void WhenBranchSelected_ShouldReturnAllActiveDeveloperForBranch()
             {
                 // arrange
-                var author = new Author { Name = "Tusani", Emails = new List<string> { "tusanig@sahomeloans.com" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithBranch("origin/TusaniG")
-                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-11"))
+                    .WithBranch("origin/my-branch")
+                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-10"))
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -377,16 +377,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 1.0,
-                        PeriodActiveDays = 1,
-                        CommitsPerDay = 1.0,
-                        Impact = 0.14,
-                        LinesOfChangePerHour = 0.25,
-                        LinesAdded = 9,
-                        LinesRemoved = 1,
-                        Churn = 0.11,
-                        Rtt100 = 400,
-                        Ptt100 = 500
+                        ActiveDaysPerWeek = 0.25,
+                        PeriodActiveDays = 2,
+                        CommitsPerDay = 2.5,
+                        Impact = 0.03,
+                        LinesOfChangePerHour = 0.31,
+                        LinesAdded = 20,
+                        LinesRemoved = 5,
+                        Churn = 0.25,
+                        Rtt100 = 322.58,
+                        Ptt100 = 526.32
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -398,12 +398,12 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithIgnorePatterns(new[] { "documents", ".orig", "BASE", "LOCAL", "REMOTE" })
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-12"))
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-13"))
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -413,16 +413,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 3.67,
-                        PeriodActiveDays = 11,
-                        CommitsPerDay = 10.18,
-                        Impact = 21016.39,
-                        LinesOfChangePerHour = 13.1,
-                        LinesAdded = 4138,
-                        LinesRemoved = 1625,
-                        Churn = 0.39,
-                        Rtt100 = 7.63,
-                        Ptt100 = 17.51
+                        ActiveDaysPerWeek = 3.0,
+                        PeriodActiveDays = 3,
+                        CommitsPerDay = 1.67,
+                        Impact = 0.02,
+                        LinesOfChangePerHour = 0.12,
+                        LinesAdded = 10,
+                        LinesRemoved = 4,
+                        Churn = 0.4,
+                        Rtt100 = 833.33,
+                        Ptt100 = 2000.0
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -447,16 +447,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 2.0,
-                        PeriodActiveDays = 2,
-                        CommitsPerDay = 2.0,
-                        Impact = 0.00,
-                        LinesOfChangePerHour = 0.04,
-                        LinesAdded = 3,
-                        LinesRemoved = 0,
-                        Churn = 0.0,
-                        Rtt100 = 2500.0,
-                        Ptt100 = 2500.0
+                        ActiveDaysPerWeek = 0.56,
+                        PeriodActiveDays = 5,
+                        CommitsPerDay = 1.8,
+                        Impact = 1.6,
+                        LinesOfChangePerHour = 0.3,
+                        LinesAdded = 57,
+                        LinesRemoved = 4,
+                        Churn = 0.07,
+                        Rtt100 = 333.33,
+                        Ptt100 = 384.62
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -487,16 +487,16 @@ namespace Analyzer.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 1.0,
-                        PeriodActiveDays = 1,
-                        CommitsPerDay = 4.0,
-                        Impact = 0.03,
-                        LinesOfChangePerHour = 0.52,
-                        LinesAdded = 17,
-                        LinesRemoved = 4,
-                        Churn = 0.24,
-                        Rtt100 = 192.31,
-                        Ptt100 = 312.5
+                        ActiveDaysPerWeek = 0.25,
+                        PeriodActiveDays = 2,
+                        CommitsPerDay = 3.0,
+                        Impact = 0.04,
+                        LinesOfChangePerHour = 0.36,
+                        LinesAdded = 24,
+                        LinesRemoved = 5,
+                        Churn = 0.21,
+                        Rtt100 = 277.78,
+                        Ptt100 = 416.67
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -509,7 +509,7 @@ namespace Analyzer.Tests.SourceRepository
                 // arrange
                 var author1 = new Author { Name = "Thabani", Emails = new List<string> { "thabanitembe@hotmail.com" } };
                 var author2 = new Author { Name = "MCEBISI", Emails = new List<string> { "mcebisimkhohliwe@gmail.com" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -580,11 +580,11 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeOneWeek_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-07-02"), DateTime.Parse("2018-07-06"))
+                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-20"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -595,31 +595,31 @@ namespace Analyzer.Tests.SourceRepository
                 {
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-02"),
-                        ActiveDevelopers = 6,
-                        TotalCommits = 50
+                        DateOf = DateTime.Parse("2018-07-16"),
+                        ActiveDevelopers = 1,
+                        TotalCommits = 3
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-03"),
-                        ActiveDevelopers = 7,
-                        TotalCommits = 39
+                        DateOf = DateTime.Parse("2018-07-17"),
+                        ActiveDevelopers = 1,
+                        TotalCommits = 1
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-04"),
-                        ActiveDevelopers = 6,
-                        TotalCommits = 49
+                        DateOf = DateTime.Parse("2018-07-18"),
+                        ActiveDevelopers = 0,
+                        TotalCommits = 0
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-05"),
-                        ActiveDevelopers = 5,
-                        TotalCommits = 22
+                        DateOf = DateTime.Parse("2018-07-19"),
+                        ActiveDevelopers = 0,
+                        TotalCommits = 0
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-06"),
+                        DateOf = DateTime.Parse("2018-07-20"),
                         ActiveDevelopers = 0,
                         TotalCommits = 0
                     }

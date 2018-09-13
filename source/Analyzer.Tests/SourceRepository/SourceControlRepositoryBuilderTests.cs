@@ -52,7 +52,7 @@ namespace Analyzer.Tests.SourceRepository
             var actual = sut.ReportingRange;
             // assert
             actual.Start.Should().Be(DateTime.Parse("2018-07-16"));
-            actual.End.Should().Be(DateTime.Parse("2018-07-17"));
+            actual.End.Should().Be(DateTime.Parse("2018-09-13"));
         }
 
         [Test]
@@ -66,22 +66,6 @@ namespace Analyzer.Tests.SourceRepository
             // act
             // assert
             Assert.DoesNotThrow(() => sut.Build());
-        }
-
-        [Test]
-        [Ignore("Incomplete test")]
-        public void WithCollaberation_ShouldSplitDayActivityBetweenPair()
-        {
-            // arrange
-            var repoPath = TestRepoPath("gd3-testoperations");
-            var sut = new SourceControlRepositoryBuilder()
-                .WithPath(repoPath)
-                .WithCollaberation(DateTime.Parse("2018-08-01"), new Author(), new Author())
-                .Build();
-            // act
-            var actual = sut.Collaberations;
-            // assert
-            Assert.IsNotNull(actual);
         }
 
         private static string TestRepoPath(string repo)
