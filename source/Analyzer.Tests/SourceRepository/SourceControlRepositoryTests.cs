@@ -17,36 +17,43 @@ namespace Analyzer.Tests.SourceRepository
         public class ListAuthors
         {
             [Test]
-            public void WhenBranchHEAD_ShouldReturnAllActiveDevelopers()
+            public void WhenMaster_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
                 var sut = new SourceControlRepositoryBuilder()
                              .WithPath(repoPath)
-                             .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                             .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
                              .Build();
                 // act
                 var actual = sut.List_Authors();
                 // assert
-                var expected = 7;
-                actual.Count().Should().Be(expected);
+                var expected = new List<Author>
+                {
+                    new Author{Name = "T-rav", Emails = new List<string>{"tmfrisinger@gmail.com"}}
+                };
+                actual.Should().BeEquivalentTo(expected);
             }
 
             [Test]
             public void WhenDeveloperBranch_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithBranch("origin/TusaniG")
-                    .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-12"))
+                    .WithBranch("origin/my-branch")
+                    .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
                     .Build();
                 // act
                 var actual = sut.List_Authors();
                 // assert
-                var expected = 1;
-                actual.Count().Should().Be(expected);
+                var expected = new List<Author>
+                {
+                    new Author{Name = "T-rav", Emails = new List<string>{"tmfrisinger@gmail.com"}},
+                    new Author{Name = "Travis", Emails = new List<string>{"travisf@sahomeloans.com"}}
+                };
+                actual.Should().BeEquivalentTo(expected);
             }
 
             [Test]
@@ -75,7 +82,7 @@ namespace Analyzer.Tests.SourceRepository
 
         [TestFixture]
         public class ListPeriodActivity
-        { 
+        {
             [TestCase("2018-06-25", "2018-07-09", 8)]
             [TestCase("2018-07-10", "2018-07-12", 1)]
             public void WhenEmailForActiveDeveloper_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
@@ -180,7 +187,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenDeveloperActive_ShouldReturnCommitsPerDay()
             {
                 // arrange
-                var author = new Author {Name = "Siphenathi", Emails = new List<string> { "SiphenathiP@SAHOMELOANS.COM" } };
+                var author = new Author { Name = "Siphenathi", Emails = new List<string> { "SiphenathiP@SAHOMELOANS.COM" } };
                 var repoPath = TestRepoPath("test-repo");
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -232,7 +239,7 @@ namespace Analyzer.Tests.SourceRepository
                                 .WithWorkingWeekHours(32)
                                 .Build();
                 // act
-                var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
                 var expected = new List<DeveloperStats>
                 {
@@ -285,7 +292,7 @@ namespace Analyzer.Tests.SourceRepository
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-10"))
-                    .WithIgnorePatterns(new []{".orig","BASE","LOCAL","REMOTE"})
+                    .WithIgnorePatterns(new[] { ".orig", "BASE", "LOCAL", "REMOTE" })
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -363,7 +370,7 @@ namespace Analyzer.Tests.SourceRepository
                     .WithRange(DateTime.Parse("2018-07-11"), DateTime.Parse("2018-07-11"))
                     .Build();
                 // act
-                var actual = sut.Build_Individual_Developer_Stats(new List<Author>{author});
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
                 var expected = new List<DeveloperStats>
                 {
@@ -395,7 +402,7 @@ namespace Analyzer.Tests.SourceRepository
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithIgnorePatterns(new []{"documents",".orig","BASE","LOCAL","REMOTE"})
+                    .WithIgnorePatterns(new[] { "documents", ".orig", "BASE", "LOCAL", "REMOTE" })
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-12"))
                     .Build();
                 // act
@@ -420,7 +427,7 @@ namespace Analyzer.Tests.SourceRepository
                 };
                 actual.Should().BeEquivalentTo(expected);
             }
-            
+
             [Test]
             public void WhenEntireHistory_ShouldReturnDeveloperStatsForLifetimeOfBranch()
             {
@@ -460,9 +467,11 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenUsingAliasMapping_ShouldReturnOneDeveloperStats()
             {
                 // arrange
-                var author = new Author { Name = "T-rav",
-                                          Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
-                                        };
+                var author = new Author
+                {
+                    Name = "T-rav",
+                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
+                };
                 var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -471,7 +480,7 @@ namespace Analyzer.Tests.SourceRepository
                     .WithEntireHistory()
                     .Build();
                 // act
-                var actual = sut.Build_Individual_Developer_Stats(new List<Author> {author});
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
                 var expected = new List<DeveloperStats>
                 {
