@@ -28,22 +28,65 @@ namespace Analyzer.Data.SourceRepository
             ReportingRange = reportingPeriod;
         }
 
-        public IEnumerable<Author> List_Authors(List<Alias> aliases)
+        public IEnumerable<Author> List_Authors(IEnumerable<Alias> aliases)
         {
             var authors = List_Authors();
 
-            // todo : if null or empty
-            var authorMap = new Dictionary<Guid, List<string>>();
-            // iterate over each entry
-            // create a dictionay with alias.id and email that matched developer list
-            // if not in alias list add as new alias
-            // then combine all keys into a new result
+            return NoAliases(aliases) ? authors : MapDevelopersToAliases(aliases, authors);
+        }
+
+        private static bool NoAliases(IEnumerable<Alias> aliases)
+        {
+            return aliases == null;
+        }
+
+        private IEnumerable<Author> MapDevelopersToAliases(IEnumerable<Alias> aliases, IEnumerable<Author> authors)
+        {
+            var authorMap = new Dictionary<Guid, Author>();
+
             foreach (var author in authors)
             {
-
+                var alias = FindAlias(aliases, author);
+                if (AliasFoundWithNoDeveloperMapping(alias, authorMap))
+                {
+                    AddMapping(author, alias, authorMap);
+                }
+                else if (NoAliasFoundWithNoDeveloperMapping(alias, authorMap))
+                {
+                    AddDefaultMapping(authorMap, author);
+                }
             }
 
-            return authors;
+            var result = authorMap.Values.ToList();
+            return result;
+        }
+
+        private void AddDefaultMapping(Dictionary<Guid, Author> authorMap, Author author)
+        {
+            authorMap[Guid.NewGuid()] = author;
+        }
+
+        private void AddMapping(Author author, Alias alias, Dictionary<Guid, Author> authorMap)
+        {
+            author.Emails.Clear();
+            author.Emails.AddRange(alias.Emails);
+            authorMap[alias.Id] = author;
+        }
+
+        private bool NoAliasFoundWithNoDeveloperMapping(Alias alias, Dictionary<Guid, Author> authorMap)
+        {
+            return alias == null || !authorMap.ContainsKey(alias.Id);
+        }
+
+        private bool AliasFoundWithNoDeveloperMapping(Alias alias, Dictionary<Guid, Author> authorMap)
+        {
+            return alias != null && !authorMap.ContainsKey(alias.Id);
+        }
+
+        private Alias FindAlias(IEnumerable<Alias> aliases, Author author)
+        {
+            var alias = aliases.FirstOrDefault(x => x.Emails.Contains(author.Emails.FirstOrDefault()));
+            return alias;
         }
 
         public IEnumerable<Author> List_Authors()

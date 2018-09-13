@@ -57,7 +57,6 @@ namespace Analyzer.Tests.SourceRepository
             }
 
             [Test]
-            [Ignore("wip")]
             public void WhenUsingAlias_ShouldReturnSingleDeveloperWithTwoEmails()
             {
                 // arrange
@@ -76,6 +75,43 @@ namespace Analyzer.Tests.SourceRepository
                 var actual = sut.List_Authors(aliasMap);
                 // assert
                 var expected = 1;
+                actual.Count().Should().Be(expected);
+            }
+
+            [Test]
+            public void WhenNullAliases_ShouldReturnTwoDevelopers()
+            {
+                // arrange
+                var repoPath = TestRepoPath("git-test-operations");
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithEntireHistory()
+                    .WithBranch("origin/my-branch")
+                    .Build();
+                // act
+                var actual = sut.List_Authors(null);
+                // assert
+                var expected = 2;
+                actual.Count().Should().Be(expected);
+            }
+
+            [Test]
+            public void WhenEmpyAliases_ShouldReturnTwoDevelopers()
+            {
+                // arrange
+                var repoPath = TestRepoPath("git-test-operations");
+                var aliasMap = new List<Alias>();
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithEntireHistory()
+                    .WithBranch("origin/my-branch")
+                    .Build();
+                // act
+                var actual = sut.List_Authors(aliasMap);
+                // assert
+                var expected = 2;
                 actual.Count().Should().Be(expected);
             }
         }

@@ -7,11 +7,11 @@ namespace Analyzer.Domain.SourceRepository
 {
     public interface ISourceControlRepository
     {
-        ReportingPeriod ReportingRange { get;  }
+        ReportingPeriod ReportingRange { get; }
         List<Collaberation> Collaberations { get; }
-        
+
         IEnumerable<Author> List_Authors();
-        IEnumerable<Author> List_Authors(List<Alias> aliases);
+        IEnumerable<Author> List_Authors(IEnumerable<Alias> aliases);
         int Period_Active_Days(Author author);
         double Active_Days_Per_Week(Author author);
         double Commits_Per_Day(Author author);
