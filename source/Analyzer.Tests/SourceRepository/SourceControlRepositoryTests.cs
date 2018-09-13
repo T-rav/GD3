@@ -103,7 +103,7 @@ namespace Analyzer.Tests.SourceRepository
 
             [TestCase("2018-06-25", "2018-07-09", 0)]
             [TestCase("2018-07-10", "2018-07-12", 1)]
-            public void NotHeadBranch_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
+            public void WhenNotMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
             {
                 // arrange
                 var repoPath = TestRepoPath("test-repo");
@@ -124,7 +124,7 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenEmailNotForActiveDeveloper_ShouldReturnZero()
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
                 var author = new Author { Name = "no-one", Emails = new List<string> { "solo@nothere.io" } };
 
                 var sut = new SourceControlRepositoryBuilder()
@@ -166,7 +166,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "Moo", Emails = new List<string> { "invalid@buddy.io" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -208,7 +208,7 @@ namespace Analyzer.Tests.SourceRepository
             {
                 // arrange
                 var author = new Author { Name = "boo", Emails = new List<string> { "noone@moonbase.co" } };
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
@@ -551,11 +551,11 @@ namespace Analyzer.Tests.SourceRepository
             public void WhenRangeOneDay_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("test-repo");
+                var repoPath = TestRepoPath("gd3-testoperations");
 
                 var sut = new SourceControlRepositoryBuilder()
                     .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-06-25"))
+                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-16"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
@@ -566,9 +566,9 @@ namespace Analyzer.Tests.SourceRepository
                 {
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-06-25"),
+                        DateOf = DateTime.Parse("2018-07-16"),
                         ActiveDevelopers = 1,
-                        TotalCommits = 8
+                        TotalCommits = 3
                     }
                 };
                 var expected = new TeamStatsCollection(stats, new List<DayOfWeek>());
