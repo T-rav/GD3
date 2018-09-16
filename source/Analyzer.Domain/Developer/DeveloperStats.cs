@@ -40,7 +40,7 @@ namespace Analyzer.Domain.Developer
                    $"{PaddedPrint(ActiveDaysPerWeek, 23)}" +
                    $"{PaddedPrint(CommitsPerDay, 16)}" +
                    $"{PaddedPrint(LinesOfChangePerHour, 27)}" +
-                   $"{PaddedPrint(Impact, 13)}" +
+                   $"{PaddedPrint(Impact, 20)}" +
                    $"{PaddedPrint(RiskFactor, 14)}" +
                    $"{PaddedPrint(LinesAdded, 14)}" +
                    $"{PaddedPrint(LinesRemoved, 16)}" +
