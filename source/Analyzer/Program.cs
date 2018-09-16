@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Analyzer.Data.SourceRepository;
+using Analyzer.Domain.Developer;
 using CommandLine;
 
 namespace Analyzer
@@ -37,6 +39,18 @@ namespace Analyzer
                             .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                             .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
                             .Build();
+
+            // todo : make configurable
+            //var aliasMap = new List<Alias>
+            //{
+            //    new Alias{
+            //        Name = "T-rav",
+            //        Emails = new List<string>{
+            //            "tmfrisinger@gmail.com",
+            //            "tmfirsinger@gmail.com",
+            //            "travisf@stoneage1.bizvoip.co.za"}
+            //    }
+            //};
 
             var dashboard = new CodeStatsDashboard();
             var authors = repo.List_Authors();
