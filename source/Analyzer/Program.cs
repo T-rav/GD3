@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Analyzer.Data.Developer;
 using Analyzer.Data.SourceRepository;
 using Analyzer.Domain.Developer;
 using CommandLine;
@@ -51,6 +52,10 @@ namespace Analyzer
             //            "travisf@stoneage1.bizvoip.co.za"}
             //    }
             //};
+
+            // todo : wip, first attempt to make aliases confiurable
+            //var aliasRepository = new AliasRepository(opts.AliasFile);
+            //var aliasMap = aliasRepository.Load();
 
             var dashboard = new CodeStatsDashboard();
             var authors = repo.List_Authors();

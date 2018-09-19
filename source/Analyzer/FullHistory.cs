@@ -24,5 +24,8 @@ namespace Analyzer
 
         [Option('d', "Working days per week", Default = 5, HelpText = "Number of working days per week")]
         public double WorkingDaysPerWeek { get; set; }
+
+        [Option('a', "Location of the JSON file containing the list of aliases", Default = "", HelpText = "Path on the filesystem to the JSON file containing the list of aliases")]
+        public string AliasFile { get; set; }
     }
 }
