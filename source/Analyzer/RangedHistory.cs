@@ -30,5 +30,8 @@ namespace Analyzer
 
         [Option('e', "End date of analysis", Default = 5, HelpText = "End day of analysis")]
         public DateTime EndDate { get; set; }
+
+        [Option('a', "Location of the JSON file containing the list of aliases", Default = "", HelpText = "Path on the filesystem to the JSON file containing the list of aliases")]
+        public string AliasFile { get; set; }
     }
 }
