@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Analyzer.Data.SourceRepository;
+﻿using Analyzer.Data.SourceRepository;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Team;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
-namespace Analyzer.Tests.SourceRepository
+namespace Analyzer.Data.Tests.SourceRepository
 {
     [TestFixture]
     public class SourceControlRepositoryTests

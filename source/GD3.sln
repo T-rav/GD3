@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer", "Analyzer\Analyzer.csproj", "{7EB385DC-AD83-489A-9C6F-2135BDE20DBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer..Data.Tests", "Analyzer.Tests\Analyzer..Data.Tests.csproj", "{C22447E5-9FA9-4930-BBB3-B05702D404E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Data.Tests", "Analyzer.Tests\Analyzer.Data.Tests.csproj", "{C22447E5-9FA9-4930-BBB3-B05702D404E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Domain", "Analyzer.Domain\Analyzer.Domain.csproj", "{A97E7C38-F6B1-4394-A870-DB60A5A08304}"
 EndProject
