@@ -1,13 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Analyzer.Data.Developer;
-using Analyzer.Data.SourceRepository;
-using Analyzer.Tests.SourceRepository;
+﻿using Analyzer.Data.Developer;
 using FluentAssertions;
 using NUnit.Framework;
+using System.IO;
 
-namespace Analyzer.Tests.Developer
+namespace Analyzer.Data.Tests.Developer
 {
     [TestFixture]
     public class AliasRepositoryTests

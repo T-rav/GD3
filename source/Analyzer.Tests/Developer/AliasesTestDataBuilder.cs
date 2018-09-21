@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Analyzer.Domain.Developer;
 
-namespace Analyzer.Tests.Developer
+namespace Analyzer.Data.Tests.Developer
 {
     public class AliasesTestDataBuilder
     {
