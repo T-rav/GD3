@@ -4,6 +4,7 @@ using LibGit2Sharp;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Analyzer.Data.Tests.SourceRepository
@@ -139,59 +140,16 @@ namespace Analyzer.Data.Tests.SourceRepository
                 foreach (var commit in _commits)
                 {
                     var content = string.Join("\n", commit.Lines);
-                    File.WriteAllText(Path.Combine(repo.Info.WorkingDirectory, commit.FileName), content);
+                    var filePath = Path.Combine(repo.Info.WorkingDirectory, commit.FileName);
+                    File.WriteAllText(filePath, content);
 
-                    var author = new Signature("James", "@jugglingnutcase", DateTime.Now);
+                    Commands.Stage(repo, "*");
 
-                    var td = TreeDefinition.From(repo.Head.Tip.Tree)
-                        .Add("1/new file", commit.FileName, Mode.NonExecutableFile);
-
-                    var tree = repo.ObjectDatabase.CreateTree(td);
-                    var builderCommit = repo.ObjectDatabase.CreateCommit(author, author, "message", tree, repo.Commits, false);
-                    repo.Refs.UpdateTarget(repo.Refs.Head, builderCommit.Id);
-
-                    // ** bare branch method
-
-                    //var contentBytes = GetContentBytes(commit);
-                    //using (var ms = new MemoryStream(contentBytes))
-                    //{
-                    //    var tree = PlaceBlobIntoTree(repo, ms, commit);
-                    //    var committer = GetCommitter();
-                    //    MakeCommit(repo, committer, tree);
-                    //}
+                    var author = new Signature("James", "@jugglingnutcase", DateTime.ParseExact(commit.TimeStamp, "yyyy-MM-dd", CultureInfo.CurrentCulture));
+                    repo.Commit("yay it works", author, author);
                 }
             }
             return path;
-        }
-
-        private void MakeCommit(Repository repo, Signature committer, Tree tree)
-        {
-            var builderCommit = repo.ObjectDatabase.CreateCommit(committer, committer, "message", tree, repo.Commits, false);
-            repo.Refs.UpdateTarget(repo.Refs.Head, builderCommit.Id);
-        }
-
-        private Signature GetCommitter()
-        {
-            var committer = new Signature("James", "@jugglingnutcase", DateTime.Now);
-            return committer;
-        }
-
-        private Tree PlaceBlobIntoTree(Repository repo, MemoryStream ms, TestCommit commit)
-        {
-            var newBlob = repo.ObjectDatabase.CreateBlob(ms);
-
-            // Put the blob in a tree
-            var td = new TreeDefinition();
-            td.Add(commit.FileName, newBlob, Mode.NonExecutableFile);
-            var tree = repo.ObjectDatabase.CreateTree(td);
-            return tree;
-        }
-
-        private byte[] GetContentBytes(TestCommit commit)
-        {
-            var content = string.Join("\n", commit.Lines);
-            var contentBytes = System.Text.Encoding.UTF8.GetBytes(content);
-            return contentBytes;
         }
     }
 
