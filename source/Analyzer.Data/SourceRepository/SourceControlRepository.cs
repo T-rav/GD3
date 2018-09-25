@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Analyzer.Domain.Developer;
+﻿using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
 using Analyzer.Domain.Team;
 using LibGit2Sharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Analyzer.Data.SourceRepository
 {
@@ -324,6 +324,11 @@ namespace Analyzer.Data.SourceRepository
             return commitLog
                 .Where(x => x.Author.When.Date >= ReportingRange.Start.Date &&
                         x.Author.When.Date <= ReportingRange.End.Date);
+        }
+
+        public void Dispose()
+        {
+            _repository?.Dispose();
         }
     }
 }

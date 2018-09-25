@@ -1,10 +1,9 @@
 ﻿using Analyzer.Data.SourceRepository;
+using Analyzer.Data.Test.Utils;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using Analyzer.Data.Test.Utils;
 
 namespace Analyzer.Data.Tests.SourceRepository
 {
@@ -30,28 +29,30 @@ namespace Analyzer.Data.Tests.SourceRepository
         {
             // arrange
             var context = new RepositoryTestDataBuilder().Build();
-            //var repoPath = TestRepoPath("git-test-operations");
-            var sut = new SourceControlRepositoryBuilder()
-                .WithPath(context.Path)
-                .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
-                .WithBranch("--Never-Existed--");
-            // act
-            var actual = Assert.Throws<Exception>(() => sut.Build());
-            // assert
-            actual.Message.Should().Be("Invalid branch [--Never-Existed--]");
+            using (context)
+            {
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                    .WithBranch("--Never-Existed--");
+                // act
+                var actual = Assert.Throws<Exception>(() => sut.Build());
+                // assert
+                actual.Message.Should().Be("Invalid branch [--Never-Existed--]");
+            }
         }
 
         [Test]
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            //var repoPath = TestRepoPath("git-test-operations");
-            var context = new RepositoryTestDataBuilder()
-                          .With_Commit(new TestCommit { FileName = "file1.txt", Lines = new List<string> { "1", "2" }, TimeStamp = "2018-07-16" })
-                          .With_Commit(new TestCommit { FileName = "file2.txt", Lines = new List<string> { "3", "4" }, TimeStamp = "2018-09-13" })
-                          .Build();
+            var repoPath = TestRepoPath("git-test-operations");
+            //var context = new RepositoryTestDataBuilder()
+            //              .With_Commit(new TestCommit { FileName = "file1.txt", Lines = new List<string> { "1", "2" }, TimeStamp = "2018-07-16" })
+            //              .With_Commit(new TestCommit { FileName = "file2.txt", Lines = new List<string> { "3", "4" }, TimeStamp = "2018-09-13" })
+            //              .Build();
             var sut = new SourceControlRepositoryBuilder()
-                .WithPath(context.Path)
+                .WithPath(repoPath)
                 .WithEntireHistory()
                 .Build();
             // act

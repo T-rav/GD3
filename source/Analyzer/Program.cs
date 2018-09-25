@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Analyzer.Data.Developer;
-using Analyzer.Data.SourceRepository;
-using Analyzer.Domain.Developer;
+﻿using Analyzer.Data.SourceRepository;
 using CommandLine;
+using System;
 
 namespace Analyzer
 {
@@ -31,60 +28,64 @@ namespace Analyzer
 
         private static int DisplayFullHistory(FullHistory opts)
         {
-            var repo = new SourceControlRepositoryBuilder()
-                            .WithPath(opts.Path)
-                            .WithEntireHistory()
-                            .WithIgnorePatterns(opts.IgnorePatterns)
-                            .WithBranch(opts.Branch)
-                            .WithWeekends(opts.WeekendDays)
-                            .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
-                            .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
-                            .Build();
+            using (var repo = new SourceControlRepositoryBuilder()
+                .WithPath(opts.Path)
+                .WithEntireHistory()
+                .WithIgnorePatterns(opts.IgnorePatterns)
+                .WithBranch(opts.Branch)
+                .WithWeekends(opts.WeekendDays)
+                .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
+                .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
+                .Build())
+            {
 
-            // todo : make configurable
-            //var aliasMap = new List<Alias>
-            //{
-            //    new Alias{
-            //        Name = "T-rav",
-            //        Emails = new List<string>{
-            //            "tmfrisinger@gmail.com",
-            //            "tmfirsinger@gmail.com",
-            //            "travisf@stoneage1.bizvoip.co.za"}
-            //    }
-            //};
+                // todo : make configurable
+                //var aliasMap = new List<Alias>
+                //{
+                //    new Alias{
+                //        Name = "T-rav",
+                //        Emails = new List<string>{
+                //            "tmfrisinger@gmail.com",
+                //            "tmfirsinger@gmail.com",
+                //            "travisf@stoneage1.bizvoip.co.za"}
+                //    }
+                //};
 
-            // todo : wip, first attempt to make aliases confiurable
-            //var aliasRepository = new AliasRepository(opts.AliasFile);
-            //var aliasMap = aliasRepository.Load();
+                // todo : wip, first attempt to make aliases confiurable
+                //var aliasRepository = new AliasRepository(opts.AliasFile);
+                //var aliasMap = aliasRepository.Load();
 
-            var dashboard = new CodeStatsDashboard();
-            var authors = repo.List_Authors();
-            var stats = repo.Build_Individual_Developer_Stats(authors);
-            var teamStats = repo.Build_Team_Stats();
-            dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+                var dashboard = new CodeStatsDashboard();
+                var authors = repo.List_Authors();
+                var stats = repo.Build_Individual_Developer_Stats(authors);
+                var teamStats = repo.Build_Team_Stats();
+                dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+            }
 
             return 1;
         }
 
         private static int DisplayRangedHistory(RangedHistory opts)
         {
-            var repo = new SourceControlRepositoryBuilder()
-                            .WithPath(opts.Path)
-                            .WithRange(opts.StartDate, opts.EndDate)
-                            .WithIgnorePatterns(opts.IgnorePatterns)
-                            .WithBranch(opts.Branch)
-                            .WithWeekends(opts.WeekendDays)
-                            .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
-                            .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
-                            .Build();
+            using (var repo = new SourceControlRepositoryBuilder()
+                .WithPath(opts.Path)
+                .WithRange(opts.StartDate, opts.EndDate)
+                .WithIgnorePatterns(opts.IgnorePatterns)
+                .WithBranch(opts.Branch)
+                .WithWeekends(opts.WeekendDays)
+                .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
+                .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
+                .Build())
+            {
 
-            var dashboard = new CodeStatsDashboard();
-            var authors = repo.List_Authors();
-            var stats = repo.Build_Individual_Developer_Stats(authors);
-            var teamStats = repo.Build_Team_Stats();
-            dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+                var dashboard = new CodeStatsDashboard();
+                var authors = repo.List_Authors();
+                var stats = repo.Build_Individual_Developer_Stats(authors);
+                var teamStats = repo.Build_Team_Stats();
+                dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
 
-            return 1;
+                return 1;
+            }
         }
     }
 }

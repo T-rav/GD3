@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.Team;
 
 namespace Analyzer.Domain.SourceRepository
 {
-    public interface ISourceControlRepository
+    public interface ISourceControlRepository: IDisposable
     {
         ReportingPeriod ReportingRange { get; }
         List<Collaberation> Collaberations { get; }
