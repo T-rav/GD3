@@ -742,7 +742,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     {
                         Author = author,
                         PeriodActiveDays = 1,
-                        Impact = 0.02,
+                        Impact = 0.01,
                         Churn = 1.0,
                         LinesAdded = 6,
                         LinesRemoved = 6,
