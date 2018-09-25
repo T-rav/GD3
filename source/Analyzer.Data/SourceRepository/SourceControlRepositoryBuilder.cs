@@ -1,5 +1,4 @@
-﻿using Analyzer.Domain.Developer;
-using Analyzer.Domain.Reporting;
+﻿using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
 using LibGit2Sharp;
 using System;
@@ -19,7 +18,6 @@ namespace Analyzer.Data.SourceRepository
         private bool _isEntireHistory;
         private readonly List<string> _ignorePatterns;
         private readonly List<DayOfWeek> _weekends;
-        private readonly List<Collaberation> _collaberations;
         private bool _ignoreComments;
 
         public SourceControlRepositoryBuilder()
@@ -29,7 +27,6 @@ namespace Analyzer.Data.SourceRepository
             _branch = Branches.Master.Value;
             _ignorePatterns = new List<string>();
             _weekends = new List<DayOfWeek>();
-            _collaberations = new List<Collaberation>();
         }
 
         public SourceControlRepositoryBuilder WithPath(string repoPath)
@@ -87,12 +84,6 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithCollaberation(DateTime date, params Author[] author)
-        {
-            _collaberations.Add(new Collaberation());
-            return this;
-        }
-
         public object WithAlias(string v1, string v2)
         {
             throw new NotImplementedException();
@@ -124,7 +115,7 @@ namespace Analyzer.Data.SourceRepository
                 MakeRangeEntireHistory(repository, reportRange);
             }
 
-            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns, _collaberations, _ignoreComments);
+            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns, _ignoreComments);
         }
 
         private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)

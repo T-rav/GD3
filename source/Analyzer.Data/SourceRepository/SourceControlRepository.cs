@@ -17,16 +17,13 @@ namespace Analyzer.Data.SourceRepository
         private readonly bool _ignoreComments;
 
         public ReportingPeriod ReportingRange { get; }
-        public List<Collaberation> Collaberations { get; }
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, List<Collaberation> collaberations, bool ignoreComments)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, bool ignoreComments)
         {
             _repository = repository;
             _branch = branch;
             _ignorePatterns = ignorePatterns;
             _ignoreComments = ignoreComments;
-
-            Collaberations = collaberations;
 
             ReportingRange = reportingPeriod;
         }

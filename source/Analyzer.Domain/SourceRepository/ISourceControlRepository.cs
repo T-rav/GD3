@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Analyzer.Domain.Developer;
+﻿using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.Team;
+using System;
+using System.Collections.Generic;
 
 namespace Analyzer.Domain.SourceRepository
 {
-    public interface ISourceControlRepository: IDisposable
+    public interface ISourceControlRepository : IDisposable
     {
         ReportingPeriod ReportingRange { get; }
-        List<Collaberation> Collaberations { get; }
 
         IEnumerable<Author> List_Authors();
         IEnumerable<Author> List_Authors(IEnumerable<Alias> aliases);
