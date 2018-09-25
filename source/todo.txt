@@ -1,3 +1,8 @@
 1. Ignore single line comments // - Basic version working, need to handle this impact in stats better. Speaks to abstraction round commits and filtering.
 2. Replace submodule in test with data builder instead
 3. Make better visualizations of data
+
+Invesigate why Thabani metrics so high
+ - Turns out ignored files where incomplete
+
+full -p D:\Systems\sahl-graduate-project  -h 32 -d 4 -c true -i node_modules;packages;.gitignore;.BASE;.BASE1;.orig;.LOCAL;.LOCAL1;.REMOTE;.REMOTE1;_BASE;_LOCAL;_REMOTE
