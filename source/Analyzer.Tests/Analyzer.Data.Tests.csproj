@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.1" />
-    <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
@@ -14,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Analyzer.Data.Test.Utils\Analyzer.Data.Test.Utils.csproj" />
     <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
   </ItemGroup>

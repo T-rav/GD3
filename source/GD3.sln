@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B346C140-FA03-4741-9F96-A695D984E0DD}"
 	ProjectSection(SolutionItems) = preProject
 		README.txt = README.txt
+		todo.txt = todo.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "DevOps\Tools.csproj", "{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}"
@@ -24,7 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F5A543
 		DevOps\release.sh = DevOps\release.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Domain.Tests", "Analyzer.Domain.Tests\Analyzer.Domain.Tests.csproj", "{E95051DD-A29B-480F-A05A-C5943F759968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Domain.Tests", "Analyzer.Domain.Tests\Analyzer.Domain.Tests.csproj", "{E95051DD-A29B-480F-A05A-C5943F759968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Data.Test.Utils", "Analyzer.Data.Test.Utils\Analyzer.Data.Test.Utils.csproj", "{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +59,10 @@ Global
 		{E95051DD-A29B-480F-A05A-C5943F759968}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E95051DD-A29B-480F-A05A-C5943F759968}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E95051DD-A29B-480F-A05A-C5943F759968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
