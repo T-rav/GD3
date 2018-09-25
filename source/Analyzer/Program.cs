@@ -36,6 +36,7 @@ namespace Analyzer
                 .WithWeekends(opts.WeekendDays)
                 .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                 .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
+                .WithIgnoreComments(opts.IgnoreComments)
                 .Build())
             {
 
@@ -75,6 +76,7 @@ namespace Analyzer
                 .WithWeekends(opts.WeekendDays)
                 .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                 .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
+                .WithIgnoreComments(opts.IgnoreComments)
                 .Build())
             {
 

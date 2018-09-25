@@ -669,6 +669,95 @@ namespace Analyzer.Data.Tests.SourceRepository
 
         }
 
+        // todo : for team stats as well
+        [TestFixture]
+        public class Ignore_Comments
+        {
+            [Test]
+            public void WhenFalse_ShouldReturnStatsWithCommentedOutLines()
+            {
+                // arrange
+                var repoPath = TestRepoPath("git-test-operations");
+                var author = new Author
+                {
+                    Name = "T-rav",
+                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
+                };
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .WithIgnoreComments(false)
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        PeriodActiveDays = 1,
+                        Impact = 0.02,
+                        Churn = 0.5,
+                        LinesAdded = 12,
+                        LinesRemoved = 6,
+                        ActiveDaysPerWeek = 1,
+                        CommitsPerDay = 2,
+                        Rtt100 = 178.57,
+                        Ptt100 = 526.32,
+                        LinesOfChangePerHour = 0.56
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
+            public void WhenTrue_ShouldReturnStatsIgnoringCommentedOutLines()
+            {
+                // arrange
+                var repoPath = TestRepoPath("git-test-operations");
+                var author = new Author
+                {
+                    Name = "T-rav",
+                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
+                };
+
+                var sut = new SourceControlRepositoryBuilder()
+                    .WithPath(repoPath)
+                    .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .WithIgnoreComments(true)
+                    .Build();
+                // act
+                var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                var expected = new List<DeveloperStats>
+                {
+                    new DeveloperStats
+                    {
+                        Author = author,
+                        PeriodActiveDays = 1,
+                        Impact = 0.02,
+                        Churn = 1.0,
+                        LinesAdded = 6,
+                        LinesRemoved = 6,
+                        ActiveDaysPerWeek = 1,
+                        CommitsPerDay = 2,
+                        Rtt100 = 263.16,
+                        Ptt100 = Double.PositiveInfinity,
+                        LinesOfChangePerHour = 0.38
+                    }
+                };
+
+                actual.Should().BeEquivalentTo(expected);
+            }
+        }
+
         private static string TestRepoPath(string repo)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;

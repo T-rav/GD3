@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Analyzer.Domain.Developer;
+﻿using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
 using LibGit2Sharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Analyzer.Data.SourceRepository
 {
@@ -20,6 +20,7 @@ namespace Analyzer.Data.SourceRepository
         private readonly List<string> _ignorePatterns;
         private readonly List<DayOfWeek> _weekends;
         private readonly List<Collaberation> _collaberations;
+        private bool _ignoreComments;
 
         public SourceControlRepositoryBuilder()
         {
@@ -65,7 +66,10 @@ namespace Analyzer.Data.SourceRepository
 
         public SourceControlRepositoryBuilder WithIgnorePatterns(IEnumerable<string> patterns)
         {
-            if (patterns == null) return this;
+            if (patterns == null)
+            {
+                return this;
+            }
 
             _ignorePatterns.AddRange(patterns);
             return this;
@@ -89,6 +93,17 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
+        public object WithAlias(string v1, string v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SourceControlRepositoryBuilder WithIgnoreComments(bool ignoreComments)
+        {
+            _ignoreComments = ignoreComments;
+            return this;
+        }
+
         public ISourceControlRepository Build()
         {
             if (NotValidGitRepository(_repoPath))
@@ -109,7 +124,7 @@ namespace Analyzer.Data.SourceRepository
                 MakeRangeEntireHistory(repository, reportRange);
             }
 
-            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns, _collaberations);
+            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns, _collaberations, _ignoreComments);
         }
 
         private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)
@@ -154,11 +169,6 @@ namespace Analyzer.Data.SourceRepository
         private bool NotValidGitRepository(string repository)
         {
             return !Repository.IsValid(repository);
-        }
-
-        public object WithAlias(string v1, string v2)
-        {
-            throw new NotImplementedException();
         }
     }
 }

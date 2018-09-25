@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CommandLine;
+using System;
 using System.Collections.Generic;
-using CommandLine;
 
 namespace Analyzer
 {
@@ -33,5 +33,8 @@ namespace Analyzer
 
         [Option('a', "Location of the JSON file containing the list of aliases", Default = "", HelpText = "Path on the filesystem to the JSON file containing the list of aliases")]
         public string AliasFile { get; set; }
+
+        [Option('c', "Ignore comments in commit history", Default = false, HelpText = "When set to true ignores single line comments")]
+        public bool IgnoreComments { get; set; }
     }
 }

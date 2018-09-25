@@ -14,15 +14,18 @@ namespace Analyzer.Data.SourceRepository
         private readonly Repository _repository;
         private readonly string _branch;
         private readonly List<string> _ignorePatterns;
+        private readonly bool _ignoreComments;
 
         public ReportingPeriod ReportingRange { get; }
         public List<Collaberation> Collaberations { get; }
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, List<Collaberation> collaberations)
+        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, List<Collaberation> collaberations, bool ignoreComments)
         {
             _repository = repository;
             _branch = branch;
             _ignorePatterns = ignorePatterns;
+            _ignoreComments = ignoreComments;
+
             Collaberations = collaberations;
 
             ReportingRange = reportingPeriod;
@@ -275,6 +278,8 @@ namespace Analyzer.Data.SourceRepository
             foreach (var parent in commit.Parents)
             {
                 var fileChanges = _repository.Diff.Compare<Patch>(parent.Tree, commit.Tree);
+                var totalCommentedOutlinesToRemove = TotalCommentedOutLinesToDeduct(fileChanges);
+
                 foreach (var file in fileChanges)
                 {
                     if (FileShouldBeIgnored(file))
@@ -282,10 +287,21 @@ namespace Analyzer.Data.SourceRepository
                         continue;
                     }
 
-                    result.Added += file.LinesAdded;
+                    result.Added += file.LinesAdded - totalCommentedOutlinesToRemove;
                     result.Removed += file.LinesDeleted;
                 }
             }
+        }
+
+        private int TotalCommentedOutLinesToDeduct(Patch fileChanges)
+        {
+            if (!_ignoreComments)
+            {
+                return 0;
+            }
+
+            var commentedOutLines = fileChanges.Content.Split("+//"); // todo : make comment char configurable
+            return commentedOutLines.Length - 1;
         }
 
         private void BuildFirstCommitStats(Commit commit, LinesOfChange result)
