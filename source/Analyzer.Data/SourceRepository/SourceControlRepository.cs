@@ -199,7 +199,7 @@ namespace Analyzer.Data.SourceRepository
             The number of files affected
             The severity of changes when old code is modified   
          */
-        // todo : this almost seems as though it should accumulate then calculate
+
         // 13-08 Tusani v Sindi stats
         private double Impact(Author developer)
         {
@@ -214,6 +214,15 @@ namespace Analyzer.Data.SourceRepository
                     var changeImpactData = CalculateImpactStats(fileChanges);
                     totalScore += changeImpactData.Calculate();
                 }
+
+                // todo : debugging log for high impact scoring
+                //if (developer.Emails.Contains("thabanitembe@hotmail.com"))
+                //{
+                //    //todo : write out debugging data
+                //    var lineToWrite = $"{developer.Name}|{commit.Author.When.DateTime}|{totalScore}" + Environment.NewLine;
+                //    File.AppendAllText("D:\\Systems\\debug.txt", lineToWrite);
+                //}
+
             }
 
             return Math.Round(totalScore, 2);
@@ -229,12 +238,16 @@ namespace Analyzer.Data.SourceRepository
                     continue;
                 }
 
+                var totalCommentedOutlinesToRemove = TotalCommentedOutLinesToDeduct(fileChanges);
+                var totalLinesEdited = ((file.LinesAdded - totalCommentedOutlinesToRemove) + (file.LinesDeleted - totalCommentedOutlinesToRemove));
+
                 result.TotalFiles += 1;
                 result.TotalEditLocations += (file.Patch.Split("@@").Length - 1) / 2;
-                result.TotalLinesEdited += file.LinesAdded + file.LinesDeleted;
+
+                result.TotalLinesEdited += totalLinesEdited;
                 if (file.Status == ChangeKind.Modified)
                 {
-                    result.TotalLinesOfOldCode += file.LinesAdded + file.LinesDeleted;
+                    result.TotalLinesOfOldCode += totalLinesEdited;
                 }
             }
 
