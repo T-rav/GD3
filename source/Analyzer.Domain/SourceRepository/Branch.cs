@@ -8,5 +8,10 @@
         {
             Value = branchName;
         }
+
+        public static Branch Create(string branch)
+        {
+            return new Branch(branch);
+        }
     }
 }

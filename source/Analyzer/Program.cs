@@ -28,7 +28,7 @@ namespace Analyzer
 
         private static int DisplayFullHistory(FullHistory opts)
         {
-            using (var repo = new SourceControlRepositoryBuilder()
+            using (var repo = new SourceControlAnalysisBuilder()
                 .WithPath(opts.Path)
                 .WithEntireHistory()
                 .WithIgnorePatterns(opts.IgnorePatterns)
@@ -68,7 +68,7 @@ namespace Analyzer
 
         private static int DisplayRangedHistory(RangedHistory opts)
         {
-            using (var repo = new SourceControlRepositoryBuilder()
+            using (var repo = new SourceControlAnalysisBuilder()
                 .WithPath(opts.Path)
                 .WithRange(opts.StartDate, opts.EndDate)
                 .WithIgnorePatterns(opts.IgnorePatterns)

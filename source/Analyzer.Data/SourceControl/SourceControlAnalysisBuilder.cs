@@ -5,10 +5,11 @@ using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Branch = Analyzer.Domain.SourceRepository.Branch;
 
 namespace Analyzer.Data.SourceControl
 {
-    public class SourceControlRepositoryBuilder
+    public class SourceControlAnalysisBuilder
     {
         private string _repoPath;
         private DateTime _start;
@@ -22,7 +23,7 @@ namespace Analyzer.Data.SourceControl
         private bool _ignoreComments;
         private string _aliasMapping;
 
-        public SourceControlRepositoryBuilder()
+        public SourceControlAnalysisBuilder()
         {
             _workWeekHours = 40;
             _workingDaysPerWeek = 5;
@@ -32,13 +33,13 @@ namespace Analyzer.Data.SourceControl
             _aliasMapping = string.Empty;
         }
 
-        public SourceControlRepositoryBuilder WithPath(string repoPath)
+        public SourceControlAnalysisBuilder WithPath(string repoPath)
         {
             _repoPath = repoPath;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithRange(DateTime start, DateTime end)
+        public SourceControlAnalysisBuilder WithRange(DateTime start, DateTime end)
         {
             _start = start;
             _end = end;
@@ -46,25 +47,25 @@ namespace Analyzer.Data.SourceControl
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithWorkingWeekHours(int workWeekHours)
+        public SourceControlAnalysisBuilder WithWorkingWeekHours(int workWeekHours)
         {
             _workWeekHours = workWeekHours;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithWorkingDaysPerWeek(double workingDaysPerWeek)
+        public SourceControlAnalysisBuilder WithWorkingDaysPerWeek(double workingDaysPerWeek)
         {
             _workingDaysPerWeek = workingDaysPerWeek;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithBranch(string branch)
+        public SourceControlAnalysisBuilder WithBranch(string branch)
         {
             _branch = branch;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithIgnorePatterns(IEnumerable<string> patterns)
+        public SourceControlAnalysisBuilder WithIgnorePatterns(IEnumerable<string> patterns)
         {
             if (patterns == null)
             {
@@ -75,25 +76,25 @@ namespace Analyzer.Data.SourceControl
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithEntireHistory()
+        public SourceControlAnalysisBuilder WithEntireHistory()
         {
             _isEntireHistory = true;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithWeekends(IEnumerable<DayOfWeek> days)
+        public SourceControlAnalysisBuilder WithWeekends(IEnumerable<DayOfWeek> days)
         {
             _weekends.AddRange(days);
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithIgnoreComments(bool ignoreComments)
+        public SourceControlAnalysisBuilder WithIgnoreComments(bool ignoreComments)
         {
             _ignoreComments = ignoreComments;
             return this;
         }
 
-        public SourceControlRepositoryBuilder WithAliasMapping(string aliasMapping)
+        public SourceControlAnalysisBuilder WithAliasMapping(string aliasMapping)
         {
             _aliasMapping = aliasMapping;
             return this;
@@ -124,12 +125,12 @@ namespace Analyzer.Data.SourceControl
             return new SourceControlAnalysis(repository, aliasMapping, context);
         }
 
-        private SourceControlContext CreateSourceControlContext(ReportingPeriod reportRange)
+        private AnalysisContext CreateSourceControlContext(ReportingPeriod reportRange)
         {
-            var context = new SourceControlContext
+            var context = new AnalysisContext
             {
                 ReportRange = reportRange,
-                Branch = _branch,
+                Branch = Branch.Create(_branch),
                 IgnorePatterns = _ignorePatterns,
                 IgnoreComments = _ignoreComments
             };

@@ -15,7 +15,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         {
             // arrange
             var repoPath = "x:\\invalid_repo";
-            var builder = new SourceControlRepositoryBuilder()
+            var builder = new SourceControlAnalysisBuilder()
                 .WithPath(repoPath);
             // act
             var actual = Assert.Throws<Exception>(() => builder.Build());
@@ -31,7 +31,7 @@ namespace Analyzer.Data.Tests.SourceRepository
             var context = new RepositoryTestDataBuilder().Build();
             using (context)
             {
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(context.Path)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .WithBranch("--Never-Existed--");
@@ -51,7 +51,7 @@ namespace Analyzer.Data.Tests.SourceRepository
             //              .With_Commit(new TestCommit { FileName = "file1.txt", Lines = new List<string> { "1", "2" }, TimeStamp = "2018-07-16" })
             //              .With_Commit(new TestCommit { FileName = "file2.txt", Lines = new List<string> { "3", "4" }, TimeStamp = "2018-09-13" })
             //              .Build();
-            var sut = new SourceControlRepositoryBuilder()
+            var sut = new SourceControlAnalysisBuilder()
                 .WithPath(repoPath)
                 .WithEntireHistory()
                 .Build();
@@ -67,7 +67,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         {
             // arrange
             var repoPath = TestRepoPath("git-test-operations");
-            var sut = new SourceControlRepositoryBuilder()
+            var sut = new SourceControlAnalysisBuilder()
                 .WithPath(repoPath)
                 .WithIgnorePatterns(null);
             // act

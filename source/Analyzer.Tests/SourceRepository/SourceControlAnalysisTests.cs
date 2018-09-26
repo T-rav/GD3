@@ -23,7 +23,7 @@ namespace Analyzer.Data.Tests.SourceRepository
             {
                 // arrange
                 var repoPath = TestRepoPath("git-test-operations");
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                              .WithPath(repoPath)
                              .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
                              .Build();
@@ -42,7 +42,7 @@ namespace Analyzer.Data.Tests.SourceRepository
             {
                 // arrange
                 var repoPath = TestRepoPath("git-test-operations");
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/my-branch")
                     .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
@@ -71,7 +71,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 using (var aliasFileContext = WriteAliasMapping(aliasMap))
                 {
 
-                    var sut = new SourceControlRepositoryBuilder()
+                    var sut = new SourceControlAnalysisBuilder()
                         .WithPath(repoPath)
                         .WithEntireHistory()
                         .WithBranch("origin/my-branch")
@@ -91,7 +91,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 // arrange
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithEntireHistory()
                     .WithBranch("origin/my-branch")
@@ -112,7 +112,7 @@ namespace Analyzer.Data.Tests.SourceRepository
 
                 using (var aliasFileContext = WriteAliasMapping(aliasMap))
                 {
-                    var sut = new SourceControlRepositoryBuilder()
+                    var sut = new SourceControlAnalysisBuilder()
                         .WithPath(repoPath)
                         .WithEntireHistory()
                         .WithBranch("origin/my-branch")
@@ -138,7 +138,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithRange(start, end)
                     .WithPath(repoPath)
                     .Build();
@@ -156,7 +156,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithRange(start, end)
                     .WithPath(repoPath)
                     .WithBranch("origin/my-branch")
@@ -174,7 +174,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "no-one", Emails = new List<string> { "solo@nothere.io" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .Build();
                 // act
@@ -195,7 +195,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-14"))
                     .WithWorkingDaysPerWeek(4)
@@ -215,7 +215,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "Moo", Emails = new List<string> { "invalid@buddy.io" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
@@ -237,7 +237,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-14"))
                     .WithWorkingDaysPerWeek(4)
@@ -257,7 +257,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "boo", Emails = new List<string> { "noone@moonbase.co" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
                     .Build();
@@ -279,7 +279,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                                 .WithPath(repoPath)
                                 .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-12"))
                                 .WithWorkingDaysPerWeek(4)
@@ -317,7 +317,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-09-13"), DateTime.Parse("2018-09-13"))
                     .WithBranch("origin/negative-commits")
@@ -338,7 +338,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-12"))
                     .WithWorkingDaysPerWeek(4)
@@ -375,7 +375,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-16"))
                     .WithWorkingDaysPerWeek(4)
@@ -412,7 +412,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/my-branch")
                     .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-10"))
@@ -448,7 +448,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithIgnorePatterns(new[] { "documents", ".orig", "BASE", "LOCAL", "REMOTE" })
                     .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-13"))
@@ -483,7 +483,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithEntireHistory()
                     .Build();
@@ -521,7 +521,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 };
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithBranch("origin/my-branch")
                     .WithEntireHistory()
@@ -559,7 +559,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 // arrange
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-16"))
                     .WithWorkingDaysPerWeek(4)
@@ -588,7 +588,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 // arrange
                 var repoPath = TestRepoPath("git-test-operations");
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-20"))
                     .WithWorkingDaysPerWeek(4)
@@ -653,7 +653,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
                 };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
                     .WithWorkingDaysPerWeek(4)
@@ -695,7 +695,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
                 };
 
-                var sut = new SourceControlRepositoryBuilder()
+                var sut = new SourceControlAnalysisBuilder()
                     .WithPath(repoPath)
                     .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
                     .WithWorkingDaysPerWeek(4)

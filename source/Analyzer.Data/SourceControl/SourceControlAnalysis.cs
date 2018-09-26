@@ -14,11 +14,11 @@ namespace Analyzer.Data.SourceControl
     {
         private readonly Repository _repository;
         private readonly Aliases _aliases;
-        private readonly SourceControlContext _context;
+        private readonly AnalysisContext _context;
 
         public ReportingPeriod ReportingRange => _context.ReportRange;
 
-        public SourceControlAnalysis(Repository repository, Aliases aliases, SourceControlContext context)
+        public SourceControlAnalysis(Repository repository, Aliases aliases, AnalysisContext context)
         {
             _repository = repository;
             _context = context;
@@ -284,10 +284,10 @@ namespace Analyzer.Data.SourceControl
         {
             var filter = new CommitFilter
             {
-                IncludeReachableFrom = _repository.Branches[_context.Branch]
+                IncludeReachableFrom = _repository.Branches[_context.Branch.Value]
             };
 
-            if (Branches.MasterNotSelected(_context.Branch))
+            if (Branches.MasterNotSelected(_context.Branch.Value))
             {
                 filter.ExcludeReachableFrom = _repository.Branches[Branches.Master.Value];
             }
