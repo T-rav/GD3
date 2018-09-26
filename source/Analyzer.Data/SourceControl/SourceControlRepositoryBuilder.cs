@@ -88,11 +88,6 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public object WithAlias(string v1, string v2)
-        {
-            throw new NotImplementedException();
-        }
-
         public SourceControlRepositoryBuilder WithIgnoreComments(bool ignoreComments)
         {
             _ignoreComments = ignoreComments;

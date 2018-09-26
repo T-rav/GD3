@@ -1,4 +1,5 @@
 ﻿using Analyzer.Data.SourceRepository;
+using Analyzer.Data.Test.Utils;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Team;
 using FluentAssertions;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TddBuddy.System.Utils.JsonUtils;
 
 namespace Analyzer.Data.Tests.SourceRepository
 {
@@ -66,16 +68,21 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new Alias {Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" } }
                 };
 
-                var sut = new SourceControlRepositoryBuilder()
-                             .WithPath(repoPath)
-                             .WithEntireHistory()
-                             .WithBranch("origin/my-branch")
-                             .Build();
-                // act
-                var actual = sut.List_Authors();
-                // assert
-                var expected = 1;
-                actual.Count().Should().Be(expected);
+                using (var aliasFileContext = WriteAliasMapping(aliasMap))
+                {
+
+                    var sut = new SourceControlRepositoryBuilder()
+                        .WithPath(repoPath)
+                        .WithEntireHistory()
+                        .WithBranch("origin/my-branch")
+                        .WithAliasMapping(aliasFileContext.Path)
+                        .Build();
+                    // act
+                    var actual = sut.List_Authors();
+                    // assert
+                    var expected = 1;
+                    actual.Count().Should().Be(expected);
+                }
             }
 
             [Test]
@@ -103,17 +110,20 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var repoPath = TestRepoPath("git-test-operations");
                 var aliasMap = new List<Alias>();
 
-                var sut = new SourceControlRepositoryBuilder()
-                    .WithPath(repoPath)
-                    .WithEntireHistory()
-                    .WithBranch("origin/my-branch")
-                    .WithAliasMapping("")
-                    .Build();
-                // act
-                var actual = sut.List_Authors();
-                // assert
-                var expected = 2;
-                actual.Count().Should().Be(expected);
+                using (var aliasFileContext = WriteAliasMapping(aliasMap))
+                {
+                    var sut = new SourceControlRepositoryBuilder()
+                        .WithPath(repoPath)
+                        .WithEntireHistory()
+                        .WithBranch("origin/my-branch")
+                        .WithAliasMapping(aliasFileContext.Path)
+                        .Build();
+                    // act
+                    var actual = sut.List_Authors();
+                    // assert
+                    var expected = 2;
+                    actual.Count().Should().Be(expected);
+                }
             }
         }
 
@@ -485,22 +495,21 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 0.56,
-                        PeriodActiveDays = 5,
-                        CommitsPerDay = 1.8,
-                        Impact = 1.6,
-                        LinesOfChangePerHour = 0.3,
-                        LinesAdded = 57,
-                        LinesRemoved = 4,
-                        Churn = 0.07,
-                        Rtt100 = 333.33,
-                        Ptt100 = 384.62
+                        ActiveDaysPerWeek = 0.6,
+                        PeriodActiveDays = 6,
+                        CommitsPerDay = 1.83,
+                        Impact = 1.63,
+                        LinesOfChangePerHour = 0.33,
+                        LinesAdded = 69,
+                        LinesRemoved = 10,
+                        Churn = 0.14,
+                        Rtt100 = 303.03,
+                        Ptt100 = 400.0
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
             }
 
-            // todo: with help and my churn calculations
             [Test]
             public void WhenUsingAliasMapping_ShouldReturnOneDeveloperStats()
             {
@@ -732,6 +741,14 @@ namespace Analyzer.Data.Tests.SourceRepository
             var indexOf = basePath.IndexOf(source, StringComparison.Ordinal);
             var rootPath = basePath.Substring(0, indexOf);
             return rootPath;
+        }
+
+        private static TestFileContext WriteAliasMapping(List<Alias> aliases)
+        {
+            var path = Path.Join(Path.GetTempPath(), Guid.NewGuid() + ".json");
+            File.WriteAllText(path, aliases.Serialize());
+
+            return new TestFileContext { Path = path };
         }
     }
 }

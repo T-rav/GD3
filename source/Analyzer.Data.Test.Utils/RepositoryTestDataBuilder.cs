@@ -26,13 +26,13 @@ namespace Analyzer.Data.Test.Utils
             return this;
         }
 
-        public TestRepositoryContext Build()
+        public TestFileContext Build()
         {
             var path = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString());
 
 
             var rootedPath = Repository.Init(path, false);
-            var repositoryContext = new TestRepositoryContext { Path = path };
+            var repositoryContext = new TestFileContext { Path = path };
 
             using (var repo = new Repository(rootedPath))
             {

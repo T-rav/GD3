@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Analyzer.Data.Test.Utils
 {
-    public class TestRepositoryContext : IDisposable
+    public class TestFileContext : IDisposable
     {
         public string Path { get; set; }
 

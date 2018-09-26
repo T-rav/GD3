@@ -59,7 +59,7 @@ namespace Analyzer.Data.Tests.SourceRepository
             var actual = sut.ReportingRange;
             // assert
             actual.Start.Should().Be(DateTime.Parse("2018-07-16"));
-            actual.End.Should().Be(DateTime.Parse("2018-09-13"));
+            actual.End.Should().Be(DateTime.Parse("2018-09-25"));
         }
 
         [Test]
