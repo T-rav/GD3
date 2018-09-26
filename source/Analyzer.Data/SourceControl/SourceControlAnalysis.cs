@@ -10,25 +10,19 @@ using System.Linq;
 
 namespace Analyzer.Data.SourceControl
 {
-    public class SourceControlRepository : ISourceControlRepository
+    public class SourceControlAnalysis : ISourceControlAnalysis
     {
         private readonly Repository _repository;
-        private readonly string _branch;
-        private readonly List<string> _ignorePatterns;
-        private readonly bool _ignoreComments;
         private readonly Aliases _aliases;
+        private readonly SourceControlContext _context;
 
-        public ReportingPeriod ReportingRange { get; }
+        public ReportingPeriod ReportingRange => _context.ReportRange;
 
-        public SourceControlRepository(Repository repository, ReportingPeriod reportingPeriod, string branch, List<string> ignorePatterns, bool ignoreComments, Aliases aliases)
+        public SourceControlAnalysis(Repository repository, Aliases aliases, SourceControlContext context)
         {
             _repository = repository;
-            _branch = branch;
-            _ignorePatterns = ignorePatterns;
-            _ignoreComments = ignoreComments;
+            _context = context;
             _aliases = aliases;
-
-            ReportingRange = reportingPeriod;
         }
 
         public IEnumerable<Author> List_Authors()
@@ -80,7 +74,7 @@ namespace Analyzer.Data.SourceControl
         {
             var teamStats = new List<TeamStats>();
 
-            var dateRange = ReportingRange.Generate_Dates_For_Range();
+            var dateRange = _context.ReportRange.Generate_Dates_For_Range();
             var commits = GetCommits();
 
             foreach (var date in dateRange)
@@ -98,7 +92,7 @@ namespace Analyzer.Data.SourceControl
                 });
             }
 
-            return new TeamStatsCollection(teamStats, ReportingRange.Weekends);
+            return new TeamStatsCollection(teamStats, _context.ReportRange.Weekends);
         }
 
         public int Period_Active_Days(Author author)
@@ -119,7 +113,7 @@ namespace Analyzer.Data.SourceControl
         public double Active_Days_Per_Week(Author author)
         {
             var activeDays = Period_Active_Days(author);
-            var weeks = ReportingRange.Period_Weeks();
+            var weeks = _context.ReportRange.Period_Weeks();
             return Math.Round(activeDays / weeks, 2);
         }
 
@@ -135,6 +129,11 @@ namespace Analyzer.Data.SourceControl
             }
 
             return Math.Round(totalCommits / periodActiveDays, 2);
+        }
+
+        public void Dispose()
+        {
+            _repository?.Dispose();
         }
 
         /*
@@ -201,7 +200,7 @@ namespace Analyzer.Data.SourceControl
 
         private bool FileShouldBeIgnored(PatchEntryChanges file)
         {
-            return _ignorePatterns.Any(pattern => file.Path.Contains(pattern));
+            return _context.IgnorePatterns.Any(pattern => file.Path.Contains(pattern));
         }
 
         private LinesOfChange Change_Stats(Author developer)
@@ -253,7 +252,7 @@ namespace Analyzer.Data.SourceControl
 
         private int TotalCommentedOutLinesToDeduct(Patch fileChanges)
         {
-            if (!_ignoreComments)
+            if (!_context.IgnoreComments)
             {
                 return 0;
             }
@@ -276,7 +275,7 @@ namespace Analyzer.Data.SourceControl
 
         private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
         {
-            var periodHoursWorked = ReportingRange.HoursPerWeek * Period_Active_Days(developer);
+            var periodHoursWorked = _context.ReportRange.HoursPerWeek * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
             return Math.Round(linesPerHour, 2);
         }
@@ -285,10 +284,10 @@ namespace Analyzer.Data.SourceControl
         {
             var filter = new CommitFilter
             {
-                IncludeReachableFrom = _repository.Branches[_branch]
+                IncludeReachableFrom = _repository.Branches[_context.Branch]
             };
 
-            if (Branches.MasterNotSelected(_branch))
+            if (Branches.MasterNotSelected(_context.Branch))
             {
                 filter.ExcludeReachableFrom = _repository.Branches[Branches.Master.Value];
             }
@@ -296,13 +295,8 @@ namespace Analyzer.Data.SourceControl
             var commitLog = _repository.Commits.QueryBy(filter);
 
             return commitLog
-                .Where(x => x.Author.When.Date >= ReportingRange.Start.Date &&
-                        x.Author.When.Date <= ReportingRange.End.Date);
-        }
-
-        public void Dispose()
-        {
-            _repository?.Dispose();
+                .Where(x => x.Author.When.Date >= _context.ReportRange.Start.Date &&
+                        x.Author.When.Date <= _context.ReportRange.End.Date);
         }
     }
 }

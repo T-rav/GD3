@@ -1,4 +1,4 @@
-﻿using Analyzer.Data.SourceRepository;
+﻿using Analyzer.Data.SourceControl;
 using CommandLine;
 using System;
 

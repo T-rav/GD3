@@ -1,5 +1,4 @@
 ﻿using Analyzer.Data.Developer;
-using Analyzer.Data.SourceControl;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceRepository;
 using LibGit2Sharp;
@@ -7,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Analyzer.Data.SourceRepository
+namespace Analyzer.Data.SourceControl
 {
     public class SourceControlRepositoryBuilder
     {
@@ -100,7 +99,7 @@ namespace Analyzer.Data.SourceRepository
             return this;
         }
 
-        public ISourceControlRepository Build()
+        public ISourceControlAnalysis Build()
         {
             if (NotValidGitRepository(_repoPath))
             {
@@ -121,8 +120,20 @@ namespace Analyzer.Data.SourceRepository
             }
 
             var aliasMapping = new Aliases(_aliasMapping);
+            var context = CreateSourceControlContext(reportRange);
+            return new SourceControlAnalysis(repository, aliasMapping, context);
+        }
 
-            return new SourceControlRepository(repository, reportRange, _branch, _ignorePatterns, _ignoreComments, aliasMapping);
+        private SourceControlContext CreateSourceControlContext(ReportingPeriod reportRange)
+        {
+            var context = new SourceControlContext
+            {
+                ReportRange = reportRange,
+                Branch = _branch,
+                IgnorePatterns = _ignorePatterns,
+                IgnoreComments = _ignoreComments
+            };
+            return context;
         }
 
         private void MakeRangeEntireHistory(Repository repository, ReportingPeriod reportRange)
