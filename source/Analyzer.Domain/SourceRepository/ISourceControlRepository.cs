@@ -11,7 +11,7 @@ namespace Analyzer.Domain.SourceRepository
         ReportingPeriod ReportingRange { get; }
 
         IEnumerable<Author> List_Authors();
-        IEnumerable<Author> List_Authors(IEnumerable<Alias> aliases);
+        //IEnumerable<Author> List_Authors(IEnumerable<Alias> aliases);
         int Period_Active_Days(Author author);
         double Active_Days_Per_Week(Author author);
         double Commits_Per_Day(Author author);

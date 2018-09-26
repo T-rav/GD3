@@ -72,7 +72,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                              .WithBranch("origin/my-branch")
                              .Build();
                 // act
-                var actual = sut.List_Authors(aliasMap);
+                var actual = sut.List_Authors();
                 // assert
                 var expected = 1;
                 actual.Count().Should().Be(expected);
@@ -90,7 +90,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .WithBranch("origin/my-branch")
                     .Build();
                 // act
-                var actual = sut.List_Authors(null);
+                var actual = sut.List_Authors();
                 // assert
                 var expected = 2;
                 actual.Count().Should().Be(expected);
@@ -107,9 +107,10 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .WithPath(repoPath)
                     .WithEntireHistory()
                     .WithBranch("origin/my-branch")
+                    .WithAliasMapping("")
                     .Build();
                 // act
-                var actual = sut.List_Authors(aliasMap);
+                var actual = sut.List_Authors();
                 // assert
                 var expected = 2;
                 actual.Count().Should().Be(expected);
