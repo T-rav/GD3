@@ -743,12 +743,12 @@ namespace Analyzer.Data.Tests.SourceRepository
             return rootPath;
         }
 
-        private static TestFileContext WriteAliasMapping(List<Alias> aliases)
+        private static FileSystemTestArtefact WriteAliasMapping(List<Alias> aliases)
         {
-            var path = Path.Join(Path.GetTempPath(), Guid.NewGuid() + ".json");
+            var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.json");
             File.WriteAllText(path, aliases.Serialize());
 
-            return new TestFileContext { Path = path };
+            return new FileSystemTestArtefact { Path = path };
         }
     }
 }
