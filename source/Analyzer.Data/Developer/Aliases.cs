@@ -20,10 +20,23 @@ namespace Analyzer.Data.Developer
         {
             var aliases = Load();
 
+            EnsureEmailAddressesAreNotSharedByAliases(aliases);
+
             return NoAliases(aliases) ? authors : MapDevelopersToAliases(aliases, authors);
         }
 
-        private IEnumerable<Alias> Load()
+        private static void EnsureEmailAddressesAreNotSharedByAliases(List<Alias> aliases)
+        {
+            var allEmailAddresses = aliases.SelectMany(alias => alias.Emails.Distinct());
+            var distinctEmailAddresses = aliases.SelectMany(alias => alias.Emails).Distinct();
+            if (allEmailAddresses.Count() != distinctEmailAddresses.Count())
+            {
+                // TODO: throw better exception?
+                throw new Exception("Aliases can't share an email address.");
+            }
+        }
+
+        private List<Alias> Load()
         {
             if (string.IsNullOrWhiteSpace(_aliasFilePath))
             {
