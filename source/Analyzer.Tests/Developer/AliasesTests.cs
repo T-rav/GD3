@@ -1,8 +1,10 @@
-﻿using Analyzer.Data.Developer;
+﻿using System;
+using Analyzer.Data.Developer;
 using Analyzer.Domain.Developer;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 
 namespace Analyzer.Data.Tests.Developer
@@ -37,6 +39,7 @@ namespace Analyzer.Data.Tests.Developer
                     actual.Should().BeEquivalentTo(expected);
                 }
 
+                // TODO do I want to bother keep the ability for the author to have multiple email addresses?
                 [Test]
                 public void When_AuthorHasAdditionalEmailAddresses_ShouldReturnAuthorWithUnionOfEmailAddresses()
                 {
@@ -78,6 +81,62 @@ namespace Analyzer.Data.Tests.Developer
                         .Build();
                     actual.Should().BeEquivalentTo(expected);
                 }
+
+                [Test]
+                public void When_AliasNameIsDifferent_ShouldUseAuthorName()
+                {
+                    // arrange
+                    var authors = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Not Cake Face", "is@yummy.net")
+                        .Build();
+                    var repoPath = TestRepoPath("many-unique-aliases.json");
+
+                    var sut = new Aliases(repoPath);
+                    // act
+                    var actual = sut.Map_To_Authors(authors);
+                    // assert
+                    var expected = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Not Cake Face", "is@yummy.net")
+                        .Build();
+                    actual.Should().BeEquivalentTo(expected);
+                }
+            }
+
+            [Test]
+            public void When_EmailAddressIsSharedByMultipleAliases_ShouldThrow()
+            {
+                // arrange
+                var authors = AuthorTestDataBuilder
+                    .Create()
+                    .WithAuthor("Travis Frisinger", "t-rav@tddbuddy.com")
+                    .Build();
+                var repoPath = TestRepoPath("shared-email-addresses.json");
+
+                var sut = new Aliases(repoPath);
+                // act
+                Action action = () => sut.Map_To_Authors(authors);
+                // assert
+                action.Should().Throw<Exception>()
+                    .WithMessage("Aliases can't share an email address.");
+            }
+
+            [Test]
+            public void When_AliasHasEmailAddressDuplicated_ShouldNotThrow()
+            {
+                // arrange
+                var authors = AuthorTestDataBuilder
+                    .Create()
+                    .WithAuthor("Travis Frisinger", "t-rav@tddbuddy.com")
+                    .Build();
+                var repoPath = TestRepoPath("duplicated-email-addresses.json");
+
+                var sut = new Aliases(repoPath);
+                // act
+                    Action action = () => sut.Map_To_Authors(authors);
+                // assert
+                action.Should().NotThrow<Exception>();
             }
 
             [TestCase(null)]
@@ -106,12 +165,9 @@ namespace Analyzer.Data.Tests.Developer
         // TODO: no aliases
         // TODO: invalid format(s)
         // TODO: multiple aliases
-        // TODO: email addresses shared across aliases in file
-        // TODO: should use given author name
-        // TODO: multiple matches
-        // TODO: one match
+        // TODO: email addresses shared across aliases in file (this is a config error and an exception should be thrown)
         // TODO: no matches
-        // TODO: match but only 1 email address
+        // TODO: if resultant list of authors share any email addresses then it should throw as this means that aliases have been applied to multiple authors, which is going to skew stats
 
         private static string TestRepoPath(string fileName)
         {
