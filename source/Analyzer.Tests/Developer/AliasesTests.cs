@@ -14,51 +14,63 @@ namespace Analyzer.Data.Tests.Developer
         public class Map_To_Authors
         {
             [Test]
-            public void When_AliasFileHasOneAlias()
+            public void When_SingleMatchInFile_ShouldReturnAuthorWithUnionOfEmailAddresses()
             {
                 // arrange
-                var authors = new List<Author> { new Author { Name = "Brendon Page", Emails = new List<string> { "brendonp@gmail.com" } } };
-                var repoPath = TestRepoPath("one-alias.json");
-
+                var authors = AuthorTestDataBuilder
+                    .Create()
+                    .WithAuthor("Brendon Page", "brendonp@gmail.com")
+                    .Build();
+                var repoPath = TestRepoPath("many-unique-aliases.json");
+                
                 var sut = new Aliases(repoPath);
                 // act
                 var actual = sut.Map_To_Authors(authors);
                 // assert
-                var expected = AliasesTestDataBuilder
+                var expected = AuthorTestDataBuilder
                     .Create()
-                    .WithAlias("Brendon Page", "brendonp@gmail.com", "brendonpage@live.co.za")
+                    .WithAuthor("Brendon Page", "brendonp@gmail.com", "brendonpage@live.co.za")
                     .Build();
-                actual.Should().BeEquivalentTo(expected, o => o.Excluding(alias => alias.Id));
+                actual.Should().BeEquivalentTo(expected);
             }
 
             [TestCase(null)]
             [TestCase("")]
             [TestCase("  ")]
-            public void When_AliasFileNullOrWhitespace(string path)
+            public void When_AliasFileNullOrWhitespace_ShouldReturnOriginalAuthor(string path)
             {
                 // arrange
-                var authors = new List<Author> { new Author { Name = "Brendon Page", Emails = new List<string> { "brendonp@gmail.com" } } };
+                var authors = AuthorTestDataBuilder
+                    .Create()
+                    .WithAuthor("Brendon Page", "brendonp@gmail.com")
+                    .Build();
 
                 var sut = new Aliases(path);
                 // act
                 var actual = sut.Map_To_Authors(authors);
                 // assert
-                var expected = AliasesTestDataBuilder
+                var expected = AuthorTestDataBuilder
                     .Create()
-                    .WithAlias("Brendon Page", "brendonp@gmail.com")
+                    .WithAuthor("Brendon Page", "brendonp@gmail.com")
                     .Build();
-                actual.Should().BeEquivalentTo(expected, o => o.Excluding(alias => alias.Id));
+                actual.Should().BeEquivalentTo(expected);
             }
         }
 
         // TODO: no aliases
         // TODO: invalid format(s)
         // TODO: multiple aliases
+        // TODO: email addresses shared across aliases in file
+        // TODO: should use given author name
+        // TODO: multiple matches
+        // TODO: one match
+        // TODO: no matches
+        // TODO: match but only 1 email address
 
-        private static string TestRepoPath(string repo)
+        private static string TestRepoPath(string fileName)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            return Path.Combine(basePath, $"Developer\\AliasRepositoryTestData\\{repo}");
+            return Path.Combine(basePath, $"Developer\\AliasesTestData\\{fileName}");
         }
     }
 }
