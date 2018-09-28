@@ -66,8 +66,9 @@ namespace Analyzer.Data.Developer
 
         private void AddMapping(Author author, Alias alias, Dictionary<Guid, Author> authorMap)
         {
+            var emails = author.Emails.Union(alias.Emails).ToList();
             author.Emails.Clear();
-            author.Emails.AddRange(alias.Emails);
+            author.Emails.AddRange(emails);
             authorMap[alias.Id] = author;
         }
 
@@ -83,8 +84,7 @@ namespace Analyzer.Data.Developer
 
         private Alias FindAlias(IEnumerable<Alias> aliases, Author author)
         {
-            var alias = aliases.FirstOrDefault(x => x.Emails.Contains(author.Emails.FirstOrDefault()));
-            return alias;
+            return aliases.FirstOrDefault(x => x.Emails.Intersect(author.Emails).Any());
         }
     }
 }
