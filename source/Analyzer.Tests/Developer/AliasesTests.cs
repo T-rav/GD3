@@ -13,25 +13,71 @@ namespace Analyzer.Data.Tests.Developer
         [TestFixture]
         public class Map_To_Authors
         {
-            [Test]
-            public void When_SingleMatchInFile_ShouldReturnAuthorWithUnionOfEmailAddresses()
+            [TestFixture]
+            public class MatchToSingleAlias
             {
-                // arrange
-                var authors = AuthorTestDataBuilder
-                    .Create()
-                    .WithAuthor("Brendon Page", "brendonp@gmail.com")
-                    .Build();
-                var repoPath = TestRepoPath("many-unique-aliases.json");
-                
-                var sut = new Aliases(repoPath);
-                // act
-                var actual = sut.Map_To_Authors(authors);
-                // assert
-                var expected = AuthorTestDataBuilder
-                    .Create()
-                    .WithAuthor("Brendon Page", "brendonp@gmail.com", "brendonpage@live.co.za")
-                    .Build();
-                actual.Should().BeEquivalentTo(expected);
+                [Test]
+                public void When_AliasHasAdditionalEmailAddresses_ShouldReturnAuthorWithUnionOfEmailAddresses()
+                {
+                    // arrange
+                    var authors = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Brendon Page", "brendonp@gmail.com")
+                        .Build();
+                    var repoPath = TestRepoPath("many-unique-aliases.json");
+
+                    var sut = new Aliases(repoPath);
+                    // act
+                    var actual = sut.Map_To_Authors(authors);
+                    // assert
+                    var expected = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Brendon Page", "brendonp@gmail.com", "brendonpage@live.co.za", "brendon.page@chillisoft.co.za")
+                        .Build();
+                    actual.Should().BeEquivalentTo(expected);
+                }
+
+                [Test]
+                public void When_AuthorHasAdditionalEmailAddresses_ShouldReturnAuthorWithUnionOfEmailAddresses()
+                {
+                    // arrange
+                    var authors = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Travis Frisinger", "travis.frisinger@chillisoft.co.za", "t-rav@tddbuddy.com")
+                        .Build();
+                    var repoPath = TestRepoPath("many-unique-aliases.json");
+
+                    var sut = new Aliases(repoPath);
+                    // act
+                    var actual = sut.Map_To_Authors(authors);
+                    // assert
+                    var expected = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Travis Frisinger", "travis.frisinger@chillisoft.co.za", "t-rav@tddbuddy.com", "trav@cakeface.co.za")
+                        .Build();
+                    actual.Should().BeEquivalentTo(expected);
+                }
+
+                [Test]
+                public void When_NoAdditionalEmailAddresses_ShouldReturnOriginalAuthor()
+                {
+                    // arrange
+                    var authors = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Cake Face", "is@yummy.net")
+                        .Build();
+                    var repoPath = TestRepoPath("many-unique-aliases.json");
+
+                    var sut = new Aliases(repoPath);
+                    // act
+                    var actual = sut.Map_To_Authors(authors);
+                    // assert
+                    var expected = AuthorTestDataBuilder
+                        .Create()
+                        .WithAuthor("Cake Face", "is@yummy.net")
+                        .Build();
+                    actual.Should().BeEquivalentTo(expected);
+                }
             }
 
             [TestCase(null)]
