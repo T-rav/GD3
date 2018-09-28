@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Developer\AliasRepositoryTestData\one-alias.json">
+    <None Update="Developer\AliasesTestData\many-unique-aliases.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
