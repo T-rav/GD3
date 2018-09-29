@@ -37,6 +37,7 @@ namespace Analyzer
                 .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                 .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
                 .WithIgnoreComments(opts.IgnoreComments)
+                .WithAliasMapping(opts.AliasFile)
                 .Build())
             {
 
@@ -77,6 +78,7 @@ namespace Analyzer
                 .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
                 .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
                 .WithIgnoreComments(opts.IgnoreComments)
+                .WithAliasMapping(opts.AliasFile)
                 .Build())
             {
 
