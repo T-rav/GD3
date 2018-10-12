@@ -3,28 +3,64 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
+using Analyzer.Domain.Stats;
 using Analyzer.Domain.Team;
+using TddBuddy.CleanArchitecture.Domain.Messages;
+using TddBuddy.CleanArchitecture.Domain.Output;
 
-namespace Analyzer
+namespace Analyzer.Presenter
 {
-    public class CodeStatsDashboard
+    public class ConsolePresenter : IRespondWithSuccessOrError<StatsOuput, ErrorOutputMessage>
     {
         public static string Version => "0.9.4";
         public static ConsoleColor DefaultColor { get; private set; }
 
-        public CodeStatsDashboard()
+        private ErrorOutputMessage _errors;
+        private StatsOuput _stats;
+
+        public ConsolePresenter()
         {
             DefaultColor = Console.ForegroundColor;
         }
 
-        public void RenderDashboard(IList<DeveloperStats> developerStats, TeamStatsCollection teamStats, ReportingPeriod reportingPeriod)
+        public void Respond(ErrorOutputMessage output)
         {
-            PrintApplicationHeader(reportingPeriod.Start, reportingPeriod.End);
+            _errors = output;
+        }
+
+        public void Respond(StatsOuput output)
+        {
+            _stats = output;
+        }
+
+        public void Render()
+        {
+            if (Error_Response())
+            {
+                Console.WriteLine("The following errors occured:");
+                foreach (var error in _errors.Errors)
+                {
+                    Console.WriteLine(error);
+                }
+                return;
+            }
+
+            RenderDashboard();
+        }
+
+        private bool Error_Response()
+        {
+            return _errors != null;
+        }
+
+        public void RenderDashboard()
+        {
+            PrintApplicationHeader(_stats.ReportingRange.Start, _stats.ReportingRange.End);
             PrintDeveloperStatsTableHeader();
-            PrintDeveloperStatsTable(developerStats);
-            PrintDeveloperAverages(developerStats, reportingPeriod);
+            PrintDeveloperStatsTable(_stats.DeveloperStats);
+            PrintDeveloperAverages(_stats.DeveloperStats, _stats.ReportingRange);
             PrintTeamStatsTableHeader();
-            PrintTeamStatsTable(teamStats);
+            PrintTeamStatsTable(_stats.TeamStats);
         }
 
         private void PrintApplicationHeader(DateTime start, DateTime end)
@@ -117,8 +153,8 @@ namespace Analyzer
         private void PrintTeamStatsTable(TeamStatsCollection teamStats)
         {
             var orderedStats = teamStats
-                                .GetWorkDayStats()
-                                .OrderBy(x => x.DateOf);
+                .GetWorkDayStats()
+                .OrderBy(x => x.DateOf);
             foreach (var stat in orderedStats)
             {
                 Console.WriteLine(stat);

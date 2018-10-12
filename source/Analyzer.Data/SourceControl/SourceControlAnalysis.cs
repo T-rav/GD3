@@ -1,12 +1,12 @@
 ﻿using Analyzer.Data.Developer;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
-using Analyzer.Domain.SourceRepository;
 using Analyzer.Domain.Team;
 using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Analyzer.Domain.SourceControl;
 
 namespace Analyzer.Data.SourceControl
 {
@@ -25,13 +25,13 @@ namespace Analyzer.Data.SourceControl
             _aliases = aliases;
         }
 
-        public IEnumerable<Author> List_Authors()
+        public IList<Author> List_Authors()
         {
             var authors = List_Repository_Authors();
             return _aliases.Map_To_Authors(authors);
         }
 
-        private IEnumerable<Author> List_Repository_Authors()
+        private IList<Author> List_Repository_Authors()
         {
             var authors = GetCommits()
                 .GroupBy(x => x.Author.Email)
@@ -40,11 +40,11 @@ namespace Analyzer.Data.SourceControl
                 {
                     Name = x.Author.Name,
                     Emails = new List<string> { x.Author.Email }
-                });
+                }).ToList();
             return authors;
         }
 
-        public List<DeveloperStats> Build_Individual_Developer_Stats(IEnumerable<Author> authors)
+        public IList<DeveloperStats> Build_Individual_Developer_Stats(IList<Author> authors)
         {
             var result = new List<DeveloperStats>();
             foreach (var developer in authors)

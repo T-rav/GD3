@@ -1,6 +1,9 @@
-﻿using Analyzer.Data.SourceControl;
-using CommandLine;
+﻿using CommandLine;
 using System;
+using Analyzer.Data.SourceControl;
+using Analyzer.Domain.Stats;
+using Analyzer.Presenter;
+using Analyzer.UseCase;
 
 namespace Analyzer
 {
@@ -19,77 +22,62 @@ namespace Analyzer
         {
             Parser.Default.ParseArguments<FullHistory, RangedHistory>(args)
                 .MapResult(
-                    (FullHistory opts) => DisplayFullHistory(opts),
-                    (RangedHistory opts) => DisplayRangedHistory(opts),
+                    (FullHistory opts) => Display_Full_History(opts),
+                    (RangedHistory opts) => Display_Ranged_History(opts),
                      errors => -1);
 
             Console.ReadKey();
         }
 
-        private static int DisplayFullHistory(FullHistory opts)
+        private static int Display_Full_History(FullHistory opts)
         {
-            using (var repo = new SourceControlAnalysisBuilder()
-                .WithPath(opts.Path)
-                .WithEntireHistory()
-                .WithIgnorePatterns(opts.IgnorePatterns)
-                .WithBranch(opts.Branch)
-                .WithWeekends(opts.WeekendDays)
-                .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
-                .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
-                .WithIgnoreComments(opts.IgnoreComments)
-                .WithAliasMapping(opts.AliasFile)
-                .Build())
+            var consolePresenter = new ConsolePresenter();
+            var builder = new SourceControlAnalysisBuilder();
+            var statsUseCase = new FullStatsUseCase(builder);
+
+            var inputTo = new FullStatsInput
             {
+                Path = opts.Path,
+                IgnorePatterns = opts.IgnorePatterns,
+                Branch = opts.Branch,
+                WeekDays = opts.WeekendDays,
+                DaysPerWeek = opts.WorkingDaysPerWeek,
+                HoursPerWeek = opts.WorkingHoursPerWeek,
+                IgnoreComments = opts.IgnoreComments,
+                AliasFile = opts.AliasFile,
+                WeekendDays = opts.WeekendDays
+            };
 
-                // todo : make configurable
-                //var aliasMap = new List<Alias>
-                //{
-                //    new Alias{
-                //        Name = "T-rav",
-                //        Emails = new List<string>{
-                //            "tmfrisinger@gmail.com",
-                //            "tmfirsinger@gmail.com",
-                //            "travisf@stoneage1.bizvoip.co.za"}
-                //    }
-                //};
-
-                // todo : wip, first attempt to make aliases confiurable
-                //var aliasRepository = new AliasRepository(opts.AliasFile);
-                //var aliasMap = aliasRepository.Load();
-
-                var dashboard = new CodeStatsDashboard();
-                var authors = repo.List_Authors();
-                var stats = repo.Build_Individual_Developer_Stats(authors);
-                var teamStats = repo.Build_Team_Stats();
-                dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
-            }
-
+            statsUseCase.Execute(inputTo, consolePresenter);
+            consolePresenter.Render();
+            
             return 1;
         }
 
-        private static int DisplayRangedHistory(RangedHistory opts)
+        private static int Display_Ranged_History(RangedHistory opts)
         {
-            using (var repo = new SourceControlAnalysisBuilder()
-                .WithPath(opts.Path)
-                .WithRange(opts.StartDate, opts.EndDate)
-                .WithIgnorePatterns(opts.IgnorePatterns)
-                .WithBranch(opts.Branch)
-                .WithWeekends(opts.WeekendDays)
-                .WithWorkingDaysPerWeek(opts.WorkingDaysPerWeek)
-                .WithWorkingWeekHours(opts.WorkingHoursPerWeek)
-                .WithIgnoreComments(opts.IgnoreComments)
-                .WithAliasMapping(opts.AliasFile)
-                .Build())
+            var consolePresenter = new ConsolePresenter();
+            var builder = new SourceControlAnalysisBuilder();
+            var statsUseCase = new RangedStatsUseCase(builder);
+            var inputTo = new RangedStatsInput
             {
+                Path = opts.Path,
+                IgnorePatterns = opts.IgnorePatterns,
+                Branch = opts.Branch,
+                WeekDays = opts.WeekendDays,
+                DaysPerWeek = opts.WorkingDaysPerWeek,
+                HoursPerWeek = opts.WorkingHoursPerWeek,
+                IgnoreComments = opts.IgnoreComments,
+                AliasFile = opts.AliasFile,
+                RangeState = opts.StartDate,
+                RangeEnd = opts.EndDate,
+                WeekendDays = opts.WeekendDays
+            };
 
-                var dashboard = new CodeStatsDashboard();
-                var authors = repo.List_Authors();
-                var stats = repo.Build_Individual_Developer_Stats(authors);
-                var teamStats = repo.Build_Team_Stats();
-                dashboard.RenderDashboard(stats, teamStats, repo.ReportingRange);
+            statsUseCase.Execute(inputTo, consolePresenter);
+            consolePresenter.Render();
 
-                return 1;
-            }
+            return 1;
         }
     }
 }

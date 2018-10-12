@@ -16,7 +16,7 @@ namespace Analyzer.Data.Developer
             _aliasFilePath = aliasFilePath;
         }
 
-        public IEnumerable<Author> Map_To_Authors(IEnumerable<Author> authors)
+        public IList<Author> Map_To_Authors(IList<Author> authors)
         {
             var aliases = Load();
 
@@ -51,7 +51,7 @@ namespace Analyzer.Data.Developer
             return aliases == null;
         }
 
-        private IEnumerable<Author> MapDevelopersToAliases(IEnumerable<Alias> aliases, IEnumerable<Author> authors)
+        private IList<Author> MapDevelopersToAliases(IList<Alias> aliases, IList<Author> authors)
         {
             var authorMap = new Dictionary<Guid, Author>();
 

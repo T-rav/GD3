@@ -1,6 +1,6 @@
 ﻿using Analyzer.Domain.Reporting;
 using System.Collections.Generic;
-using Analyzer.Domain.SourceRepository;
+using Analyzer.Domain.SourceControl;
 
 namespace Analyzer.Data.SourceControl
 {

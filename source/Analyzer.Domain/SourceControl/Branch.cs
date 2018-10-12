@@ -1,4 +1,4 @@
-﻿namespace Analyzer.Domain.SourceRepository
+﻿namespace Analyzer.Domain.SourceControl
 {
     public class Branch
     {

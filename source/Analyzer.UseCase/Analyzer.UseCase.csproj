@@ -1,20 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.2.1" />
-    <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
+    <PackageReference Include="TddBuddy.CleanArchitecture.DotNetCore" Version="3.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
-    <ProjectReference Include="..\Analyzer.Presenter\Analyzer.Presenter.csproj" />
-    <ProjectReference Include="..\Analyzer.UseCase\Analyzer.UseCase.csproj" />
   </ItemGroup>
 
 </Project>
