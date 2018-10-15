@@ -39,7 +39,7 @@ fi
 
 cd $appdir
 dotnet build -c release
-mv "bin/Release/GD3-Analyzer.$Version.nupkg" $dist
+mv "bin/Release/GD3-Analyzer.$Version.nupkg" ../$dist
 
 # commit build number bump to source
 cd ..
