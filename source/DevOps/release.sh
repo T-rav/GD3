@@ -39,10 +39,10 @@ fi
 
 cd $appdir
 dotnet build -c release
-mv "bin/Release/GD3-Analyzer.$version.nupkg" $dist
+mv "bin/Release/GD3-Analyzer.$Version.nupkg" $dist
 
 # commit build number bump to source
 cd ..
 git add version.txt
-git commit -m "devOps(release):version bump to [$version.$build] from release script"
+git commit -m "devOps(release):version bump to [$Version.$build] from release script"
 git push
