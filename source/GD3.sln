@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.txt = README.txt
 		todo.txt = todo.txt
+		version.txt = version.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "DevOps\Tools.csproj", "{4B9FE0B3-DB5D-4021-A6D1-59B1295CBD1A}"
@@ -22,6 +23,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F5A543B5-E225-4222-8937-EEB84639D318}"
 	ProjectSection(SolutionItems) = preProject
 		DevOps\coverage.sh = DevOps\coverage.sh
+		..\devOps\gd3-alias.json = ..\devOps\gd3-alias.json
 		DevOps\release.sh = DevOps\release.sh
 	EndProjectSection
 EndProject
@@ -31,11 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Data.Test.Utils", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.UseCase", "Analyzer.UseCase\Analyzer.UseCase.csproj", "{BCA2719A-51DE-417F-AF43-77F3E791186D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.UseCase.Tests", "Analyzer.UseCase.Tests\Analyzer.UseCase.Tests.csproj", "{E8592E31-D5C9-41A8-9BF4-F897D39C7F24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.UseCase.Tests", "Analyzer.UseCase.Tests\Analyzer.UseCase.Tests.csproj", "{E8592E31-D5C9-41A8-9BF4-F897D39C7F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Presenter", "Analyzer.Presenter\Analyzer.Presenter.csproj", "{BB01ACC6-C043-4106-BCEB-171AD653EDF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Presenter", "Analyzer.Presenter\Analyzer.Presenter.csproj", "{BB01ACC6-C043-4106-BCEB-171AD653EDF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anaylzer.Presenter.Tests", "Anaylzer.Presenter.Tests\Anaylzer.Presenter.Tests.csproj", "{0AF812ED-170C-421E-A9F0-DB1874147E3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anaylzer.Presenter.Tests", "Anaylzer.Presenter.Tests\Anaylzer.Presenter.Tests.csproj", "{0AF812ED-170C-421E-A9F0-DB1874147E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
