@@ -35,6 +35,8 @@ done
 echo -e "\e[33mCreating NuGet Package\e[0m"
 if [ ! -d "$dist" ]; then
   mkdir $dist
+else
+  rm -f $dist/*
 fi
 
 cd $appdir
