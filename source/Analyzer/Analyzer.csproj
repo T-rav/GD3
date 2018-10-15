@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<OutputType>Exe</OutputType>-->
+    <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <AssemblyName>dotnet-gd3-analyzer</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,11 +31,12 @@
     <Owner>StoneAge Technologies</Owner>
     <Authors>Travis Frisinger; Brendon Page</Authors>
     <Company>StoneAge Technologies</Company>
-    <Title>GD3.Analyzer</Title>
-    <Summary>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Summary>
+    <Title>GD3-Analyzer</Title>
+    <AssemblyTitle>GD3-Analyzer</AssemblyTitle>
     <Description>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Description>
     <PackageProjectUrl>https://github.com/T-rav/GD3</PackageProjectUrl>
-    <PackageTags>Developer Metrics;Data Driven Decisions;Git</PackageTags>
+    <PackageTags>Developer Metrics,Data Driven Decisions,Git</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageType>DotnetCliTool</PackageType>
   </PropertyGroup>
 </Project>
