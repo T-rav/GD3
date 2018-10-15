@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -17,4 +17,12 @@
     <ProjectReference Include="..\Analyzer.UseCase\Analyzer.UseCase.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <PackageId>GD3</PackageId>
+    <Authors>Travis Frisinger</Authors>
+    <Company>StoneAge Technologies</Company>
+    <Description>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Description>
+    <PackageProjectUrl>https://github.com/T-rav/GD3</PackageProjectUrl>
+    <PackageTags>Developer Metrics;Data Driven Decisions;Git</PackageTags>
+  </PropertyGroup>
 </Project>
