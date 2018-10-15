@@ -7,6 +7,8 @@ netcoreVersion="2.1"
 version=$(cat version.txt | cut -d. -f1,2,3)
 build=$(cat version.txt | cut -d. -f4)
 build=$(($build+1))
+dist="../dist"
+appdir="Analyzer"
 
 echo -n "$version.$build" > version.txt
 
@@ -29,12 +31,13 @@ for project in *.Tests/*.csproj; do
 	fi
 done
 
-if [ ! -d "dist" ]; then
-  mkdir dist
+if [ ! -d "$dist" ]; then
+  mkdir $dist
 fi
 
 echo -e "\e[33mCreating NuGet Package\e[0m"
-dotnet pack -c Release --output dist
+cd $appdir
+dotnet pack -c Release --output ../$dist
 
 # commit build number bump to source
 cd ..
