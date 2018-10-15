@@ -19,8 +19,11 @@
 
   <PropertyGroup>
     <PackageId>GD3-Analyzer</PackageId>
+    <Owner>StoneAge Technologies</Owner>
     <Authors>Travis Frisinger</Authors>
     <Company>StoneAge Technologies</Company>
+    <Title>GD3.Analyzer</Title>
+    <Summary>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Summary>
     <Description>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Description>
     <PackageProjectUrl>https://github.com/T-rav/GD3</PackageProjectUrl>
     <PackageTags>Developer Metrics;Data Driven Decisions;Git</PackageTags>
