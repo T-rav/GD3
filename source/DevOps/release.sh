@@ -7,8 +7,8 @@ netcoreVersion="2.1"
 version=$(cat version.txt | cut -d. -f1,2,3)
 build=$(cat version.txt | cut -d. -f4)
 build=$(($build+1))
-dist="../dist"
 appdir="Analyzer"
+dist="../dist"
 
 echo -n "$version.$build" > version.txt
 
@@ -39,7 +39,7 @@ fi
 
 cd $appdir
 dotnet build -c release
-mv "Analyzer/bin/Release/GD3-Analyzer.$version.nupkg" $dist
+mv "bin/Release/GD3-Analyzer.$version.nupkg" $dist
 
 # commit build number bump to source
 cd ..
