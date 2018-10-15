@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1;netstandard2.0;</TargetFramework>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,21 +12,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
-    <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
-    <ProjectReference Include="..\Analyzer.Presenter\Analyzer.Presenter.csproj" />
-    <ProjectReference Include="..\Analyzer.UseCase\Analyzer.UseCase.csproj" />
+    <ProjectReference Include="..\Analyzer.Data\Analyzer.csproj"/>
+    <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Analyzer.Presenter\Analyzer.Presenter.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Analyzer.UseCase\Analyzer.UseCase.csproj" PrivateAssets="all"/>
   </ItemGroup>
+
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'All'))" />
+    </ItemGroup>
+  </Target>
 
   <PropertyGroup>
     <PackageId>GD3-Analyzer</PackageId>
     <Owner>StoneAge Technologies</Owner>
-    <Authors>Travis Frisinger</Authors>
+    <Authors>Travis Frisinger; Brendon Page</Authors>
     <Company>StoneAge Technologies</Company>
     <Title>GD3.Analyzer</Title>
     <Summary>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Summary>
     <Description>A tool simular to gitprime.com or waydev.co to analyse a git repo and render a team dashboard. The dashboard can then be used to make data drive decisions about the team.</Description>
     <PackageProjectUrl>https://github.com/T-rav/GD3</PackageProjectUrl>
     <PackageTags>Developer Metrics;Data Driven Decisions;Git</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 </Project>
