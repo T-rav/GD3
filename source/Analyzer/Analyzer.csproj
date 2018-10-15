@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
+    <!--<OutputType>Exe</OutputType>-->
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
@@ -11,8 +11,8 @@
     <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
   </ItemGroup>
 
+  <!-- https://github.com/dotnet/cli/issues/3959 -->
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer\Analyzer.csproj"/>
     <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" PrivateAssets="all"/>
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" PrivateAssets="all"/>
     <ProjectReference Include="..\Analyzer.Presenter\Analyzer.Presenter.csproj" PrivateAssets="all"/>
