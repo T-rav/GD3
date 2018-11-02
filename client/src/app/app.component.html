@@ -5,10 +5,70 @@
   </h1>
 </div>
 
-<table mat-table [dataSource]="results" class="mat-elevation-z8">
-  <ng-container matColumnDef="test">
-    <th mat-header-cell *matHeaderCellDef>header</th>
-    <td mat-cell *matCellDef="let result">{{result.field}}</td>
+<table mat-table [dataSource]="stats" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let stat">{{stat.author.name}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="periodActiveDays">
+    <th mat-header-cell *matHeaderCellDef>Period Active Days</th>
+    <td mat-cell *matCellDef="let stat">{{stat.periodActiveDays}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="activeDaysPerWeek">
+    <th mat-header-cell *matHeaderCellDef>Active Days Per Week</th>
+    <td mat-cell *matCellDef="let stat">{{stat.activeDaysPerWeek}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="commitsPerDay">
+    <th mat-header-cell *matHeaderCellDef>Commits Per Day</th>
+    <td mat-cell *matCellDef="let stat">{{stat.commitsPerDay}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="impact">
+    <th mat-header-cell *matHeaderCellDef>Impact</th>
+    <td mat-cell *matCellDef="let stat">{{stat.impact}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="linesOfChangePerHour">
+    <th mat-header-cell *matHeaderCellDef>Lines of Change Per Hour</th>
+    <td mat-cell *matCellDef="let stat">{{stat.linesOfChangePerHour}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="churn">
+    <th mat-header-cell *matHeaderCellDef>Churn</th>
+    <td mat-cell *matCellDef="let stat">{{stat.churn}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="linesAdded">
+    <th mat-header-cell *matHeaderCellDef>Lines Added</th>
+    <td mat-cell *matCellDef="let stat">{{stat.linesAdded}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="linesRemoved">
+    <th mat-header-cell *matHeaderCellDef>Lines Removed</th>
+    <td mat-cell *matCellDef="let stat">{{stat.linesRemoved}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="rtt100">
+    <th mat-header-cell *matHeaderCellDef>Rtt100</th>
+    <td mat-cell *matCellDef="let stat">{{stat.rtt100}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="ptt100">
+    <th mat-header-cell *matHeaderCellDef>Ptt100</th>
+    <td mat-cell *matCellDef="let stat">{{stat.ptt100}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="dtt100">
+    <th mat-header-cell *matHeaderCellDef>Dtt100</th>
+    <td mat-cell *matCellDef="let stat">{{stat.dtt100}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="riskFactor">
+    <th mat-header-cell *matHeaderCellDef>Risk Factor</th>
+    <td mat-cell *matCellDef="let stat">{{stat.riskFactor}}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
