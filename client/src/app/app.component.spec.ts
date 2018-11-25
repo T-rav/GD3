@@ -1,26 +1,18 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { MatTableModule } from '@angular/material/table';
+import { HttpClientModule } from '@angular/common/http';
 import { DeveloperStats } from './domain/developer/developer-stats';
 import { DeveloperStatsTestDataBuilder } from './../test-data-builders/developer-stats-test-data-builder'
+import { DeveloperStatsGatewayService } from './domain/developer/developer-stats-gateway.service'
+import { Component } from '@angular/compiler/src/core';
+import { Observable, of } from 'rxjs';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatTableModule
-      ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
-
   it('should create the app', () => {
     // Arrange
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = createFixture();
     const app = fixture.debugElement.componentInstance;
     // Act
     // Assert
@@ -29,7 +21,7 @@ describe('AppComponent', () => {
 
   it(`should have as title 'gd3'`, () => {
     // Arrange
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = createFixture();
     const app = fixture.debugElement.componentInstance;
     // Act
     // Assert
@@ -38,7 +30,7 @@ describe('AppComponent', () => {
 
   it('should render title in a h1 tag', () => {
     // Arrange
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = createFixture();
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     // Act
@@ -48,7 +40,7 @@ describe('AppComponent', () => {
 
   it('should render a header row', () => {
     // Arrange
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = createFixture();
     fixture.detectChanges();
     // Act
     // Assert
@@ -58,11 +50,13 @@ describe('AppComponent', () => {
 
   it('should render a row for each developer stat', () => {
     // Arrange
-    const fixture = TestBed.createComponent(AppComponent);
     const stats = [
       DeveloperStatsTestDataBuilder.create().build(),
       DeveloperStatsTestDataBuilder.create().build()
     ];
+    // TODO this is dodgy got to find a beter way to handle fakes, it would be nice if we could use interfaces for injection!!!
+    const fixture = createFixture(new FakeDeveloperStatsGatewayService(stats) as unknown as DeveloperStatsGatewayService);
+
     // Act
     fixture.componentInstance.stats = stats;
     fixture.detectChanges();
@@ -72,6 +66,40 @@ describe('AppComponent', () => {
     expectRowToBeForStat(rows[1], stats[0]);
     expectRowToBeForStat(rows[2], stats[1]);
   });
+
+  class FakeDeveloperStatsGatewayService {
+    private developerStats:DeveloperStats[];
+
+    constructor(developerStats: DeveloperStats[]) {
+      this.developerStats = developerStats;
+    }
+
+    public get(): Observable<DeveloperStats[]> {
+      return of(this.developerStats);
+    }
+  }
+
+  function createFixture(developerStatsGateway?: DeveloperStatsGatewayService): ComponentFixture<AppComponent> {
+    var providers = [];
+
+    if (developerStatsGateway) {
+      providers.push({ provide: DeveloperStatsGatewayService, useValue: developerStatsGateway });
+    }
+
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule,
+        MatTableModule,
+        HttpClientModule
+      ],
+      declarations: [
+        AppComponent
+      ],
+      providers: providers
+    }).compileComponents();
+
+    return TestBed.createComponent(AppComponent);
+  }
 
   function expectRowToBeDeveloperStatsHeader(row: any) {
     const columns = row.querySelectorAll('th');
@@ -107,8 +135,8 @@ describe('AppComponent', () => {
     expect(columns[11].textContent).toEqual(stat.dtt100.toString());
     expect(columns[12].textContent).toEqual(stat.riskFactor.toString());
   }
-});
 
-function getRows(fixture: any) {
-  return fixture.debugElement.nativeElement.querySelectorAll('table tr');
-}
+  function getRows(fixture: any) {
+    return fixture.debugElement.nativeElement.querySelectorAll('table tr');
+  }
+});

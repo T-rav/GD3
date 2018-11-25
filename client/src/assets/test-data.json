@@ -1,0 +1,20 @@
+[
+    {
+        "author": { 
+            "name": "brendon", 
+            "emails": ["brendonpage@live.co.za"] 
+        },
+        "periodActiveDays": 1,
+        "activeDaysPerWeek": 2,
+        "commitsPerDay": 3,
+        "impact": 4,
+        "linesOfChangePerHour": 5,
+        "churn": 6,
+        "linesAdded": 7,
+        "linesRemoved": 8,
+        "rtt100": 9,
+        "ptt100": 10,
+        "dtt100": 11,
+        "riskFactor": 12
+      }
+]
