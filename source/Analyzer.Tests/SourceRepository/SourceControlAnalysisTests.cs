@@ -57,9 +57,9 @@ namespace Analyzer.Data.Tests.SourceRepository
             {
                 // arrange
                 var branchName = "my-branch";
-                var authorName = "T-rav";
+                var authorName = "Travis";
                 var commitBuilder = new CommitTestDataBuilder()
-                    .With_Author(authorName, "tmfrisinger@gmail.com");
+                    .With_Author(authorName, "travis@frisinger.com");
 
                 var commit1 = commitBuilder
                     .With_Branch(branchName)
@@ -71,6 +71,7 @@ namespace Analyzer.Data.Tests.SourceRepository
 
                 var commit2 = commitBuilder
                     .With_Branch(branchName)
+                    .With_Author("T-rav", "tmfrisinger@gmail.com")
                     .With_File_Name("file2.txt")
                     .With_File_Content("1", "2")
                     .With_Commit_Timestamp("2018-07-17 11:03:02")
@@ -174,6 +175,7 @@ namespace Analyzer.Data.Tests.SourceRepository
 
                 var commit2 = commitBuilder
                     .With_Branch(branchName)
+                    .With_Author("Travis", "travis@frisinger.com")
                     .With_File_Name("file2.txt")
                     .With_File_Content("1", "2")
                     .With_Commit_Timestamp("2018-07-17 11:03:02")
@@ -220,6 +222,7 @@ namespace Analyzer.Data.Tests.SourceRepository
 
                 var commit2 = commitBuilder
                     .With_Branch(branchName)
+                    .With_Author("Travis", "travis@frisinger.com")
                     .With_File_Name("file2.txt")
                     .With_File_Content("1", "2")
                     .With_Commit_Timestamp("2018-07-17 11:03:02")
