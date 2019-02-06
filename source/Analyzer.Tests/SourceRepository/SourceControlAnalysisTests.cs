@@ -22,9 +22,22 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenMaster_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author("T-rav", "tmfrisinger@gmail.com");
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-07-16 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .Make_Commit(commit1)
+                    .Build();
+
                 var sut = new SourceControlAnalysisBuilder()
-                             .WithPath(repoPath)
+                             .WithPath(context.Path)
                              .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
                              .Build();
                 // act
@@ -41,10 +54,38 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenDeveloperBranch_ShouldReturnAllActiveDevelopers()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
+                var branchName = "my-branch";
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author("T-rav", "tmfrisinger@gmail.com");
+
+                var commit1 = commitBuilder
+                    .With_Branch(branchName)
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-07-16 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_Author("Travis","travis@frisinger.com")
+                    .With_Branch(branchName)
+                    .With_File_Name("file2.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-07-17 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .With_Init_Commit_To_Master()
+                    .On_Branch(branchName)
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Build();
+
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithBranch("origin/my-branch")
+                    .WithPath(context.Path)
+                    .WithBranch("refs/heads/my-branch")
                     .WithRange(DateTime.Parse("2018-7-16"), DateTime.Parse("2018-07-17"))
                     .Build();
                 // act
@@ -53,7 +94,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var expected = new List<Author>
                 {
                     new Author{Name = "T-rav", Emails = new List<string>{"tmfrisinger@gmail.com"}},
-                    new Author{Name = "Travis", Emails = new List<string>{"travisf@sahomeloans.com"}}
+                    new Author{Name = "Travis", Emails = new List<string>{"travis@frisinger.com"}}
                 };
                 actual.Should().BeEquivalentTo(expected);
             }

@@ -12,6 +12,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         private readonly List<string> _fileContents;
         private DateTime _commitTimestamp;
         private string _commitMessage;
+        private string _branch;
 
         public CommitTestDataBuilder()
         {
@@ -46,6 +47,12 @@ namespace Analyzer.Data.Tests.SourceRepository
         public CommitTestDataBuilder With_Commit_Message(string message)
         {
             _commitMessage = message;
+            return this;
+        }
+
+        public CommitTestDataBuilder With_Branch(string branch)
+        {
+            _branch = branch;
             return this;
         }
 

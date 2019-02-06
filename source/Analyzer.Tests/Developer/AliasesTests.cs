@@ -26,7 +26,7 @@ namespace Analyzer.Data.Tests.Developer
                         .Create()
                         .WithAuthor("Brendon Page", "brendonp@gmail.com")
                         .Build();
-                    var repoPath = TestRepoPath("many-unique-aliases.json");
+                    var repoPath = AliasPath("many-unique-aliases.json");
 
                     var sut = new Aliases(repoPath);
                     // act
@@ -48,7 +48,7 @@ namespace Analyzer.Data.Tests.Developer
                         .Create()
                         .WithAuthor("Travis Frisinger", "travis.frisinger@chillisoft.co.za", "t-rav@tddbuddy.com")
                         .Build();
-                    var repoPath = TestRepoPath("many-unique-aliases.json");
+                    var repoPath = AliasPath("many-unique-aliases.json");
 
                     var sut = new Aliases(repoPath);
                     // act
@@ -69,7 +69,7 @@ namespace Analyzer.Data.Tests.Developer
                         .Create()
                         .WithAuthor("Cake Face", "is@yummy.net")
                         .Build();
-                    var repoPath = TestRepoPath("many-unique-aliases.json");
+                    var repoPath = AliasPath("many-unique-aliases.json");
 
                     var sut = new Aliases(repoPath);
                     // act
@@ -90,7 +90,7 @@ namespace Analyzer.Data.Tests.Developer
                         .Create()
                         .WithAuthor("Not Cake Face", "is@yummy.net")
                         .Build();
-                    var repoPath = TestRepoPath("many-unique-aliases.json");
+                    var repoPath = AliasPath("many-unique-aliases.json");
 
                     var sut = new Aliases(repoPath);
                     // act
@@ -112,7 +112,7 @@ namespace Analyzer.Data.Tests.Developer
                     .Create()
                     .WithAuthor("Travis Frisinger", "t-rav@tddbuddy.com")
                     .Build();
-                var repoPath = TestRepoPath("shared-email-addresses.json");
+                var repoPath = AliasPath("shared-email-addresses.json");
 
                 var sut = new Aliases(repoPath);
                 // act
@@ -130,7 +130,7 @@ namespace Analyzer.Data.Tests.Developer
                     .Create()
                     .WithAuthor("Travis Frisinger", "t-rav@tddbuddy.com")
                     .Build();
-                var repoPath = TestRepoPath("duplicated-email-addresses.json");
+                var repoPath = AliasPath("duplicated-email-addresses.json");
 
                 var sut = new Aliases(repoPath);
                 // act
@@ -169,7 +169,7 @@ namespace Analyzer.Data.Tests.Developer
         // TODO: no matches
         // TODO: if resultant list of authors share any email addresses then it should throw as this means that aliases have been applied to multiple authors, which is going to skew stats
 
-        private static string TestRepoPath(string fileName)
+        private static string AliasPath(string fileName)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
             return Path.Combine(basePath, $"Developer\\AliasesTestData\\{fileName}");
