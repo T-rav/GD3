@@ -1,3 +1,15 @@
+// Web Interface With : https://demos.creative-tim.com/material-dashboard-angular2/dashboard
+// + Code : https://www.gitprime.com/platform/code/
+//   - https://help.gitprime.com/using-the-app/cross-linking-authors-in-reports
+//   - Work Log
+//   - Work Patterns
+//   - Player Card
+// + Collaberation : https://www.gitprime.com/platform/collaborate/
+//    - Unseen assistance (same code changed)?
+//    - Log pairing, assistance
+//    - Semantic Logs: chore, feat, devOps?
+// + Team : Leaderboard
+
 // Team Velocity
 https://help.gitprime.com/using-the-app/calculations/what-is-velocity
 
