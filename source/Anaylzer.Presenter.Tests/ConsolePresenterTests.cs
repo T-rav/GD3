@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using Analyzer.Presenter;
 using FluentAssertions;
 using NUnit.Framework;
 using TddBuddy.CleanArchitecture.Domain.Messages;
 
-namespace Anaylzer.Presenter.Tests
+namespace Analyzer.Presenter.Tests
 {
     [TestFixture]
     public class ConsolePresenterTests

@@ -36,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.UseCase.Tests", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Presenter", "Analyzer.Presenter\Analyzer.Presenter.csproj", "{BB01ACC6-C043-4106-BCEB-171AD653EDF8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anaylzer.Presenter.Tests", "Anaylzer.Presenter.Tests\Anaylzer.Presenter.Tests.csproj", "{0AF812ED-170C-421E-A9F0-DB1874147E3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Presenter.Tests", "Anaylzer.Presenter.Tests\Analyzer.Presenter.Tests.csproj", "{0AF812ED-170C-421E-A9F0-DB1874147E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
