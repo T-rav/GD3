@@ -9,12 +9,12 @@ namespace Analyzer.Data.Test.Utils
     public class RepositoryTestDataBuilder
     {
         private readonly List<TestCommit> _commits;
-        //private readonly string _branch;
+        private readonly string _branch;
 
 
         public RepositoryTestDataBuilder()
         {
-            //_branch = "master";
+            _branch = "master";
             _commits = new List<TestCommit>();
         }
 
@@ -22,6 +22,22 @@ namespace Analyzer.Data.Test.Utils
         public RepositoryTestDataBuilder With_Commit(TestCommit commit)
         {
             _commits.Add(commit);
+
+            return this;
+        }
+        
+        public RepositoryTestDataBuilder With_Default_Commit_To_Build_Master()
+        {
+            _commits.Add(new TestCommit
+            {
+                Name = "dummy-user",
+                Email = "dummy@idiot.io",
+                FileName = "test-file.txt",
+                Lines = new List<string> { "a line" },
+                CommitMessage = "a message of commit",
+                TimeStamp = DateTime.Today
+
+            });
 
             return this;
         }
@@ -38,7 +54,8 @@ namespace Analyzer.Data.Test.Utils
             {
                 //if (!string.IsNullOrEmpty(_branch))
                 //{
-                //    repo.CreateBranch(_branch);
+                //    //repo.CreateBranch(_branch);
+                //    repo.Branches.Add("develop", "HEAD");
                 //}
 
                 foreach (var commit in _commits)
@@ -52,7 +69,7 @@ namespace Analyzer.Data.Test.Utils
                     var author = new Signature(commit.Name, commit.Email, commit.TimeStamp);
                     repo.Commit(commit.CommitMessage, author, author);
 
-                    File.Delete(filePath);
+                    //File.Delete(filePath);
                 }
             }
             return repositoryContext;
