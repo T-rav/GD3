@@ -28,67 +28,68 @@ namespace Analyzer.Data.Tests.SourceRepository
         public void WhenInvalidBranch_ShouldReturnDeveloperList()
         {
             // arrange
-            var context = new RepositoryTestDataBuilder().Build();
-            using (context)
-            {
-                var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(context.Path)
-                    .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
-                    .WithBranch("--Never-Existed--");
-                // act
-                var actual = Assert.Throws<Exception>(() => sut.Build());
-                // assert
-                actual.Message.Should().Be("Invalid branch [--Never-Existed--]");
-            }
+            var context = new RepositoryTestDataBuilder()
+                        .Build();
+
+            var sut = new SourceControlAnalysisBuilder()
+                .WithPath(context.Path)
+                .WithRange(DateTime.Parse("2018-06-25"), DateTime.Parse("2018-07-09"))
+                .WithBranch("--Never-Existed--");
+            // act
+            var actual = Assert.Throws<Exception>(() => sut.Build());
+            // assert
+            actual.Message.Should().Be("Invalid branch [--Never-Existed--]");
+            
         }
 
         [Test]
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            var repoPath = TestRepoPath("git-test-operations");
-            //var context = new RepositoryTestDataBuilder()
-            //              .With_Commit(new TestCommit { FileName = "file1.txt", Lines = new List<string> { "1", "2" }, TimeStamp = "2018-07-16" })
-            //              .With_Commit(new TestCommit { FileName = "file2.txt", Lines = new List<string> { "3", "4" }, TimeStamp = "2018-09-13" })
-            //              .Build();
+            var commitBuilder = new CommitTestDataBuilder()
+                .With_Author("bob", "bob@shucks.io");
+
+            var commit1 = commitBuilder
+                .With_File_Name("file1.txt")
+                .With_File_Content("1", "2")
+                .With_Commit_Timestamp("2018-07-16 01:01:01")
+                .With_Commit_Message("it worked!")
+                .Build();
+
+            var commit2 = commitBuilder
+                .With_File_Name("file2.txt")
+                .With_File_Content("3", "4")
+                .With_Commit_Timestamp("2018-09-13 12:12:12")
+                .With_Commit_Message("it worked again!")
+                .Build();
+
+            var context = new RepositoryTestDataBuilder()
+                          .With_Commit(commit1)
+                          .With_Commit(commit2)
+                          .Build();
             var sut = new SourceControlAnalysisBuilder()
-                .WithPath(repoPath)
+                .WithPath(context.Path)
                 .WithEntireHistory()
                 .Build();
             // act
             var actual = sut.ReportingRange;
             // assert
             actual.Start.Should().Be(DateTime.Parse("2018-07-16"));
-            actual.End.Should().Be(DateTime.Parse("2018-09-25"));
+            actual.End.Should().Be(DateTime.Parse("2018-09-13"));
         }
 
         [Test]
         public void WhenNullIgnorePatterns_ShouldNotThrowException()
         {
             // arrange
-            var repoPath = TestRepoPath("git-test-operations");
+            var context = new RepositoryTestDataBuilder()
+                .Build();
             var sut = new SourceControlAnalysisBuilder()
-                .WithPath(repoPath)
+                .WithPath(context.Path)
                 .WithIgnorePatterns(null);
             // act
             // assert
             Assert.DoesNotThrow(() => sut.Build());
-        }
-
-        private static string TestRepoPath(string repo)
-        {
-            var basePath = TestContext.CurrentContext.TestDirectory;
-            var rootPath = GetRootPath(basePath);
-            var repoPath = Path.Combine(rootPath, repo);
-            return repoPath;
-        }
-
-        private static string GetRootPath(string basePath)
-        {
-            var source = "source";
-            var indexOf = basePath.IndexOf(source, StringComparison.Ordinal);
-            var rootPath = basePath.Substring(0, indexOf);
-            return rootPath;
         }
     }
 }

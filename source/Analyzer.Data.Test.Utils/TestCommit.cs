@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Analyzer.Data.Test.Utils
 {
@@ -6,6 +7,9 @@ namespace Analyzer.Data.Test.Utils
     {
         public string FileName { get; set; }
         public List<string> Lines { get; set; }
-        public string TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string CommitMessage { get; set; }
     }
 }

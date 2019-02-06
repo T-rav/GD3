@@ -49,8 +49,10 @@ namespace Analyzer.Data.Test.Utils
 
                     Commands.Stage(repo, "*");
 
-                    var author = new Signature("James", "@jugglingnutcase", DateTime.ParseExact(commit.TimeStamp, "yyyy-MM-dd", CultureInfo.CurrentCulture));
-                    repo.Commit("yay it works", author, author);
+                    var author = new Signature(commit.Name, commit.Email, commit.TimeStamp);
+                    repo.Commit(commit.CommitMessage, author, author);
+
+                    File.Delete(filePath);
                 }
             }
             return repositoryContext;

@@ -148,6 +148,24 @@ namespace Analyzer.Data.Tests.SourceRepository
                 actual.Should().Be(expected);
             }
 
+            [TestCase("2018-09-10", "2018-09-14", 3)]
+            [TestCase("2018-09-12", "2018-09-12", 1)]
+            public void WhenAliases_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)
+            {
+                // arrange
+                var repoPath = TestRepoPath("git-test-operations");
+                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" } };
+
+                var sut = new SourceControlAnalysisBuilder()
+                    .WithRange(start, end)
+                    .WithPath(repoPath)
+                    .Build();
+                // act
+                var actual = sut.Period_Active_Days(author);
+                // assert
+                actual.Should().Be(expected);
+            }
+
             [TestCase("2018-09-11", "2018-09-11", 0)]
             [TestCase("2018-09-10", "2018-09-10", 1)]
             public void WhenNotMaster_ShouldReturnActiveDays(DateTime start, DateTime end, int expected)

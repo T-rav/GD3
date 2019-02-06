@@ -97,6 +97,7 @@ namespace Analyzer.Data.SourceControl
 
         public int Period_Active_Days(Author author)
         {
+            // todo : this needs to account for aliases when combining, and only count one for the group
             var activeDays = GetCommits()
                 .Where(x => author.Emails.Contains(x.Author.Email))
                 .Select(x => new
