@@ -97,12 +97,12 @@ namespace Analyzer.Data.SourceControl
 
         public int Period_Active_Days(Author author)
         {
-            // todo : this needs to account for aliases when combining, and only count one for the group
+            // todo : this needs to account for aliases when combining, and only count one for the group?
             var activeDays = GetCommits()
                 .Where(x => author.Emails.Contains(x.Author.Email))
                 .Select(x => new
                 {
-                    x.Author.When.UtcDateTime.Date
+                    x.Author.When.Date
                 }).GroupBy(x => x.Date)
                 .Select(x => x.First());
 
@@ -295,9 +295,11 @@ namespace Analyzer.Data.SourceControl
 
             var commitLog = _repository.Commits.QueryBy(filter);
 
-            return commitLog
+            var commits = commitLog
                 .Where(x => x.Author.When.Date >= _context.ReportRange.Start.Date &&
                         x.Author.When.Date <= _context.ReportRange.End.Date);
+
+            return commits;
         }
     }
 }

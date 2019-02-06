@@ -58,15 +58,21 @@ namespace Analyzer.Data.Tests.SourceRepository
 
         public TestCommit Build()
         {
-            return new TestCommit
+            var result = new TestCommit
             {
                 Name = _authorName,
                 Email = _email,
                 FileName = _fileName,
-                Lines = _fileContents,
+                Lines = new List<string>(),
                 CommitMessage = _commitMessage,
                 TimeStamp = _commitTimestamp
             };
+
+            result.Lines.AddRange(_fileContents);
+
+            _fileContents.Clear();
+
+            return result;
         }
     }
 }
