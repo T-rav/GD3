@@ -172,7 +172,7 @@ namespace Analyzer.Data.Tests.Developer
         private static string AliasPath(string fileName)
         {
             var basePath = TestContext.CurrentContext.TestDirectory;
-            return Path.Combine(basePath, $"Developer\\AliasesTestData\\{fileName}");
+            return Path.Combine(basePath, "Developer","AliasesTestData",$"{fileName}");
         }
     }
 }
