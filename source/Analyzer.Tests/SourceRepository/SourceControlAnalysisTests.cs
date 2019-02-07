@@ -706,11 +706,11 @@ namespace Analyzer.Data.Tests.SourceRepository
                         PeriodActiveDays = 3,
                         CommitsPerDay = 1.0,
                         Impact = 0.01,
-                        LinesOfChangePerHour = 0.08,
+                        LinesOfChangePerHour = 0.33,
                         LinesAdded = 6,
                         LinesRemoved = 2,
-                        Rtt100 = 1250.0,
-                        Ptt100 = 2500.0,
+                        Rtt100 = 303.03,
+                        Ptt100 = 588.24,
                         Churn = 0.33
                     }
                 };
@@ -825,7 +825,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.5,
                         PeriodActiveDays = 3,
                         CommitsPerDay = 1.0,
-                        Impact = 0.01,
+                        Impact = 0.012,
                         LinesOfChangePerHour = 0.42,
                         LinesAdded = 8,
                         LinesRemoved = 2,
@@ -860,7 +860,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .With_File_Name("file2.txt")
                     .With_File_Content("1", "2")
                     .With_Commit_Timestamp(DateTime.Today)
-                    .With_Commit_Message("init commit")
+                    .With_Commit_Message("second commit")
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
@@ -886,7 +886,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                         ActiveDaysPerWeek = 1.0,
                         PeriodActiveDays = 1,
                         CommitsPerDay = 2.0,
-                        Impact = 0.0,
+                        Impact = 0.002,
                         LinesOfChangePerHour = 0.5,
                         LinesAdded = 4,
                         LinesRemoved = 0,
@@ -900,16 +900,54 @@ namespace Analyzer.Data.Tests.SourceRepository
             }
 
             [Test]
-            public void WhenBranchSelected_ShouldReturnAllActiveDeveloperForBranch()
+            public void WhenBranchSelected_ShouldReturnAllActiveDevelopersOnBranch()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
-                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var branchName = "my-branch";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+                var commitBuilder = new CommitTestDataBuilder();
+
+                var commit1 = commitBuilder
+                    .With_Author("ted", "bob@bunddy.co")
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp(DateTime.Today)
+                    .With_Commit_Message("init commit to master")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_Author(authorName, email)
+                    .With_File_Name("file2.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp(DateTime.Today)
+                    .With_Commit_Message("first branch commit")
+                    .With_Branch(branchName)
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file2.txt")
+                    .With_File_Content("3", "5", "abc")
+                    .With_Commit_Timestamp(DateTime.Today)
+                    .With_Commit_Message("second branch commit")
+                    .With_Branch(branchName)
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .Make_Commit(commit1)
+                    .On_Branch(branchName)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithBranch("origin/my-branch")
-                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-09-10"))
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Today, DateTime.Today)
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .WithBranch(branchName)
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -919,16 +957,16 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 0.25,
-                        PeriodActiveDays = 2,
-                        CommitsPerDay = 2.5,
-                        Impact = 0.03,
-                        LinesOfChangePerHour = 0.31,
-                        LinesAdded = 20,
-                        LinesRemoved = 5,
-                        Churn = 0.25,
-                        Rtt100 = 322.58,
-                        Ptt100 = 526.32
+                        ActiveDaysPerWeek = 1,
+                        PeriodActiveDays = 1,
+                        CommitsPerDay = 2,
+                        Impact = 0.010,
+                        LinesOfChangePerHour = 0.88,
+                        LinesAdded = 5,
+                        LinesRemoved = 2,
+                        Churn = 0.4,
+                        Rtt100 = 113.64,
+                        Ptt100 = 263.16
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -959,12 +997,12 @@ namespace Analyzer.Data.Tests.SourceRepository
                         PeriodActiveDays = 3,
                         CommitsPerDay = 1.67,
                         Impact = 0.02,
-                        LinesOfChangePerHour = 0.12,
+                        LinesOfChangePerHour = 0.58,
                         LinesAdded = 10,
                         LinesRemoved = 4,
                         Churn = 0.4,
-                        Rtt100 = 833.33,
-                        Ptt100 = 2000.0
+                        Rtt100 = 172.41,
+                        Ptt100 = 400.00
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -992,13 +1030,13 @@ namespace Analyzer.Data.Tests.SourceRepository
                         ActiveDaysPerWeek = 0.6,
                         PeriodActiveDays = 6,
                         CommitsPerDay = 1.83,
-                        Impact = 1.63,
-                        LinesOfChangePerHour = 0.33,
+                        Impact = 1.628,
+                        LinesOfChangePerHour = 1.65,
                         LinesAdded = 69,
                         LinesRemoved = 10,
                         Churn = 0.14,
-                        Rtt100 = 303.03,
-                        Ptt100 = 400.0
+                        Rtt100 = 60.61,
+                        Ptt100 = 81.3
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -1031,13 +1069,13 @@ namespace Analyzer.Data.Tests.SourceRepository
                         ActiveDaysPerWeek = 0.25,
                         PeriodActiveDays = 2,
                         CommitsPerDay = 3.0,
-                        Impact = 0.04,
-                        LinesOfChangePerHour = 0.36,
+                        Impact = 0.038,
+                        LinesOfChangePerHour = 1.81,
                         LinesAdded = 24,
                         LinesRemoved = 5,
                         Churn = 0.21,
-                        Rtt100 = 277.78,
-                        Ptt100 = 416.67
+                        Rtt100 = 55.25,
+                        Ptt100 = 84.03
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -1163,15 +1201,15 @@ namespace Analyzer.Data.Tests.SourceRepository
                     {
                         Author = author,
                         PeriodActiveDays = 1,
-                        Impact = 0.02,
+                        Impact = 0.024,
                         Churn = 0.5,
                         LinesAdded = 12,
                         LinesRemoved = 6,
                         ActiveDaysPerWeek = 1,
                         CommitsPerDay = 2,
-                        Rtt100 = 178.57,
-                        Ptt100 = 526.32,
-                        LinesOfChangePerHour = 0.56
+                        Rtt100 = 44.44,
+                        Ptt100 = 133.33,
+                        LinesOfChangePerHour = 2.25
                     }
                 };
 
@@ -1205,15 +1243,15 @@ namespace Analyzer.Data.Tests.SourceRepository
                     {
                         Author = author,
                         PeriodActiveDays = 1,
-                        Impact = 0.01,
+                        Impact = 0.006,
                         Churn = 1.0,
                         LinesAdded = 6,
                         LinesRemoved = 6,
                         ActiveDaysPerWeek = 1,
                         CommitsPerDay = 2,
-                        Rtt100 = 263.16,
+                        Rtt100 = 66.67,
                         Ptt100 = Double.PositiveInfinity,
-                        LinesOfChangePerHour = 0.38
+                        LinesOfChangePerHour = 1.5
                     }
                 };
 

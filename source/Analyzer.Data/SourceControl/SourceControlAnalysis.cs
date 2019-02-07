@@ -170,7 +170,7 @@ namespace Analyzer.Data.SourceControl
 
             }
 
-            return Math.Round(totalScore, 2);
+            return Math.Round(totalScore, 3);
         }
 
         private Impact CalculateImpactStats(Patch fileChanges)
