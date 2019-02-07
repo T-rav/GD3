@@ -44,6 +44,13 @@ namespace Analyzer.Data.Tests.SourceRepository
             return this;
         }
 
+
+        public CommitTestDataBuilder With_Commit_Timestamp(DateTime timeStamp)
+        {
+            _commitTimestamp = timeStamp;
+            return this;
+        }
+
         public CommitTestDataBuilder With_Commit_Message(string message)
         {
             _commitMessage = message;

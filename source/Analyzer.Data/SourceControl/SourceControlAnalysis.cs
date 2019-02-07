@@ -223,9 +223,10 @@ namespace Analyzer.Data.SourceControl
                 BuildCommitStats(commit, result);
             }
 
+            var hundredLines = 100.00;
             var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
             result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines);
-            result.Rtt100 = Math.Round(100.0 / result.ChangePerHour, 2);
+            result.Rtt100 = Math.Round(hundredLines / result.ChangePerHour, 2);
             result.Ptt100 = Math.Abs(Math.Round(100.0 / productionLinesPerHour, 2));
 
             return result;
@@ -276,7 +277,8 @@ namespace Analyzer.Data.SourceControl
 
         private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
         {
-            var periodHoursWorked = _context.ReportRange.HoursPerWeek * Period_Active_Days(developer);
+            var hoursPerDay = _context.ReportRange.HoursPerWeek / _context.ReportRange.DaysPerWeek;
+            var periodHoursWorked = hoursPerDay * Period_Active_Days(developer);
             var linesPerHour = (linesChanged / periodHoursWorked);
             return Math.Round(linesPerHour, 2);
         }
