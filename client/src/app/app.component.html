@@ -1,78 +1,108 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-</div>
+<mat-toolbar color="primary">
+  {{title}}
+</mat-toolbar>
 
-<table mat-table [dataSource]="stats" class="mat-elevation-z8">
+<h5>Reporting Range {{stats.reportingRange.start | date:'shortDate' }} - {{stats.reportingRange.end | date:'shortDate' }}</h5>
+<mat-divider></mat-divider>
+
+<h2>Individual Developer Stats</h2>
+<table mat-table [dataSource]="stats.developerStats" matSort  class="mat-elevation-z8 ">
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
     <td mat-cell *matCellDef="let stat">{{stat.author.name}}</td>
   </ng-container>
 
   <ng-container matColumnDef="periodActiveDays">
-    <th mat-header-cell *matHeaderCellDef>Period Active Days</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Period Active Days</th>
     <td mat-cell *matCellDef="let stat">{{stat.periodActiveDays}}</td>
   </ng-container>
 
   <ng-container matColumnDef="activeDaysPerWeek">
-    <th mat-header-cell *matHeaderCellDef>Active Days Per Week</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Active Days Per Week</th>
     <td mat-cell *matCellDef="let stat">{{stat.activeDaysPerWeek}}</td>
   </ng-container>
 
   <ng-container matColumnDef="commitsPerDay">
-    <th mat-header-cell *matHeaderCellDef>Commits Per Day</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Commits Per Day</th>
     <td mat-cell *matCellDef="let stat">{{stat.commitsPerDay}}</td>
   </ng-container>
 
   <ng-container matColumnDef="impact">
-    <th mat-header-cell *matHeaderCellDef>Impact</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Impact</th>
     <td mat-cell *matCellDef="let stat">{{stat.impact}}</td>
   </ng-container>
 
   <ng-container matColumnDef="linesOfChangePerHour">
-    <th mat-header-cell *matHeaderCellDef>Lines of Change Per Hour</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Lines of Change Per Hour</th>
     <td mat-cell *matCellDef="let stat">{{stat.linesOfChangePerHour}}</td>
   </ng-container>
 
   <ng-container matColumnDef="churn">
-    <th mat-header-cell *matHeaderCellDef>Churn</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Churn</th>
     <td mat-cell *matCellDef="let stat">{{stat.churn}}</td>
   </ng-container>
 
   <ng-container matColumnDef="linesAdded">
-    <th mat-header-cell *matHeaderCellDef>Lines Added</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Lines Added</th>
     <td mat-cell *matCellDef="let stat">{{stat.linesAdded}}</td>
   </ng-container>
 
   <ng-container matColumnDef="linesRemoved">
-    <th mat-header-cell *matHeaderCellDef>Lines Removed</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Lines Removed</th>
     <td mat-cell *matCellDef="let stat">{{stat.linesRemoved}}</td>
   </ng-container>
 
   <ng-container matColumnDef="rtt100">
-    <th mat-header-cell *matHeaderCellDef>Rtt100</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rtt100</th>
     <td mat-cell *matCellDef="let stat">{{stat.rtt100}}</td>
   </ng-container>
 
   <ng-container matColumnDef="ptt100">
-    <th mat-header-cell *matHeaderCellDef>Ptt100</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ptt100</th>
     <td mat-cell *matCellDef="let stat">{{stat.ptt100}}</td>
   </ng-container>
 
   <ng-container matColumnDef="dtt100">
-    <th mat-header-cell *matHeaderCellDef>Dtt100</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Dtt100</th>
     <td mat-cell *matCellDef="let stat">{{stat.dtt100}}</td>
   </ng-container>
 
   <ng-container matColumnDef="riskFactor">
-    <th mat-header-cell *matHeaderCellDef>Risk Factor</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Risk Factor</th>
     <td mat-cell *matCellDef="let stat">{{stat.riskFactor}}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+
+<h2>Team Stats</h2>
+<table mat-table [dataSource]="stats.teamStats.stats" matSort  class="mat-elevation-z8 ">
+  <ng-container matColumnDef="dateOf">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+    <td mat-cell *matCellDef="let stat">{{stat.dateOf | date:'shortDate'}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalCommits">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Commits</th>
+    <td mat-cell *matCellDef="let stat">{{stat.totalCommits}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="activeDevelopers">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Active Developers</th>
+    <td mat-cell *matCellDef="let stat">{{stat.activeDevelopers}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="velocity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Velocity</th>
+      <td mat-cell *matCellDef="let stat">{{stat.velocity}}</td>
+    </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="teamDisplayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: teamDisplayedColumns"></tr>
+</table>
+
 
 <router-outlet></router-outlet>

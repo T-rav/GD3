@@ -1,20 +1,100 @@
-[
+{
+  "authors": [
     {
-        "author": { 
-            "name": "brendon", 
-            "emails": ["brendonpage@live.co.za"] 
-        },
-        "periodActiveDays": 1,
-        "activeDaysPerWeek": 2,
-        "commitsPerDay": 3,
-        "impact": 4,
-        "linesOfChangePerHour": 5,
-        "churn": 6,
-        "linesAdded": 7,
-        "linesRemoved": 8,
-        "rtt100": 9,
-        "ptt100": 10,
-        "dtt100": 11,
-        "riskFactor": 12
+      "name": "T-rav",
+      "emails": [
+        "tmfrisinger@gmail.com",
+        "t@bizvoip.co.za",
+        "travisf@stoneage1.bizvoip.co.za",
+        "tmfirsinger@gmail.com",
+        "t@bizvoip,co.za"
+      ]
+    }
+  ],
+  "developerStats": [
+    {
+      "author": {
+        "name": "T-rav",
+        "emails": [
+          "tmfrisinger@gmail.com",
+          "t@bizvoip.co.za",
+          "travisf@stoneage1.bizvoip.co.za",
+          "tmfirsinger@gmail.com",
+          "t@bizvoip,co.za"
+        ]
+      },
+      "periodActiveDays": 8,
+      "activeDaysPerWeek": 8.0,
+      "commitsPerDay": 16.62,
+      "impact": 239377.332,
+      "linesOfChangePerHour": 1112.62,
+      "churn": 0.16,
+      "linesAdded": 61285,
+      "linesRemoved": 9923,
+      "rtt100": 0.09,
+      "ptt100": 0.12,
+      "dtt100": 0.03,
+      "riskFactor": 66.94
+    }
+  ],
+  "teamStats": {
+    "stats": [
+      {
+        "dateOf": "2019-01-28T00:00:00",
+        "totalCommits": 11,
+        "activeDevelopers": 1,
+        "velocity": 11.0
+      },
+      {
+        "dateOf": "2019-01-29T00:00:00",
+        "totalCommits": 8,
+        "activeDevelopers": 1,
+        "velocity": 8.0
+      },
+      {
+        "dateOf": "2019-01-30T00:00:00",
+        "totalCommits": 14,
+        "activeDevelopers": 2,
+        "velocity": 7.0
+      },
+      {
+        "dateOf": "2019-01-31T00:00:00",
+        "totalCommits": 14,
+        "activeDevelopers": 2,
+        "velocity": 7.0
+      },
+      {
+        "dateOf": "2019-02-01T00:00:00",
+        "totalCommits": 9,
+        "activeDevelopers": 2,
+        "velocity": 4.5
+      },
+      {
+        "dateOf": "2019-02-04T00:00:00",
+        "totalCommits": 41,
+        "activeDevelopers": 2,
+        "velocity": 20.5
+      },
+      {
+        "dateOf": "2019-02-05T00:00:00",
+        "totalCommits": 23,
+        "activeDevelopers": 3,
+        "velocity": 7.67
       }
-]
+    ],
+    "weekends": [
+      6,
+      0
+    ]
+  },
+  "reportingRange": {
+    "start": "2019-01-28T00:00:00",
+    "end": "2019-02-05T00:00:00",
+    "hoursPerWeek": 40,
+    "daysPerWeek": 5.0,
+    "weekends": [
+      6,
+      0
+    ]
+  }
+}

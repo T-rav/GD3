@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DeveloperStats } from './domain/developer/developer-stats'
 import { DeveloperStatsGatewayService } from './domain/developer/developer-stats-gateway.service'
+import { AnalysisStats } from './domain/analysisStats';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import { DeveloperStatsGatewayService } from './domain/developer/developer-stats
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public title: string = 'gd3';
+  public title: string = 'GD3 (Git Data Driven Decisions)';
   public displayedColumns: string[] = [
     'name',
     'periodActiveDays',
@@ -24,7 +24,13 @@ export class AppComponent implements OnInit {
     'dtt100',
     'riskFactor',
   ];
-  public stats: DeveloperStats[];
+  public teamDisplayedColumns: string[] = [
+    'dateOf',
+    'totalCommits',
+    'activeDevelopers',
+    'velocity'
+  ];
+  public stats: AnalysisStats[];
 
   constructor(private developerStatsGateway: DeveloperStatsGatewayService) { }
 

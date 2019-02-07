@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DeveloperStats } from './developer-stats'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs';
+import { AnalysisStats } from '../analysisStats';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class DeveloperStatsGatewayService {
   constructor(private http: HttpClient) { }
 
-  public get(): Observable<DeveloperStats[]> {
-    return this.http.get<DeveloperStats[]>('assets/test-data.json');
+  public get(): Observable<AnalysisStats[]> {
+    return this.http.get<AnalysisStats[]>('assets/test-data.json');
   }
 }
