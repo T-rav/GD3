@@ -36,5 +36,8 @@ namespace Analyzer
 
         [Option('c', "Ignore comments in commit history", Default = false, HelpText = "When set to true ignores single line comments")]
         public bool IgnoreComments { get; set; }
+
+        [Option('m', "When set writes out the data model as json for the angular ui to consume", Default = DisplayModes.Console)]
+        public DisplayModes Mode { get; set; }
     }
 }

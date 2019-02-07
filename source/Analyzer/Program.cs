@@ -31,7 +31,7 @@ namespace Analyzer
 
         private static int Display_Full_History(FullHistory opts)
         {
-            var consolePresenter = new ConsolePresenter();
+            var presenter = Create_Presenter(opts.Mode);
             var builder = new SourceControlAnalysisBuilder();
             var statsUseCase = new FullStatsUseCase(builder);
 
@@ -48,15 +48,27 @@ namespace Analyzer
                 WeekendDays = opts.WeekendDays
             };
 
-            statsUseCase.Execute(inputTo, consolePresenter);
-            consolePresenter.Render();
+            statsUseCase.Execute(inputTo, presenter);
+            presenter.Render();
             
             return 1;
         }
 
+        private static IPresenter Create_Presenter(DisplayModes optsMode)
+        {
+            if (optsMode == DisplayModes.Web)
+            {
+                return new JsonPresenter();
+            }
+
+            var consolePresenter = new ConsolePresenter();
+
+            return consolePresenter;
+        }
+
         private static int Display_Ranged_History(RangedHistory opts)
         {
-            var consolePresenter = new ConsolePresenter();
+            var presenter = Create_Presenter(opts.Mode);
             var builder = new SourceControlAnalysisBuilder();
             var statsUseCase = new RangedStatsUseCase(builder);
             var inputTo = new RangedStatsInput
@@ -74,8 +86,8 @@ namespace Analyzer
                 WeekendDays = opts.WeekendDays
             };
 
-            statsUseCase.Execute(inputTo, consolePresenter);
-            consolePresenter.Render();
+            statsUseCase.Execute(inputTo, presenter);
+            presenter.Render();
 
             return 1;
         }

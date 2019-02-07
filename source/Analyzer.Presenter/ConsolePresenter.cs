@@ -10,7 +10,7 @@ using TddBuddy.CleanArchitecture.Domain.Output;
 
 namespace Analyzer.Presenter
 {
-    public class ConsolePresenter : IRespondWithSuccessOrError<StatsOuput, ErrorOutputMessage>
+    public class ConsolePresenter : IPresenter
     {
         public static string Version => "0.9.4";
         public static ConsoleColor DefaultColor { get; private set; }
