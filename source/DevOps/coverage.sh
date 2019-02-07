@@ -6,7 +6,8 @@ workingDir=".."
 
 cd $workingDir
 
-dotnet build
+dotnet clean
+dotnet msbuild GD3.sln
 
 rm -f coverage.xml
 rm -f coverage.json
