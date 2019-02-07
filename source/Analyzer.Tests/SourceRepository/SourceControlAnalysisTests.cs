@@ -1047,12 +1047,46 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenEntireHistory_ShouldReturnDeveloperStatsForLifetimeOfBranch()
             {
                 // arrange
-                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("git-test-operations");
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-08-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-12 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-10-20 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
+                    .WithPath(context.Path)
                     .WithEntireHistory()
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -1062,16 +1096,16 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 0.6,
-                        PeriodActiveDays = 6,
-                        CommitsPerDay = 1.83,
-                        Impact = 1.628,
-                        LinesOfChangePerHour = 1.65,
-                        LinesAdded = 69,
-                        LinesRemoved = 10,
-                        Churn = 0.14,
-                        Rtt100 = 60.61,
-                        Ptt100 = 81.3
+                        ActiveDaysPerWeek = 0.12,
+                        PeriodActiveDays = 3,
+                        CommitsPerDay = 1.0,
+                        Impact =0.012,
+                        LinesOfChangePerHour = 0.42,
+                        LinesAdded = 8,
+                        LinesRemoved = 2,
+                        Churn = 0.25,
+                        Rtt100 = 238.1,
+                        Ptt100 = 400.00
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -1081,17 +1115,46 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenUsingAliasMapping_ShouldReturnOneDeveloperStats()
             {
                 // arrange
-                var author = new Author
-                {
-                    Name = "T-rav",
-                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
-                };
-                var repoPath = TestRepoPath("git-test-operations");
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email, "travis@frisinger.com" } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-12 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-09-20 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithBranch("origin/my-branch")
+                    .WithPath(context.Path)
                     .WithEntireHistory()
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
@@ -1101,16 +1164,16 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 0.25,
-                        PeriodActiveDays = 2,
-                        CommitsPerDay = 3.0,
-                        Impact = 0.038,
-                        LinesOfChangePerHour = 1.81,
-                        LinesAdded = 24,
-                        LinesRemoved = 5,
-                        Churn = 0.21,
-                        Rtt100 = 55.25,
-                        Ptt100 = 84.03
+                        ActiveDaysPerWeek = 0.14,
+                        PeriodActiveDays = 3,
+                        CommitsPerDay = 1.0,
+                        Impact = 0.012,
+                        LinesOfChangePerHour = 0.42,
+                        LinesAdded = 8,
+                        LinesRemoved = 2,
+                        Churn = 0.25,
+                        Rtt100 = 238.1,
+                        Ptt100 = 400.00
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);
@@ -1124,14 +1187,50 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenRangeOneDay_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-10 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_Author("bob", "bob@smith.com")
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-09-10 12:13:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-16"))
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-10"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
+
                 // act
                 var actual = sut.Build_Team_Stats();
                 // assert
@@ -1139,8 +1238,8 @@ namespace Analyzer.Data.Tests.SourceRepository
                 {
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-16"),
-                        ActiveDevelopers = 1,
+                        DateOf = DateTime.Parse("2018-09-10"),
+                        ActiveDevelopers = 2,
                         TotalCommits = 3
                     }
                 };
@@ -1153,14 +1252,48 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenRangeOneWeek_ShouldReturnStats()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-12 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-09-14 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-07-16"), DateTime.Parse("2018-07-20"))
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-14"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .Build();
+
                 // act
                 var actual = sut.Build_Team_Stats();
                 // assert
@@ -1168,33 +1301,33 @@ namespace Analyzer.Data.Tests.SourceRepository
                 {
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-16"),
-                        ActiveDevelopers = 1,
-                        TotalCommits = 3
-                    },
-                    new TeamStats
-                    {
-                        DateOf = DateTime.Parse("2018-07-17"),
+                        DateOf = DateTime.Parse("2018-09-10"),
                         ActiveDevelopers = 1,
                         TotalCommits = 1
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-18"),
+                        DateOf = DateTime.Parse("2018-09-11"),
                         ActiveDevelopers = 0,
                         TotalCommits = 0
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-19"),
+                        DateOf = DateTime.Parse("2018-09-12"),
+                        ActiveDevelopers = 1,
+                        TotalCommits = 1
+                    },
+                    new TeamStats
+                    {
+                        DateOf = DateTime.Parse("2018-09-13"),
                         ActiveDevelopers = 0,
                         TotalCommits = 0
                     },
                     new TeamStats
                     {
-                        DateOf = DateTime.Parse("2018-07-20"),
-                        ActiveDevelopers = 0,
-                        TotalCommits = 0
+                        DateOf = DateTime.Parse("2018-09-14"),
+                        ActiveDevelopers = 1,
+                        TotalCommits = 1
                     }
                 };
 
@@ -1213,16 +1346,44 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenFalse_ShouldReturnStatsWithCommentedOutLines()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
-                var author = new Author
-                {
-                    Name = "T-rav",
-                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
-                };
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email, } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("// 1", "// 2")
+                    .With_Commit_Timestamp("2018-09-10 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-09-10 13:05:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-10"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .WithIgnoreComments(false)
@@ -1236,15 +1397,15 @@ namespace Analyzer.Data.Tests.SourceRepository
                     {
                         Author = author,
                         PeriodActiveDays = 1,
-                        Impact = 0.024,
-                        Churn = 0.5,
-                        LinesAdded = 12,
-                        LinesRemoved = 6,
+                        Impact = 0.012,
+                        Churn = 0.25,
+                        LinesAdded = 8,
+                        LinesRemoved = 2,
                         ActiveDaysPerWeek = 1,
-                        CommitsPerDay = 2,
-                        Rtt100 = 44.44,
+                        CommitsPerDay = 3,
+                        Rtt100 = 80.0,
                         Ptt100 = 133.33,
-                        LinesOfChangePerHour = 2.25
+                        LinesOfChangePerHour = 1.25
                     }
                 };
 
@@ -1255,16 +1416,45 @@ namespace Analyzer.Data.Tests.SourceRepository
             public void WhenTrue_ShouldReturnStatsIgnoringCommentedOutLines()
             {
                 // arrange
-                var repoPath = TestRepoPath("git-test-operations");
-                var author = new Author
-                {
-                    Name = "T-rav",
-                    Emails = new List<string> { "tmfrisinger@gmail.com", "travisf@sahomeloans.com" }
-                };
+                // arrange
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email, } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("// 1", "// 2")
+                    .With_Commit_Timestamp("2018-09-10 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file3.txt")
+                    .With_File_Content("1", "2", "5", "7")
+                    .With_Commit_Timestamp("2018-09-10 13:05:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithRange(DateTime.Parse("2018-09-25"), DateTime.Parse("2018-09-25"))
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-10"))
                     .WithWorkingDaysPerWeek(4)
                     .WithWorkingWeekHours(32)
                     .WithIgnoreComments(true)
@@ -1279,37 +1469,21 @@ namespace Analyzer.Data.Tests.SourceRepository
                         Author = author,
                         PeriodActiveDays = 1,
                         Impact = 0.006,
-                        Churn = 1.0,
+                        Churn = 0.33,
                         LinesAdded = 6,
-                        LinesRemoved = 6,
+                        LinesRemoved = 2,
                         ActiveDaysPerWeek = 1,
-                        CommitsPerDay = 2,
-                        Rtt100 = 66.67,
-                        Ptt100 = Double.PositiveInfinity,
-                        LinesOfChangePerHour = 1.5
+                        CommitsPerDay = 3,
+                        Rtt100 = 100.0,
+                        Ptt100 = 200.00,
+                        LinesOfChangePerHour = 1.0
                     }
                 };
 
                 actual.Should().BeEquivalentTo(expected);
             }
         }
-
-        private static string TestRepoPath(string repo)
-        {
-            var basePath = TestContext.CurrentContext.TestDirectory;
-            var rootPath = GetRootPath(basePath);
-            var repoPath = Path.Combine(rootPath, repo);
-            return repoPath;
-        }
-
-        private static string GetRootPath(string basePath)
-        {
-            var source = "source";
-            var indexOf = basePath.IndexOf(source, StringComparison.Ordinal);
-            var rootPath = basePath.Substring(0, indexOf);
-            return rootPath;
-        }
-
+        
         private static FileSystemTestArtefact WriteAliasMapping(List<Alias> aliases)
         {
             var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.json");
