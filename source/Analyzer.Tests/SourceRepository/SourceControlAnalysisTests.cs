@@ -79,7 +79,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -133,7 +133,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -183,7 +183,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -230,7 +230,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -290,7 +290,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -343,7 +343,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -395,7 +395,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -446,7 +446,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -499,7 +499,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -527,7 +527,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                 var author = new Author { Name = authorName, Emails = new List<string> { email } };
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
@@ -592,7 +592,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -630,7 +630,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Build();
 
@@ -682,7 +682,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -747,7 +747,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .On_Branch(branchName)
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
@@ -802,7 +802,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     .Build();
 
                 var context = new RepositoryTestDataBuilder()
-                    .With_Init_Commit_To_Master()
+                    .After_Init_Commit_To_Master()
                     .Make_Commit(commit1)
                     .Make_Commit(commit2)
                     .Make_Commit(commit3)
@@ -972,19 +972,54 @@ namespace Analyzer.Data.Tests.SourceRepository
                 actual.Should().BeEquivalentTo(expected);
             }
 
-
+            // todo : should it count as a period active day if all work is in the ignore list?
             [Test]
             public void WhenFolderIgnored_ShouldIgnoreFilesInFolderWhenCalculatingDeveloperStats()
             {
                 // arrange
-                var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
-                var repoPath = TestRepoPath("git-test-operations");
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt.orig")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-10 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("5", "6", "7")
+                    .With_Commit_Timestamp("2018-09-10 13:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
 
                 var sut = new SourceControlAnalysisBuilder()
-                    .WithPath(repoPath)
-                    .WithIgnorePatterns(new[] { "documents", ".orig", "BASE", "LOCAL", "REMOTE" })
-                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-13"))
+                    .WithPath(context.Path)
+                    .WithIgnorePatterns(new[] {".orig"})
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-20"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
                     .Build();
+
                 // act
                 var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
                 // assert
@@ -993,16 +1028,16 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 3.0,
-                        PeriodActiveDays = 3,
-                        CommitsPerDay = 1.67,
-                        Impact = 0.02,
-                        LinesOfChangePerHour = 0.58,
-                        LinesAdded = 10,
-                        LinesRemoved = 4,
-                        Churn = 0.4,
-                        Rtt100 = 172.41,
-                        Ptt100 = 400.00
+                        ActiveDaysPerWeek = 0.5,
+                        PeriodActiveDays = 1, 
+                        CommitsPerDay = 3.0, // per active day
+                        Impact = 0.010, // affected
+                        LinesOfChangePerHour = 0.88, // affected
+                        LinesAdded = 5, // affected
+                        LinesRemoved = 2,
+                        Churn = 0.4, // affected
+                        Rtt100 = 113.64, // affected
+                        Ptt100 = 263.16 // affected
                     }
                 };
                 actual.Should().BeEquivalentTo(expected);

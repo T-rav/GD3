@@ -83,7 +83,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         {
             // arrange
             var context = new RepositoryTestDataBuilder()
-                          .With_Init_Commit_To_Master()
+                          .After_Init_Commit_To_Master()
                           .Build();
             var sut = new SourceControlAnalysisBuilder()
                 .WithPath(context.Path)

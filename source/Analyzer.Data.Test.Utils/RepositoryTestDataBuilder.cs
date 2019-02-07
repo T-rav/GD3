@@ -31,7 +31,7 @@ namespace Analyzer.Data.Test.Utils
             return this;
         }
         
-        public RepositoryTestDataBuilder With_Init_Commit_To_Master()
+        public RepositoryTestDataBuilder After_Init_Commit_To_Master()
         {
             _commits.Add(new TestCommitWithBranch
             {
