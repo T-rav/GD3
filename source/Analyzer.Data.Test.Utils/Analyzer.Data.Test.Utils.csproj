@@ -8,13 +8,4 @@
     <PackageReference Include="LibGit2Sharp" Version="0.25.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.IO.FileSystem.AccessControl">
-      <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.0\System.IO.FileSystem.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.AccessControl">
-      <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.0\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
