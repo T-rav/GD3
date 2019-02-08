@@ -101,16 +101,24 @@ namespace Analyzer.Data.SourceControl
 
         public double Active_Days_Per_Week(Author author)
         {
-            var activeDays = Period_Active_Days_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
-            var weeks = _context.ReportRange.Period_Weeks();
-            return Math.Round(activeDays / weeks, 2);
+            return Active_Days_Per_Week_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
         }
 
         public double Commits_Per_Day(Author author)
         {
-            var periodActiveDays = (double)Period_Active_Days_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
-            var totalCommits = GetCommits(_context.ReportRange.Start,_context.ReportRange.End)
-                              .Count(x => author.Emails.Contains(x.Author.Email));
+            return Commits_Per_Day_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
+        }
+
+        public void Dispose()
+        {
+            _repository?.Dispose();
+        }
+        
+        private double Commits_Per_Day_For_Range(Author author, DateTime start, DateTime end)
+        {
+            var periodActiveDays = (double)Period_Active_Days_For_Range(author, start, end);
+            var totalCommits = GetCommits(start, end)
+                .Count(x => author.Emails.Contains(x.Author.Email));
 
             if (periodActiveDays == 0 || totalCommits == 0)
             {
@@ -120,9 +128,11 @@ namespace Analyzer.Data.SourceControl
             return Math.Round(totalCommits / periodActiveDays, 2);
         }
 
-        public void Dispose()
+        private double Active_Days_Per_Week_For_Range(Author author, DateTime start, DateTime end)
         {
-            _repository?.Dispose();
+            var activeDays = Period_Active_Days_For_Range(author, start, end);
+            var weeks = _context.ReportRange.Period_Weeks();
+            return Math.Round(activeDays / weeks, 2);
         }
 
         private int Period_Active_Days_For_Range(Author author, DateTime start, DateTime end)
@@ -141,7 +151,6 @@ namespace Analyzer.Data.SourceControl
             return activeDaysCount;
         }
 
-
         private List<DeveloperStats> Build_Stats_For_Range(IList<Author> authors, DateTime start, DateTime end)
         {
             var result = new List<DeveloperStats>();
@@ -152,9 +161,9 @@ namespace Analyzer.Data.SourceControl
                 {
                     Author = developer,
                     PeriodActiveDays = Period_Active_Days_For_Range(developer, start, end),
-                    ActiveDaysPerWeek = Active_Days_Per_Week(developer),
-                    CommitsPerDay = Commits_Per_Day(developer),
-                    Impact = Impact(developer),
+                    ActiveDaysPerWeek = Active_Days_Per_Week_For_Range(developer, start, end),
+                    CommitsPerDay = Commits_Per_Day_For_Range(developer, start, end),
+                    Impact = Impact(developer, start, end),
                     LinesOfChangePerHour = changeStats.ChangePerHour,
                     LinesAdded = changeStats.Added,
                     LinesRemoved = changeStats.Removed,
@@ -177,10 +186,10 @@ namespace Analyzer.Data.SourceControl
          */
 
         // 13-08 Tusani v Sindi stats
-        private double Impact(Author developer)
+        private double Impact(Author developer, DateTime start, DateTime end)
         {
             var totalScore = 0.0;
-            var developerCommits = GetCommits(_context.ReportRange.Start, _context.ReportRange.End)
+            var developerCommits = GetCommits(start, end)
                                    .Where(x => developer.Emails.Contains(x.Author.Email));
             foreach (var commit in developerCommits)
             {
@@ -237,7 +246,7 @@ namespace Analyzer.Data.SourceControl
 
         private LinesOfChange Change_Stats(Author developer, DateTime start, DateTime end)
         {
-            var result = new LinesOfChange();
+            var stats = new LinesOfChange();
 
             var developerCommits = GetCommits(start, end)
                 .Where(x => developer.Emails.Contains(x.Author.Email))
@@ -247,18 +256,41 @@ namespace Analyzer.Data.SourceControl
             {
                 if (FirstCommit(commit))
                 {
-                    BuildFirstCommitStats(commit, result);
+                    BuildFirstCommitStats(commit, stats);
                     continue;
                 }
 
-                BuildCommitStats(commit, result);
+                BuildCommitStats(commit, stats);
             }
 
             var hundredLines = 100.00;
-            var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed, start, end);
-            result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines, start, end);
-            result.Rtt100 = Math.Round(hundredLines / result.ChangePerHour, 2);
-            result.Ptt100 = Math.Abs(Math.Round(100.0 / productionLinesPerHour, 2));
+            var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, stats.Added - stats.Removed, start, end);
+            stats.ChangePerHour = Calculate_Lines_Per_Hour(developer, stats.TotalLines, start, end);
+            stats.Rtt100 = Calculate_Rtt100(hundredLines, stats.ChangePerHour);
+            stats.Ptt100 = Calculate_Ptt100(hundredLines, productionLinesPerHour);
+
+
+            return stats;
+        }
+
+        private static double Calculate_Ptt100(double hundredLines, double productionLinesPerHour)
+        {
+            var result = Math.Abs(Math.Round(hundredLines / productionLinesPerHour, 2));
+            if (double.IsPositiveInfinity(result))
+            {
+                return 0;
+            }
+
+            return result;
+        }
+
+        private static double Calculate_Rtt100(double hundredLines, double changePerHour)
+        {
+            var result = Math.Round(hundredLines / changePerHour, 2);
+            if (double.IsPositiveInfinity(result))
+            {
+                return 0;
+            }
 
             return result;
         }
@@ -311,6 +343,10 @@ namespace Analyzer.Data.SourceControl
             var hoursPerDay = _context.ReportRange.HoursPerWeek / _context.ReportRange.DaysPerWeek;
             var periodHoursWorked = hoursPerDay * Period_Active_Days_For_Range(developer, start, end);
             var linesPerHour = (linesChanged / periodHoursWorked);
+            if (double.IsNaN(linesPerHour))
+            {
+                linesPerHour = 0;
+            }
             return Math.Round(linesPerHour, 2);
         }
 
@@ -329,8 +365,8 @@ namespace Analyzer.Data.SourceControl
             var commitLog = _repository.Commits.QueryBy(filter);
 
             var commits = commitLog
-                .Where(x => x.Author.When.Date >= _context.ReportRange.Start.Date &&
-                        x.Author.When.Date <= _context.ReportRange.End.Date);
+                .Where(x => x.Author.When.Date >= start &&
+                        x.Author.When.Date <= end);
 
             return commits;
         }
