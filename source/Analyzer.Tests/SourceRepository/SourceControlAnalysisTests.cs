@@ -1181,6 +1181,228 @@ namespace Analyzer.Data.Tests.SourceRepository
         }
 
         [TestFixture]
+        public class Build_Daily_Individual_Developer_Stats
+        {
+            [Test]
+            public void WhenOneDay_ShouldReturnOneDaysStats()
+            {
+                // arrange
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-10 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Build();
+
+                var sut = new SourceControlAnalysisBuilder()
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-10"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .Build();
+                // act
+                var actual = sut.Build_Daily_Individual_Developer_Stats(new List<Author> { author });
+                // assert
+                var expected = new List<DailyDeveloperStats>
+                {
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-09-10"),
+                        Stats = new List<DeveloperStats>{
+                            new DeveloperStats{
+                                Author = author,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 2.0,
+                                Impact = 0.008,
+                                LinesOfChangePerHour = 0.75,
+                                LinesAdded = 4,
+                                LinesRemoved = 2,
+                                Rtt100 = 133.33,
+                                Ptt100 = 400.00,
+                                Churn = 0.5
+                            }
+                        }
+                    }
+                };
+                actual.Should().BeEquivalentTo(expected);
+            }
+
+            [Test]
+            public void WhenManyDaysAndManyAuthors_ShouldReturnEveryDaysStatsForAllAuthors()
+            {
+                // arrange
+                var email = "tmfrisinger@gmail.com";
+                var authorName = "T-rav";
+                var author = new Author { Name = authorName, Emails = new List<string> { email } };
+                var author2 = new Author { Name = "bob", Emails = new List<string> { "bob@smith.com" } };
+
+                var commitBuilder = new CommitTestDataBuilder()
+                    .With_Author(authorName, email);
+
+                var commit1 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("1", "2")
+                    .With_Commit_Timestamp("2018-09-10 01:01:01")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit2 = commitBuilder
+                    .With_File_Name("file1.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-11 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var commit3 = commitBuilder
+                    .With_Author("bob","bob@smith.com")
+                    .With_File_Name("file2.txt")
+                    .With_File_Content("3", "4")
+                    .With_Commit_Timestamp("2018-09-12 11:03:02")
+                    .With_Commit_Message("it worked!")
+                    .Build();
+
+                var context = new RepositoryTestDataBuilder()
+                    .After_Init_Commit_To_Master()
+                    .Make_Commit(commit1)
+                    .Make_Commit(commit2)
+                    .Make_Commit(commit3)
+                    .Build();
+
+                var sut = new SourceControlAnalysisBuilder()
+                    .WithPath(context.Path)
+                    .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-12"))
+                    .WithWorkingDaysPerWeek(4)
+                    .WithWorkingWeekHours(32)
+                    .Build();
+                // act
+                var actual = sut.Build_Daily_Individual_Developer_Stats(new List<Author> { author, author2 });
+                // assert
+                var expected = new List<DailyDeveloperStats>
+                {
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-09-10"),
+                        Stats = new List<DeveloperStats>{
+                            new DeveloperStats{
+                                Author = author2,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.002,
+                                LinesOfChangePerHour = 0.25,
+                                LinesAdded = 2,
+                                LinesRemoved = 0,
+                                Rtt100 = 400.00,
+                                Ptt100 = 400.00,
+                                Churn = 0.0
+                            },
+                            new DeveloperStats{
+                                Author = author,
+                                ActiveDaysPerWeek = 2.0, 
+                                PeriodActiveDays = 2,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.008,
+                                LinesOfChangePerHour = 0.38,
+                                LinesAdded = 4,
+                                LinesRemoved = 2,
+                                Rtt100 = 263.16,
+                                Ptt100 = 833.33, // seems strange this value so high
+                                Churn = 0.5
+                            }
+                        }
+                    },
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-09-11"),
+                        Stats = new List<DeveloperStats>{
+                            new DeveloperStats{
+                                Author = author2,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.002,
+                                LinesOfChangePerHour = 0.25,
+                                LinesAdded = 2,
+                                LinesRemoved = 0,
+                                Rtt100 = 400.00,
+                                Ptt100 = 400.00,
+                                Churn = 0.0
+                            },
+                            new DeveloperStats{
+                                Author = author,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.002,
+                                LinesOfChangePerHour = 0.25,
+                                LinesAdded = 2,
+                                LinesRemoved = 0,
+                                Rtt100 = 400.00,
+                                Ptt100 = 400.00,
+                                Churn = 0.0
+                            }
+                        }
+                    },
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-09-12"),
+                        Stats = new List<DeveloperStats>{
+                            new DeveloperStats{
+                                Author = author2,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.002,
+                                LinesOfChangePerHour = 0.25,
+                                LinesAdded = 2,
+                                LinesRemoved = 0,
+                                Rtt100 = 400.00,
+                                Ptt100 = 400.00,
+                                Churn = 0.0
+                            },
+                            new DeveloperStats{
+                                Author = author,
+                                ActiveDaysPerWeek = 1.0, 
+                                PeriodActiveDays = 1,    
+                                CommitsPerDay = 1.0,
+                                Impact = 0.002,
+                                LinesOfChangePerHour = 0.25,
+                                LinesAdded = 2,
+                                LinesRemoved = 0,
+                                Rtt100 = 400.00,
+                                Ptt100 = 400.00,
+                                Churn = 0.0
+                            }
+                        }
+                    }
+                };
+                actual.Should().BeEquivalentTo(expected);
+            }
+        }
+
+
+        [TestFixture]
         public class Build_Team_Stats
         {
             [Test]
@@ -1189,8 +1411,6 @@ namespace Analyzer.Data.Tests.SourceRepository
                 // arrange
                 var email = "tmfrisinger@gmail.com";
                 var authorName = "T-rav";
-                var author = new Author { Name = authorName, Emails = new List<string> { email } };
-
 
                 var commitBuilder = new CommitTestDataBuilder()
                     .With_Author(authorName, email);

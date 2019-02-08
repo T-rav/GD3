@@ -16,5 +16,6 @@ namespace Analyzer.Domain.SourceControl
         double Commits_Per_Day(Author author);
         IList<DeveloperStats> Build_Individual_Developer_Stats(IList<Author> authors);
         TeamStatsCollection Build_Team_Stats();
+        IList<DailyDeveloperStats> Build_Daily_Individual_Developer_Stats(List<Author> authors);
     }
 }

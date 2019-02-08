@@ -27,13 +27,13 @@ namespace Analyzer.Data.SourceControl
 
         public IList<Author> List_Authors()
         {
-            var authors = List_Repository_Authors();
+            var authors = List_Repository_Authors(_context.ReportRange.Start, _context.ReportRange.End);
             return _aliases.Map_To_Authors(authors);
         }
 
-        private IList<Author> List_Repository_Authors()
+        private IList<Author> List_Repository_Authors(DateTime start, DateTime end)
         {
-            var authors = GetCommits()
+            var authors = GetCommits(start, end)
                 .GroupBy(x => x.Author.Email)
                 .Select(x => x.First())
                 .Select(x => new Author
@@ -46,36 +46,17 @@ namespace Analyzer.Data.SourceControl
 
         public IList<DeveloperStats> Build_Individual_Developer_Stats(IList<Author> authors)
         {
-            var result = new List<DeveloperStats>();
-            foreach (var developer in authors)
-            {
-                var changeStats = Change_Stats(developer);
-                var stats = new DeveloperStats
-                {
-                    Author = developer,
-                    PeriodActiveDays = Period_Active_Days(developer),
-                    ActiveDaysPerWeek = Active_Days_Per_Week(developer),
-                    CommitsPerDay = Commits_Per_Day(developer),
-                    Impact = Impact(developer),
-                    LinesOfChangePerHour = changeStats.ChangePerHour,
-                    LinesAdded = changeStats.Added,
-                    LinesRemoved = changeStats.Removed,
-                    Churn = changeStats.Churn,
-                    Rtt100 = changeStats.Rtt100,
-                    Ptt100 = changeStats.Ptt100
-                };
-                result.Add(stats);
-            }
+            var result = Build_Stats_For_Range(authors, _context.ReportRange.Start, _context.ReportRange.End);
 
             return result;
         }
-
+        
         public TeamStatsCollection Build_Team_Stats()
         {
             var teamStats = new List<TeamStats>();
 
             var dateRange = _context.ReportRange.Generate_Dates_For_Range();
-            var commits = GetCommits();
+            var commits = GetCommits(_context.ReportRange.Start, _context.ReportRange.End);
 
             foreach (var date in dateRange)
             {
@@ -95,33 +76,40 @@ namespace Analyzer.Data.SourceControl
             return new TeamStatsCollection(teamStats, _context.ReportRange.Weekends);
         }
 
+        public IList<DailyDeveloperStats> Build_Daily_Individual_Developer_Stats(List<Author> authors)
+        {
+            var result = new List<DailyDeveloperStats>();
+            var days  = _context.ReportRange.Generate_Dates_For_Range();
+
+            foreach (var day in days)
+            {
+                var individualDeveloperStats = Build_Stats_For_Range(authors, day.Date, day.Date.Date);
+               result.Add(new DailyDeveloperStats
+               {
+                   Date = day.Date,
+                   Stats = individualDeveloperStats
+               });
+            }
+           
+            return result;
+        }
+
         public int Period_Active_Days(Author author)
         {
-            // todo : this needs to account for aliases when combining, and only count one for the group?
-            var activeDays = GetCommits()
-                .Where(x => author.Emails.Contains(x.Author.Email))
-                .Select(x => new
-                {
-                    x.Author.When.Date
-                }).GroupBy(x => x.Date)
-                .Select(x => x.First());
-
-            var activeDaysCount = activeDays.Count();
-
-            return activeDaysCount;
+            return Period_Active_Days_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
         }
 
         public double Active_Days_Per_Week(Author author)
         {
-            var activeDays = Period_Active_Days(author);
+            var activeDays = Period_Active_Days_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
             var weeks = _context.ReportRange.Period_Weeks();
             return Math.Round(activeDays / weeks, 2);
         }
 
         public double Commits_Per_Day(Author author)
         {
-            var periodActiveDays = (double)Period_Active_Days(author);
-            var totalCommits = GetCommits()
+            var periodActiveDays = (double)Period_Active_Days_For_Range(author, _context.ReportRange.Start, _context.ReportRange.End);
+            var totalCommits = GetCommits(_context.ReportRange.Start,_context.ReportRange.End)
                               .Count(x => author.Emails.Contains(x.Author.Email));
 
             if (periodActiveDays == 0 || totalCommits == 0)
@@ -137,6 +125,49 @@ namespace Analyzer.Data.SourceControl
             _repository?.Dispose();
         }
 
+        private int Period_Active_Days_For_Range(Author author, DateTime start, DateTime end)
+        {
+            // todo : this needs to account for aliases when combining, and only count one for the group?
+            var activeDays = GetCommits(start, end)
+                .Where(x => author.Emails.Contains(x.Author.Email))
+                .Select(x => new
+                {
+                    x.Author.When.Date
+                }).GroupBy(x => x.Date)
+                .Select(x => x.First());
+
+            var activeDaysCount = activeDays.Count();
+
+            return activeDaysCount;
+        }
+
+
+        private List<DeveloperStats> Build_Stats_For_Range(IList<Author> authors, DateTime start, DateTime end)
+        {
+            var result = new List<DeveloperStats>();
+            foreach (var developer in authors)
+            {
+                var changeStats = Change_Stats(developer, start, end);
+                var stats = new DeveloperStats
+                {
+                    Author = developer,
+                    PeriodActiveDays = Period_Active_Days_For_Range(developer, start, end),
+                    ActiveDaysPerWeek = Active_Days_Per_Week(developer),
+                    CommitsPerDay = Commits_Per_Day(developer),
+                    Impact = Impact(developer),
+                    LinesOfChangePerHour = changeStats.ChangePerHour,
+                    LinesAdded = changeStats.Added,
+                    LinesRemoved = changeStats.Removed,
+                    Churn = changeStats.Churn,
+                    Rtt100 = changeStats.Rtt100,
+                    Ptt100 = changeStats.Ptt100
+                };
+                result.Add(stats);
+            }
+
+            return result;
+        }
+
         /*
          *  The amount of code in the change
             What percentage of the work is edits to old code
@@ -149,7 +180,7 @@ namespace Analyzer.Data.SourceControl
         private double Impact(Author developer)
         {
             var totalScore = 0.0;
-            var developerCommits = GetCommits()
+            var developerCommits = GetCommits(_context.ReportRange.Start, _context.ReportRange.End)
                                    .Where(x => developer.Emails.Contains(x.Author.Email));
             foreach (var commit in developerCommits)
             {
@@ -204,11 +235,11 @@ namespace Analyzer.Data.SourceControl
             return _context.IgnorePatterns.Any(pattern => file.Path.Contains(pattern));
         }
 
-        private LinesOfChange Change_Stats(Author developer)
+        private LinesOfChange Change_Stats(Author developer, DateTime start, DateTime end)
         {
             var result = new LinesOfChange();
 
-            var developerCommits = GetCommits()
+            var developerCommits = GetCommits(start, end)
                 .Where(x => developer.Emails.Contains(x.Author.Email))
                 .OrderBy(x => x.Author.When.Date);
 
@@ -224,8 +255,8 @@ namespace Analyzer.Data.SourceControl
             }
 
             var hundredLines = 100.00;
-            var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed);
-            result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines);
+            var productionLinesPerHour = Calculate_Lines_Per_Hour(developer, result.Added - result.Removed, start, end);
+            result.ChangePerHour = Calculate_Lines_Per_Hour(developer, result.TotalLines, start, end);
             result.Rtt100 = Math.Round(hundredLines / result.ChangePerHour, 2);
             result.Ptt100 = Math.Abs(Math.Round(100.0 / productionLinesPerHour, 2));
 
@@ -275,15 +306,15 @@ namespace Analyzer.Data.SourceControl
             return !commit.Parents.Any();
         }
 
-        private double Calculate_Lines_Per_Hour(Author developer, double linesChanged)
+        private double Calculate_Lines_Per_Hour(Author developer, double linesChanged, DateTime start, DateTime end)
         {
             var hoursPerDay = _context.ReportRange.HoursPerWeek / _context.ReportRange.DaysPerWeek;
-            var periodHoursWorked = hoursPerDay * Period_Active_Days(developer);
+            var periodHoursWorked = hoursPerDay * Period_Active_Days_For_Range(developer, start, end);
             var linesPerHour = (linesChanged / periodHoursWorked);
             return Math.Round(linesPerHour, 2);
         }
 
-        private IEnumerable<Commit> GetCommits()
+        private IEnumerable<Commit> GetCommits(DateTime start, DateTime end)
         {
             var filter = new CommitFilter
             {
