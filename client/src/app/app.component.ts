@@ -30,6 +30,10 @@ export class AppComponent implements OnInit {
     'activeDevelopers',
     'velocity'
   ];
+  public dailyDeveloperColumns: string[] = [
+   'date',
+   'stats'
+  ];
   public stats: AnalysisStats[];
 
   constructor(private developerStatsGateway: DeveloperStatsGatewayService) { }

@@ -30,12 +30,15 @@ namespace Analyzer.UseCase
             {
                 var authors = repo.List_Authors();
                 var stats = repo.Build_Individual_Developer_Stats(authors);
+                var dailyDeveloperStats = repo.Build_Daily_Individual_Developer_Stats(authors);
+
                 var teamStats = repo.Build_Team_Stats();
 
                 var result = new StatsOuput
                 {
                     Authors = authors,
                     DeveloperStats = stats,
+                    DailyDeveloperStats = dailyDeveloperStats,
                     TeamStats = teamStats,
                     ReportingRange = repo.ReportingRange
                 };

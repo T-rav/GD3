@@ -74,6 +74,17 @@ namespace Analyzer.UseCase.Tests
                         Rtt100 = 6.2
                     }
                 },
+                DailyDeveloperStats = new List<DailyDeveloperStats>
+                {
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-10-05"),
+                        Stats = new List<DeveloperStats>
+                        {
+
+                        }
+                    }
+                },
                 TeamStats = new TeamStatsCollection(developerStats, weekends),
                 ReportingRange = reportingRange
             };
@@ -106,6 +117,16 @@ namespace Analyzer.UseCase.Tests
                         PeriodActiveDays = 1,
                         Ptt100 = 4.5,
                         Rtt100 = 6.2
+                    }
+                });
+
+            repo.Build_Daily_Individual_Developer_Stats(Arg.Any<IList<Author>>())
+                .Returns(new List<DailyDeveloperStats>
+                {
+                    new DailyDeveloperStats
+                    {
+                        Date = DateTime.Parse("2018-10-05"),
+                        Stats = new List<DeveloperStats>()
                     }
                 });
 

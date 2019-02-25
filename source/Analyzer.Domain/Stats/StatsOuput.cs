@@ -11,5 +11,6 @@ namespace Analyzer.Domain.Stats
         public IList<DeveloperStats> DeveloperStats { get; set; }
         public TeamStatsCollection TeamStats { get; set; }
         public ReportingPeriod ReportingRange { get; set; }
+        public IList<DailyDeveloperStats> DailyDeveloperStats { get; set; }
     }
 }

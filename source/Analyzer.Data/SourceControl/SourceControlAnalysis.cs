@@ -76,7 +76,7 @@ namespace Analyzer.Data.SourceControl
             return new TeamStatsCollection(teamStats, _context.ReportRange.Weekends);
         }
 
-        public IList<DailyDeveloperStats> Build_Daily_Individual_Developer_Stats(List<Author> authors)
+        public IList<DailyDeveloperStats> Build_Daily_Individual_Developer_Stats(IList<Author> authors)
         {
             var result = new List<DailyDeveloperStats>();
             var days  = _context.ReportRange.Generate_Dates_For_Range();

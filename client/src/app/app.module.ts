@@ -11,10 +11,12 @@ import {
   MatIconModule,
   MatListModule,
 } from '@angular/material';
+import { DailyDeveloperStatComponent } from './daily-developer-stat/daily-developer-stat.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DailyDeveloperStatComponent
   ],
   imports: [
     BrowserModule,

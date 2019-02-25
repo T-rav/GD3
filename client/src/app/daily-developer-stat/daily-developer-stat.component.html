@@ -1,0 +1,43 @@
+<ng-container *ngIf="isValid(developerStats)">
+
+  <mat-table [dataSource]="dataSource" class="heading">
+    <ng-container matColumnDef="name" class="cell">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.author.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="commits" class="cell">
+      <mat-header-cell *matHeaderCellDef> Commits </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.commitsPerDay}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="impact" class="cell">
+      <mat-header-cell *matHeaderCellDef> Impact </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.impact}} &nbsp; </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="linesOfChangePerHour" class="cell">
+      <mat-header-cell *matHeaderCellDef> Lines of Change Per Hour </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.linesOfChangePerHour}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="churn" class="cell">
+      <mat-header-cell *matHeaderCellDef> Churn </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.churn}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="linesAdded" class="cell">
+      <mat-header-cell *matHeaderCellDef> Lines Added </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.linesAdded}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="linesRemoved" class="cell">
+      <mat-header-cell *matHeaderCellDef> Lines Removed </mat-header-cell>
+      <mat-cell *matCellDef="let stat"> {{stat.linesRemoved}} </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+</ng-container>

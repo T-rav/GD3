@@ -77,9 +77,7 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<h2>Daily Individual Developer Stats</h2>
-
-<h2>Team Stats</h2>
+<h2>Daily Team Stats</h2>
 <table mat-table [dataSource]="stats.teamStats.stats" matSort  class="mat-elevation-z8 ">
   <ng-container matColumnDef="dateOf">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
@@ -105,5 +103,24 @@
   <tr mat-row *matRowDef="let row; columns: teamDisplayedColumns"></tr>
 </table>
 
+<h2>Daily Individual Developer Stats</h2>
+<table mat-table [dataSource]="stats.dailyDeveloperStats" matSort class="mat-elevation-z8 ">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+      <td mat-cell *matCellDef="let stat">{{stat.date | date:'shortDate'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="stats">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stats</th>
+      <mat-cell *matCellDef="let row">
+        <daily-developer-stat [developerStats]="row.stats"></daily-developer-stat>
+      </mat-cell>
+    </ng-container>
+   
+    <!-- https://github.com/ManfredWind/angular-material-nested-and-expanded-tables/blob/master/src/app/components/simple-nested/simple-nested-tables.component.ts-->
+
+    <tr mat-header-row *matHeaderRowDef="dailyDeveloperColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: dailyDeveloperColumns"></tr>
+  </table>
 
 <router-outlet></router-outlet>
