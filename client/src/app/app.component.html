@@ -3,6 +3,14 @@
   {{title}}
 </mat-toolbar>
 
+<!--
+  todo : 
+  1) break this up into components
+  2) allow drill-down for each aggregated developer / team stats into a new tab
+  3) allow drill-down for each day into individual commits (allow flagging for exclusion)
+  4) investigate high impact -> filter renames and other cosmetic adjustments (28/01 - 05/02 on XTeam project)
+-->
+
 <h5>Reporting Range {{stats.reportingRange.start | date:'shortDate' }} - {{stats.reportingRange.end | date:'shortDate' }}</h5>
 <mat-divider></mat-divider>
 
