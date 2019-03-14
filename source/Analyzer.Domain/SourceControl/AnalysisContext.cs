@@ -1,8 +1,7 @@
-﻿using Analyzer.Domain.Reporting;
-using System.Collections.Generic;
-using Analyzer.Domain.SourceControl;
+﻿using System.Collections.Generic;
+using Analyzer.Domain.Reporting;
 
-namespace Analyzer.Data.SourceControl
+namespace Analyzer.Domain.SourceControl
 {
     public class AnalysisContext
     {
