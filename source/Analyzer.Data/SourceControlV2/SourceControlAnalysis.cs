@@ -43,19 +43,57 @@ namespace Analyzer.Data.SourceControlV2
             var commits = Get_Commits(_context.ReportRange.Start, _context.ReportRange.End);
             foreach (var commit in commits)
             {
-                foreach (var commitParent in commit.Parents)
+                if (First_Commit(commit))
                 {
-                    var fileChanges = _repository.Diff.Compare<Patch>(commitParent.Tree, commit.Tree);
-                    result.Add(new CommitStat
-                    {
-                        Author = Find_Commit_Author(authors, commit), 
-                        When = commit.Committer.When.DateTime,
-                        Patch = Create_Commit_Patch(fileChanges)
-                    });
+                    var firstCommit = Convert_First_Commit(commit,authors);
+                    result.Add(firstCommit);
+                    continue;
                 }
+
+                var convertedCommits = Convert_Commit(authors, commit);
+                result.AddRange(convertedCommits);
             }
 
             return result;
+        }
+
+        private List<CommitStat> Convert_Commit(IList<Author> authors, Commit commit)
+        {
+            var result = new List<CommitStat>();
+            foreach (var commitParent in commit.Parents)
+            {
+                var fileChanges = _repository.Diff.Compare<Patch>(commitParent.Tree, commit.Tree);
+                result.Add(new CommitStat
+                {
+                    Author = Find_Commit_Author(authors, commit),
+                    When = commit.Committer.When.DateTime,
+                    Patch = Create_Commit_Patch(fileChanges)
+                });
+            }
+
+            return result;
+        }
+
+        private CommitStat Convert_First_Commit(Commit commit, IList<Author> authors)
+        {
+            var fileChanges = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
+
+            return new CommitStat
+            {
+                Author = Find_Commit_Author(authors, commit),
+                When = commit.Committer.When.DateTime,
+                Patch = new CommitPatch
+                {
+                    LinesAdded = fileChanges.TotalLinesAdded,
+                    LinesRemoved = fileChanges.TotalLinesDeleted,
+                    Contents = string.Empty // todo : get the contents properly
+                }
+            };
+        }
+
+        private bool First_Commit(Commit commit)
+        {
+            return !commit.Parents.Any();
         }
 
         private static CommitPatch Create_Commit_Patch(Patch fileChanges)
