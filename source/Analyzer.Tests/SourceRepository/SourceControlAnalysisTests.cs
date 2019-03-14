@@ -1061,7 +1061,7 @@ namespace Analyzer.Data.Tests.SourceRepository
                     new DeveloperStats
                     {
                         Author = author,
-                        ActiveDaysPerWeek = 0.12,
+                        ActiveDaysPerWeek = 0.1,
                         PeriodActiveDays = 3,
                         CommitsPerDay = 1.0,
                         Impact =0.012,

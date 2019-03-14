@@ -32,11 +32,8 @@ namespace Analyzer.Data.SourceControlV2
         {
             var authors = Map_Aliases_To_Authors();
             var commits = Fetch_Commits(authors);
-            return new CodeAnalysis
-            {
-                Authors = authors,
-                CommitStats = commits
-            };
+
+            return new CodeAnalysis(authors, commits, _context);
         }
 
         private IList<CommitStat> Fetch_Commits(IList<Author> authors)
