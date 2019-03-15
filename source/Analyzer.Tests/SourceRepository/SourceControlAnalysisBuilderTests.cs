@@ -1,9 +1,8 @@
-﻿using Analyzer.Data.SourceControl;
+﻿using System;
+using Analyzer.Data.SourceControl;
 using Analyzer.Data.Test.Utils;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace Analyzer.Data.Tests.SourceRepository
 {
@@ -46,7 +45,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            var commitBuilder = new CommitTestDataBuilder()
+            var commitBuilder = new SourceRepository.CommitTestDataBuilder()
                 .With_Author("bob", "bob@shucks.io");
 
             var commit1 = commitBuilder
@@ -67,12 +66,15 @@ namespace Analyzer.Data.Tests.SourceRepository
                           .Make_Commit(commit1)
                           .Make_Commit(commit2)
                           .Build();
-            var sut = new SourceControlAnalysisBuilder()
-                .WithPath(context.Path)
-                .WithEntireHistory()
-                .Build();
+
+            var sourceControlAnalysis = new SourceControlAnalysisBuilder()
+                                        .WithPath(context.Path)
+                                        .WithEntireHistory()
+                                        .Build();
+
+            var sut = sourceControlAnalysis.Run_Analysis();
             // act
-            var actual = sut.ReportingRange;
+            var actual = sut.AnalysisContext.ReportRange;
             // assert
             actual.Start.Should().Be(DateTime.Parse("2018-07-16"));
             actual.End.Should().Be(DateTime.Parse("2018-09-13"));

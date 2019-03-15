@@ -1,8 +1,9 @@
-﻿using TddBuddy.CleanArchitecture.Domain;
+﻿using Analyzer.Domain.SourceControl;
+using TddBuddy.CleanArchitecture.Domain;
 
 namespace Analyzer.Domain.Stats
 {
-    public interface IRangedStatsUseCase : IUseCase<RangedStatsInput, StatsOuput>
+    public interface IRangedStatsUseCase : IUseCase<RangedStatsInput, CodeAnalysis>
     {
     }
 }

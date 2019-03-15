@@ -1,11 +1,13 @@
-﻿using Analyzer.Data.Developer;
-using Analyzer.Domain.Reporting;
-using LibGit2Sharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Analyzer.Data.Developer;
+using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceControl;
+using LibGit2Sharp;
 using Branch = Analyzer.Domain.SourceControl.Branch;
+using ISourceControlAnalysis = Analyzer.Domain.SourceControl.ISourceControlAnalysis;
+using ISourceControlAnalysisBuilder = Analyzer.Domain.SourceControlV2.ISourceControlAnalysisBuilder;
 
 namespace Analyzer.Data.SourceControl
 {

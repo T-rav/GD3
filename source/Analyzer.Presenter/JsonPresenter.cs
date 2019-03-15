@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using Analyzer.Domain.Stats;
+using Analyzer.Domain.SourceControl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using TddBuddy.CleanArchitecture.Domain.Messages;
@@ -10,7 +9,7 @@ namespace Analyzer.Presenter
 {
     public class JsonPresenter : IPresenter
     {
-        private StatsOuput _output;
+        private CodeAnalysis _output;
         private ErrorOutputMessage _errors;
 
         public void Respond(ErrorOutputMessage output)
@@ -18,7 +17,7 @@ namespace Analyzer.Presenter
             _errors = output;
         }
 
-        public void Respond(StatsOuput output)
+        public void Respond(CodeAnalysis output)
         {
             _output = output;
         }

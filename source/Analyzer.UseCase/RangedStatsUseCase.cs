@@ -1,4 +1,5 @@
 ﻿using Analyzer.Domain.SourceControl;
+using Analyzer.Domain.SourceControlV2;
 using Analyzer.Domain.Stats;
 using TddBuddy.CleanArchitecture.Domain.Messages;
 using TddBuddy.CleanArchitecture.Domain.Output;
@@ -14,7 +15,7 @@ namespace Analyzer.UseCase
             _builder = builder;
         }
 
-        public void Execute(RangedStatsInput inputTo, IRespondWithSuccessOrError<StatsOuput, ErrorOutputMessage> presenter)
+        public void Execute(RangedStatsInput inputTo, IRespondWithSuccessOrError<CodeAnalysis, ErrorOutputMessage> presenter)
         {
             using (var repo = _builder
                 .WithPath(inputTo.Path)
@@ -28,22 +29,24 @@ namespace Analyzer.UseCase
                 .WithWeekends(inputTo.WeekendDays)
                 .Build())
             {
-                var authors = repo.List_Authors();
-                var stats = repo.Build_Individual_Developer_Stats(authors);
-                var dailyDeveloperStats = repo.Build_Daily_Individual_Developer_Stats(authors);
+                //var authors = repo.List_Authors();
+                //var stats = repo.Build_Individual_Developer_Stats(authors);
+                //var dailyDeveloperStats = repo.Build_Daily_Individual_Developer_Stats(authors);
 
-                var teamStats = repo.Build_Team_Stats();
+                //var teamStats = repo.Build_Team_Stats();
 
-                var result = new StatsOuput
-                {
-                    Authors = authors,
-                    DeveloperStats = stats,
-                    DailyDeveloperStats = dailyDeveloperStats,
-                    TeamStats = teamStats,
-                    ReportingRange = repo.ReportingRange
-                };
+                //var result = new StatsOutput
+                //{
+                //    Authors = authors,
+                //    DeveloperStats = stats,
+                //    DailyDeveloperStats = dailyDeveloperStats,
+                //    TeamStats = teamStats,
+                //    ReportingRange = repo.ReportingRange
+                //};
 
-                presenter.Respond(result);
+                var codeAnalysis = repo.Run_Analysis();
+
+                presenter.Respond(codeAnalysis);
             }
         }
     }

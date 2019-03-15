@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceControl;
+using Analyzer.Domain.SourceControlV2;
 using Analyzer.Domain.Stats;
 using Analyzer.Domain.Team;
 using FluentAssertions;
@@ -33,8 +34,8 @@ namespace Analyzer.UseCase.Tests
                 End = DateTime.Parse("2018-10-15")
             };
 
-            var presenter = new PropertyPresenter<StatsOuput, ErrorOutputMessage>();
-            var repo = Create_Valid_Repository_Mocks(author, developerStats, weekends, reportingRange);
+            var presenter = new PropertyPresenter<CodeAnalysis, ErrorOutputMessage>();
+            var repo = Create_Valid_Repository_Mocks(author, reportingRange);
 
             var builder = Substitute.For<ISourceControlAnalysisBuilder>();
             builder
@@ -54,7 +55,7 @@ namespace Analyzer.UseCase.Tests
             //---------------Act----------------------
             sut.Execute(inputTo, presenter);
             //---------------Assert-------------------
-            var expected = new StatsOuput
+            var expected = new StatsOutput
             {
                 Authors = new List<Author>{author},
                 DeveloperStats = new List<DeveloperStats>
@@ -91,48 +92,48 @@ namespace Analyzer.UseCase.Tests
             presenter.SuccessContent.Should().BeEquivalentTo(expected);
         }
 
-        private static ISourceControlAnalysis Create_Valid_Repository_Mocks(Author author, List<TeamStats> developerStats, List<DayOfWeek> weekends, ReportingPeriod reportingRange)
+        private static ISourceControlAnalysis Create_Valid_Repository_Mocks(Author author, ReportingPeriod reportingRange)
         {
             var repo = Substitute.For<ISourceControlAnalysis>();
 
-            repo.List_Authors()
-                .Returns(new List<Author>
-                {
-                    author
-                });
+            repo.Run_Analysis().Returns(new CodeAnalysis(new List<Author> { author }, new List<CommitStat>(), new AnalysisContext { ReportRange = reportingRange }));
 
-            repo.Build_Individual_Developer_Stats(Arg.Any<List<Author>>())
-                .Returns(new List<DeveloperStats>
-                {
-                    new DeveloperStats
-                    {
-                        ActiveDaysPerWeek = 1.5,
-                        Author = author,
-                        Churn = 0.9,
-                        CommitsPerDay = 1.2,
-                        Impact = 9.9,
-                        LinesAdded = 10,
-                        LinesRemoved = 5,
-                        LinesOfChangePerHour = 2.2,
-                        PeriodActiveDays = 1,
-                        Ptt100 = 4.5,
-                        Rtt100 = 6.2
-                    }
-                });
+            //repo.List_Authors()
+            //    .Returns(new List<Author>
+            //    {
+            //        author
+            //    });
 
-            repo.Build_Daily_Individual_Developer_Stats(Arg.Any<IList<Author>>())
-                .Returns(new List<DailyDeveloperStats>
-                {
-                    new DailyDeveloperStats
-                    {
-                        Date = DateTime.Parse("2018-10-05"),
-                        Stats = new List<DeveloperStats>()
-                    }
-                });
+            //repo.Build_Individual_Developer_Stats(Arg.Any<List<Author>>())
+            //    .Returns(new List<DeveloperStats>
+            //    {
+            //        new DeveloperStats
+            //        {
+            //            ActiveDaysPerWeek = 1.5,
+            //            Author = author,
+            //            Churn = 0.9,
+            //            CommitsPerDay = 1.2,
+            //            Impact = 9.9,
+            //            LinesAdded = 10,
+            //            LinesRemoved = 5,
+            //            LinesOfChangePerHour = 2.2,
+            //            PeriodActiveDays = 1,
+            //            Ptt100 = 4.5,
+            //            Rtt100 = 6.2
+            //        }
+            //    });
 
-            repo.Build_Team_Stats().Returns(new TeamStatsCollection(developerStats, weekends));
+            //repo.Build_Daily_Individual_Developer_Stats(Arg.Any<IList<Author>>())
+            //    .Returns(new List<DailyDeveloperStats>
+            //    {
+            //        new DailyDeveloperStats
+            //        {
+            //            Date = DateTime.Parse("2018-10-05"),
+            //            Stats = new List<DeveloperStats>()
+            //        }
+            //    });
 
-            repo.ReportingRange.Returns( reportingRange );
+            //repo.Build_Team_Stats().Returns(new TeamStatsCollection(developerStats, weekends));
 
             return repo;
         }

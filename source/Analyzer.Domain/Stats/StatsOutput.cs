@@ -5,7 +5,7 @@ using Analyzer.Domain.Team;
 
 namespace Analyzer.Domain.Stats
 {
-    public class StatsOuput
+    public class StatsOutput
     {
         public IList<Author> Authors { get; set; }
         public IList<DeveloperStats> DeveloperStats { get; set; }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
+using Analyzer.Domain.SourceControl;
 using Analyzer.Domain.Stats;
 using Analyzer.Domain.Team;
 using TddBuddy.CleanArchitecture.Domain.Messages;
-using TddBuddy.CleanArchitecture.Domain.Output;
 
 namespace Analyzer.Presenter
 {
@@ -16,7 +16,7 @@ namespace Analyzer.Presenter
         public static ConsoleColor DefaultColor { get; private set; }
 
         private ErrorOutputMessage _errors;
-        private StatsOuput _stats;
+        private CodeAnalysis _stats;
 
         public ConsolePresenter()
         {
@@ -28,7 +28,7 @@ namespace Analyzer.Presenter
             _errors = output;
         }
 
-        public void Respond(StatsOuput output)
+        public void Respond(CodeAnalysis output)
         {
             _stats = output;
         }
@@ -55,12 +55,12 @@ namespace Analyzer.Presenter
 
         public void RenderDashboard()
         {
-            PrintApplicationHeader(_stats.ReportingRange.Start, _stats.ReportingRange.End);
-            PrintDeveloperStatsTableHeader();
-            PrintDeveloperStatsTable(_stats.DeveloperStats);
-            PrintDeveloperAverages(_stats.DeveloperStats, _stats.ReportingRange);
-            PrintTeamStatsTableHeader();
-            PrintTeamStatsTable(_stats.TeamStats);
+            //PrintApplicationHeader(_stats.ReportingRange.Start, _stats.ReportingRange.End);
+            //PrintDeveloperStatsTableHeader();
+            //PrintDeveloperStatsTable(_stats.DeveloperStats);
+            //PrintDeveloperAverages(_stats.DeveloperStats, _stats.ReportingRange);
+            //PrintTeamStatsTableHeader();
+            //PrintTeamStatsTable(_stats.TeamStats);
         }
 
         private void PrintApplicationHeader(DateTime start, DateTime end)

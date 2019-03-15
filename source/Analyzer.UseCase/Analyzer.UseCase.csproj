@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
+    <ProjectReference Include="..\Analyzer.Presenter\Analyzer.Presenter.csproj" />
   </ItemGroup>
 
 </Project>

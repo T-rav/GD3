@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Analyzer.Domain.SourceControl;
 
-namespace Analyzer.Domain.SourceControl
+namespace Analyzer.Domain.SourceControlV2
 {
     public interface ISourceControlAnalysisBuilder
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
-using Analyzer.Domain.SourceControl;
+using Analyzer.Domain.SourceControlV2;
 
-namespace Analyzer.Domain.SourceControlV2
+namespace Analyzer.Domain.SourceControl
 {
     public class CodeAnalysis
     {
