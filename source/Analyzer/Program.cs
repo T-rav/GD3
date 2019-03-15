@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 using System;
-using Analyzer.Data.SourceControl;
+using Analyzer.Domain.SourceControl;
 using Analyzer.Domain.Stats;
 using Analyzer.Presenter;
 using Analyzer.UseCase;

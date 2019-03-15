@@ -1,10 +1,10 @@
-﻿using LibGit2Sharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LibGit2Sharp;
 
-namespace Analyzer.Data.Test.Utils
+namespace Analyzer.Test.Utils
 {
     public class RepositoryTestDataBuilder
     {

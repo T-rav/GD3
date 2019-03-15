@@ -5,14 +5,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Developer\AliasesTestData\duplicate-eliases.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="StoneAge.System.Utils.DotNetCore" Version="1.2.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="Developer\AliasesTestData\duplicate-eliases.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Analyzer.Data.Test.Utils\Analyzer.Test.Utils.csproj" />
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Developer\AliasesTestData\duplicated-email-addresses.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Developer\AliasesTestData\many-unique-aliases.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Developer\AliasesTestData\shared-email-addresses.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

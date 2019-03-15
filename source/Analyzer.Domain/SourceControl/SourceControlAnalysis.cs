@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Data.Developer;
 using Analyzer.Domain.Developer;
-using Analyzer.Domain.Reporting;
-using Analyzer.Domain.SourceControl;
-using Analyzer.Domain.SourceControlV2;
 using LibGit2Sharp;
 
-namespace Analyzer.Data.SourceControl
+namespace Analyzer.Domain.SourceControl
 {
-    public class SourceControlAnalysis : ISourceControlAnalysis
+    // todo : this object sits in a funny place - ideally we have this data in a DB and can get a repo to create it
+    // but for now it shall sit in the domain
+    public class SourceControlAnalysis : IDisposable
     {
         private readonly Repository _repository;
         private readonly Aliases _aliases;
@@ -35,8 +34,6 @@ namespace Analyzer.Data.SourceControl
 
             return new CodeAnalysis(authors, commits, _context);
         }
-
-        public ReportingPeriod ReportingRange { get; set; }
 
         private IList<CommitStat> Fetch_Commits(IList<Author> authors)
         {

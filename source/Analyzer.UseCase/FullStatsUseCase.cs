@@ -1,5 +1,4 @@
 ﻿using Analyzer.Domain.SourceControl;
-using Analyzer.Domain.SourceControlV2;
 using Analyzer.Domain.Stats;
 using TddBuddy.CleanArchitecture.Domain.Messages;
 using TddBuddy.CleanArchitecture.Domain.Output;
@@ -8,9 +7,9 @@ namespace Analyzer.UseCase
 {
     public class FullStatsUseCase : IFullStatsUseCase
     {
-        private readonly ISourceControlAnalysisBuilder _builder;
+        private readonly SourceControlAnalysisBuilder _builder;
 
-        public FullStatsUseCase(ISourceControlAnalysisBuilder builder)
+        public FullStatsUseCase(SourceControlAnalysisBuilder builder)
         {
             _builder = builder;
         }

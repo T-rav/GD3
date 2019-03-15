@@ -1,6 +1,6 @@
 ﻿using System;
-using Analyzer.Data.SourceControl;
-using Analyzer.Data.Test.Utils;
+using Analyzer.Domain.SourceControl;
+using Analyzer.Test.Utils;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -45,7 +45,7 @@ namespace Analyzer.Data.Tests.SourceRepository
         public void WhenNoRangeSpecified_ShouldUseRepositorysFirstAndLastCommitDates()
         {
             // arrange
-            var commitBuilder = new SourceRepository.CommitTestDataBuilder()
+            var commitBuilder = new CommitTestDataBuilder()
                 .With_Author("bob", "bob@shucks.io");
 
             var commit1 = commitBuilder

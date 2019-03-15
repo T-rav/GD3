@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
-using Analyzer.Domain.SourceControlV2;
 
 namespace Analyzer.Domain.SourceControl
 {
@@ -19,8 +18,10 @@ namespace Analyzer.Domain.SourceControl
             AnalysisContext = context;
         }
 
+        // todo : need a build stats method that makes it all come together
         public IList<IndividualPeriodStats> Individual_Period_Stats()
         {
+            // todo : rework to build 
             var result = new List<IndividualPeriodStats>();
             foreach (var author in Authors)
             {
@@ -29,6 +30,7 @@ namespace Analyzer.Domain.SourceControl
                 var averageCommitsPerDay = Fetch_Average_Commits_Per_Day(author, activeDays);
                 var ptt100 = Calculate_Ptt100(author, activeDays);
 
+                // todo : should be daily stats which aggregate up
                 result.Add(new IndividualPeriodStats
                 {
                     Author = author,

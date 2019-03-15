@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F5A543
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Domain.Tests", "Analyzer.Domain.Tests\Analyzer.Domain.Tests.csproj", "{E95051DD-A29B-480F-A05A-C5943F759968}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Data.Test.Utils", "Analyzer.Data.Test.Utils\Analyzer.Data.Test.Utils.csproj", "{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Test.Utils", "Analyzer.Data.Test.Utils\Analyzer.Test.Utils.csproj", "{F8FF5124-0986-402E-A0B8-B4469FD2EEF9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.UseCase", "Analyzer.UseCase\Analyzer.UseCase.csproj", "{BCA2719A-51DE-417F-AF43-77F3E791186D}"
 EndProject

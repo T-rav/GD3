@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Analyzer.Data.Test.Utils;
 
-namespace Analyzer.Data.Tests.SourceRepository
+namespace Analyzer.Test.Utils
 {
     public class CommitTestDataBuilder
     {

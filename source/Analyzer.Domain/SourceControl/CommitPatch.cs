@@ -1,4 +1,4 @@
-﻿namespace Analyzer.Domain.SourceControlV2
+﻿namespace Analyzer.Domain.SourceControl
 {
     public class CommitPatch
     {

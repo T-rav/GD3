@@ -5,16 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Developer\AliasesTestData\duplicate-eliases.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="Developer\AliasesTestData\duplicate-eliases.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
@@ -24,21 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer.Data.Test.Utils\Analyzer.Data.Test.Utils.csproj" />
+    <ProjectReference Include="..\Analyzer.Data.Test.Utils\Analyzer.Test.Utils.csproj" />
     <ProjectReference Include="..\Analyzer.Data\Analyzer.Data.csproj" />
     <ProjectReference Include="..\Analyzer.Domain\Analyzer.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Developer\AliasesTestData\shared-email-addresses.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Developer\AliasesTestData\duplicated-email-addresses.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Developer\AliasesTestData\many-unique-aliases.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

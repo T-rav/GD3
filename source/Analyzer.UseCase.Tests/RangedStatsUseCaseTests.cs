@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Analyzer.Domain.Developer;
 using Analyzer.Domain.Reporting;
 using Analyzer.Domain.SourceControl;
-using Analyzer.Domain.SourceControlV2;
 using Analyzer.Domain.Stats;
 using Analyzer.Domain.Team;
 using FluentAssertions;
@@ -37,7 +36,7 @@ namespace Analyzer.UseCase.Tests
             var presenter = new PropertyPresenter<CodeAnalysis, ErrorOutputMessage>();
             var repo = Create_Valid_Repository_Mocks(author, reportingRange);
 
-            var builder = Substitute.For<ISourceControlAnalysisBuilder>();
+            var builder = Substitute.For<SourceControlAnalysisBuilder>();
             builder
                 .WithPath(Arg.Any<string>())
                 .WithRange(Arg.Any<DateTime>(), Arg.Any<DateTime>())
@@ -92,9 +91,9 @@ namespace Analyzer.UseCase.Tests
             presenter.SuccessContent.Should().BeEquivalentTo(expected);
         }
 
-        private static ISourceControlAnalysis Create_Valid_Repository_Mocks(Author author, ReportingPeriod reportingRange)
+        private static SourceControlAnalysis Create_Valid_Repository_Mocks(Author author, ReportingPeriod reportingRange)
         {
-            var repo = Substitute.For<ISourceControlAnalysis>();
+            var repo = Substitute.For<SourceControlAnalysis>();
 
             repo.Run_Analysis().Returns(new CodeAnalysis(new List<Author> { author }, new List<CommitStat>(), new AnalysisContext { ReportRange = reportingRange }));
 

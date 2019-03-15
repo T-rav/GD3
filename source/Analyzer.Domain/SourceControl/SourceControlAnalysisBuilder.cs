@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Data.Developer;
 using Analyzer.Domain.Reporting;
-using Analyzer.Domain.SourceControl;
 using LibGit2Sharp;
-using Branch = Analyzer.Domain.SourceControl.Branch;
-using ISourceControlAnalysis = Analyzer.Domain.SourceControl.ISourceControlAnalysis;
-using ISourceControlAnalysisBuilder = Analyzer.Domain.SourceControlV2.ISourceControlAnalysisBuilder;
 
-namespace Analyzer.Data.SourceControl
+namespace Analyzer.Domain.SourceControl
 {
-    public class SourceControlAnalysisBuilder : ISourceControlAnalysisBuilder
+    public class SourceControlAnalysisBuilder
     {
         private string _repoPath;
         private DateTime _start;
@@ -35,13 +31,13 @@ namespace Analyzer.Data.SourceControl
             _aliasMapping = string.Empty;
         }
 
-        public ISourceControlAnalysisBuilder WithPath(string repoPath)
+        public SourceControlAnalysisBuilder WithPath(string repoPath)
         {
             _repoPath = repoPath;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithRange(DateTime start, DateTime end)
+        public SourceControlAnalysisBuilder WithRange(DateTime start, DateTime end)
         {
             _start = start;
             _end = end;
@@ -49,25 +45,25 @@ namespace Analyzer.Data.SourceControl
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithWorkingWeekHours(int workWeekHours)
+        public SourceControlAnalysisBuilder WithWorkingWeekHours(int workWeekHours)
         {
             _workWeekHours = workWeekHours;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithWorkingDaysPerWeek(double workingDaysPerWeek)
+        public SourceControlAnalysisBuilder WithWorkingDaysPerWeek(double workingDaysPerWeek)
         {
             _workingDaysPerWeek = workingDaysPerWeek;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithBranch(string branch)
+        public SourceControlAnalysisBuilder WithBranch(string branch)
         {
             _branch = branch;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithIgnorePatterns(IEnumerable<string> patterns)
+        public SourceControlAnalysisBuilder WithIgnorePatterns(IEnumerable<string> patterns)
         {
             if (patterns == null)
             {
@@ -78,31 +74,31 @@ namespace Analyzer.Data.SourceControl
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithEntireHistory()
+        public SourceControlAnalysisBuilder WithEntireHistory()
         {
             _isEntireHistory = true;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithWeekends(IEnumerable<DayOfWeek> days)
+        public SourceControlAnalysisBuilder WithWeekends(IEnumerable<DayOfWeek> days)
         {
             _weekends.AddRange(days);
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithIgnoreComments(bool ignoreComments)
+        public SourceControlAnalysisBuilder WithIgnoreComments(bool ignoreComments)
         {
             _ignoreComments = ignoreComments;
             return this;
         }
 
-        public ISourceControlAnalysisBuilder WithAliasMapping(string aliasMapping)
+        public SourceControlAnalysisBuilder WithAliasMapping(string aliasMapping)
         {
             _aliasMapping = aliasMapping;
             return this;
         }
 
-        public ISourceControlAnalysis Build()
+        public SourceControlAnalysis Build()
         {
             if (NotValidGitRepository(_repoPath))
             {

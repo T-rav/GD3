@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Analyzer.Data.Test.Utils
+namespace Analyzer.Test.Utils
 {
     public class FileSystemTestArtefact : IDisposable
     {
