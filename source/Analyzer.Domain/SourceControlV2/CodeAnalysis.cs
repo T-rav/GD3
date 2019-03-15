@@ -24,6 +24,7 @@ namespace Analyzer.Domain.SourceControlV2
             var result = new List<IndividualPeriodStats>();
             foreach (var author in Authors)
             {
+                // todo : make stats object for each? Or rules to build IStat objects
                 var activeDays = Fetch_Active_Days(author);
                 var averageCommitsPerDay = Fetch_Average_Commits_Per_Day(author, activeDays);
                 var ptt100 = Calculate_Ptt100(author, activeDays);

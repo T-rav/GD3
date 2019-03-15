@@ -1,10 +1,7 @@
 ﻿using System;
 using Analyzer.Data.Developer;
-using Analyzer.Domain.Developer;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 
 namespace Analyzer.Data.Tests.Developer
@@ -39,28 +36,6 @@ namespace Analyzer.Data.Tests.Developer
                     actual.Should().BeEquivalentTo(expected);
                 }
 
-                // TODO do I want to bother keep the ability for the author to have multiple email addresses?
-                [Test]
-                public void When_AuthorHasAdditionalEmailAddresses_ShouldReturnAuthorWithUnionOfEmailAddresses()
-                {
-                    // arrange
-                    var authors = AuthorTestDataBuilder
-                        .Create()
-                        .WithAuthor("Travis Frisinger", "travis.frisinger@chillisoft.co.za", "t-rav@tddbuddy.com")
-                        .Build();
-                    var repoPath = AliasPath("many-unique-aliases.json");
-
-                    var sut = new Aliases(repoPath);
-                    // act
-                    var actual = sut.Map_To_Authors(authors);
-                    // assert
-                    var expected = AuthorTestDataBuilder
-                        .Create()
-                        .WithAuthor("Travis Frisinger", "travis.frisinger@chillisoft.co.za", "t-rav@tddbuddy.com", "trav@cakeface.co.za")
-                        .Build();
-                    actual.Should().BeEquivalentTo(expected);
-                }
-
                 [Test]
                 public void When_NoAdditionalEmailAddresses_ShouldReturnOriginalAuthor()
                 {
@@ -83,7 +58,7 @@ namespace Analyzer.Data.Tests.Developer
                 }
 
                 [Test]
-                public void When_AliasNameIsDifferent_ShouldUseAuthorName()
+                public void When_AliasNameIsDifferentToRepositoryAuthor_ShouldUseAliasName()
                 {
                     // arrange
                     var authors = AuthorTestDataBuilder
@@ -98,7 +73,7 @@ namespace Analyzer.Data.Tests.Developer
                     // assert
                     var expected = AuthorTestDataBuilder
                         .Create()
-                        .WithAuthor("Not Cake Face", "is@yummy.net")
+                        .WithAuthor("Cake Face", "is@yummy.net")
                         .Build();
                     actual.Should().BeEquivalentTo(expected);
                 }

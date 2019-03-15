@@ -60,7 +60,7 @@ namespace Analyzer.Data.Developer
                 var alias = FindAlias(aliases, author);
                 if (AliasFoundWithNoDeveloperMapping(alias, authorMap))
                 {
-                    AddMapping(author, alias, authorMap);
+                    AddMapping(alias, authorMap);
                 }
                 else if (NoAliasFoundWithNoDeveloperMapping(alias, authorMap))
                 {
@@ -77,12 +77,16 @@ namespace Analyzer.Data.Developer
             authorMap[Guid.NewGuid()] = author;
         }
 
-        private void AddMapping(Author author, Alias alias, Dictionary<Guid, Author> authorMap)
+        private void AddMapping(Alias alias, Dictionary<Guid, Author> authorMap)
         {
-            var emails = author.Emails.Union(alias.Emails).ToList();
-            author.Emails.Clear();
-            author.Emails.AddRange(emails);
-            authorMap[alias.Id] = author;
+
+            var aliasAuthor = new Author
+            {
+                Name = alias.Name,
+                Emails = alias.Emails
+            };
+
+            authorMap[alias.Id] = aliasAuthor;
         }
 
         private bool NoAliasFoundWithNoDeveloperMapping(Alias alias, Dictionary<Guid, Author> authorMap)

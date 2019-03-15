@@ -113,8 +113,8 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                     var authorName = "T-rav";
                     var aliasMap = new List<Alias>
                     {
-                    new Alias {Name = authorName, Emails = new List<string> { "tmfrisinger@gmail.com", "travis@frisinger.com" } }
-                };
+                        new Alias {Name = authorName, Emails = new List<string> { "tmfrisinger@gmail.com", "travis@frisinger.com" } }
+                    };
 
                     var commitBuilder = new CommitTestDataBuilder()
                         .With_Author(authorName, "tmfrisinger@gmail.com");
@@ -566,7 +566,7 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                 {
                     // arrange
                     var branchName = "negative-commits";
-                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+                    var author = new Author {Name = "T-rav", Emails = new List<string> {"tmfrisinger@gmail.com"}};
 
                     var commitBuilder = new CommitTestDataBuilder()
                         .With_Author(author.Name, author.Emails.First());
@@ -608,17 +608,17 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                     // assert
                     var expected = new List<IndividualPeriodStats>
                     {
-                        new IndividualPeriodStats{Author = author, Ptt100 = 833.33}
+                        new IndividualPeriodStats {Author = author, Ptt100 = 833.33}
                     };
                     actual.Should().BeEquivalentTo(expected, opt => opt.Excluding(x => x.ActiveDays)
-                                                                             .Excluding(x=>x.AverageCommitsPerDay));
+                        .Excluding(x => x.AverageCommitsPerDay));
                 }
 
                 [Test]
                 public void WhenDeveloperActiveAcrossEntireRange_ShouldReturnStats()
                 {
                     // arrange
-                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+                    var author = new Author {Name = "T-rav", Emails = new List<string> {"tmfrisinger@gmail.com"}};
 
                     var commitBuilder = new CommitTestDataBuilder()
                         .With_Author(author.Name, author.Emails.First());
@@ -664,7 +664,7 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                     // assert
                     var expected = new List<IndividualPeriodStats>
                     {
-                        new IndividualPeriodStats{Author = author, Ptt100 = 44.44}
+                        new IndividualPeriodStats {Author = author, Ptt100 = 44.44}
                     };
                     actual.Should().BeEquivalentTo(expected, opt => opt.Excluding(x => x.ActiveDays)
                         .Excluding(x => x.AverageCommitsPerDay));
@@ -674,7 +674,7 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                 public void WhenDeveloperStatsIncludeFirstCommit_ShouldReturnStatsWithoutException()
                 {
                     // arrange
-                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+                    var author = new Author {Name = "T-rav", Emails = new List<string> {"tmfrisinger@gmail.com"}};
 
                     var commitBuilder = new CommitTestDataBuilder()
                         .With_Author(author.Name, author.Emails.First());
@@ -711,6 +711,177 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
                     Assert.DoesNotThrow(() => sut.Individual_Period_Stats());
                 }
             }
+
+            [TestFixture]
+            class All_Stats { 
+                // todo : should it count as a period active day if all work is in the ignore list?
+                [Test]
+                public void WhenPatternsIgnored_ShouldIgnoreMatchingFilesWhenCalculatingDeveloperStats()
+                {
+                    // arrange
+                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com" } };
+
+                    var commitBuilder = new CommitTestDataBuilder()
+                        .With_Author(author.Name, author.Emails.First());
+
+                    var commit1 = commitBuilder
+                        .With_File_Name("file1.txt.orig")
+                        .With_File_Content("1", "2")
+                        .With_Commit_Timestamp("2018-09-10 01:01:01")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit2 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("3", "4")
+                        .With_Commit_Timestamp("2018-09-10 11:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit3 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("5", "6", "7")
+                        .With_Commit_Timestamp("2018-09-10 13:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var context = new RepositoryTestDataBuilder()
+                        .After_Init_Commit_To_Master()
+                        .Make_Commit(commit1)
+                        .Make_Commit(commit2)
+                        .Make_Commit(commit3)
+                        .Build();
+                    
+                    var sourceAnalysis = new SourceControlAnalysisBuilder()
+                        .WithPath(context.Path)
+                        .WithIgnorePatterns(new[] { ".orig" })
+                        .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-20"))
+                        .WithWorkingDaysPerWeek(4)
+                        .WithWorkingWeekHours(32)
+                        .Build();
+
+                    var sut = sourceAnalysis.Run_Analysis();
+                    // act
+                    var actual = sut.Individual_Period_Stats();
+                    // assert
+                    var expected = new List<IndividualPeriodStats>
+                    {
+                        new IndividualPeriodStats{Author = author, ActiveDays = 3, AverageCommitsPerDay = 1.0, Ptt100 = 53.19}
+                    };
+                    actual.Should().BeEquivalentTo(expected);
+                }
+
+                [Test]
+                public void WhenEntireHistory_ShouldReturnDeveloperStatsForLifetime()
+                {
+                    // arrange;
+                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmil.com" } };
+
+                    var commitBuilder = new CommitTestDataBuilder()
+                        .With_Author(author.Name, author.Emails.First());
+
+                    var commit1 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("1", "2")
+                        .With_Commit_Timestamp("2018-08-10 01:01:01")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit2 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("3", "4")
+                        .With_Commit_Timestamp("2018-09-12 11:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit3 = commitBuilder
+                        .With_File_Name("file3.txt")
+                        .With_File_Content("1", "2", "5", "7")
+                        .With_Commit_Timestamp("2018-10-20 11:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var context = new RepositoryTestDataBuilder()
+                        .Make_Commit(commit1)
+                        .Make_Commit(commit2)
+                        .Make_Commit(commit3)
+                        .Build();
+
+                    var sourceAnalysis = new SourceControlAnalysisBuilder()
+                        .WithPath(context.Path)
+                        .WithEntireHistory()
+                        .WithWorkingDaysPerWeek(4)
+                        .WithWorkingWeekHours(32)
+                        .Build();
+
+                    var sut = sourceAnalysis.Run_Analysis();
+                    // act
+                    var actual = sut.Individual_Period_Stats();
+                    // assert
+                    var expected = new List<IndividualPeriodStats>
+                    {
+                        new IndividualPeriodStats{Author = author, ActiveDays = 3, AverageCommitsPerDay = 1.0, Ptt100 = 44.44}
+                    };
+                    actual.Should().BeEquivalentTo(expected);
+                }
+
+                [Test]
+                public void WhenUsingAliasMapping_ShouldReturnOneDeveloperStats()
+                {
+                    // arrange
+                    var author = new Author { Name = "T-rav", Emails = new List<string> { "tmfrisinger@gmail.com", "travis@frisinger.com" } };
+                    var aliasFile = Create_Alias_File(author);
+
+                    var commitBuilder = new CommitTestDataBuilder()
+                        .With_Author(author.Name, author.Emails.First());
+
+                    var commit1 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("1", "2")
+                        .With_Commit_Timestamp("2018-09-10 01:01:01")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit2 = commitBuilder
+                        .With_File_Name("file1.txt")
+                        .With_File_Content("3", "4")
+                        .With_Commit_Timestamp("2018-09-12 11:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var commit3 = commitBuilder
+                        .With_Author("Travis", "travis@frisinger.com")
+                        .With_File_Name("file3.txt")
+                        .With_File_Content("1", "2", "5", "7")
+                        .With_Commit_Timestamp("2018-09-20 11:03:02")
+                        .With_Commit_Message("it worked!")
+                        .Build();
+
+                    var context = new RepositoryTestDataBuilder()
+                        .Make_Commit(commit1)
+                        .Make_Commit(commit2)
+                        .Make_Commit(commit3)
+                        .Build();
+
+                    var sourceAnalysis = new SourceControlAnalysisBuilder()
+                        .WithPath(context.Path)
+                        .WithAliasMapping(aliasFile)
+                        .WithEntireHistory()
+                        .WithWorkingDaysPerWeek(4)
+                        .WithWorkingWeekHours(32)
+                        .Build();
+
+                    var sut = sourceAnalysis.Run_Analysis();
+                    // act
+                    var actual = sut.Individual_Period_Stats();
+                    // assert
+                    var expected = new List<IndividualPeriodStats>
+                    {
+                        new IndividualPeriodStats{Author = author, ActiveDays = 3, AverageCommitsPerDay = 1.0, Ptt100 = 44.44}
+                    };
+                    actual.Should().BeEquivalentTo(expected);
+                }
+            }
         }
         
         private static string Create_Alias_File(Author author)
@@ -739,255 +910,13 @@ namespace Analyzer.Data.Tests.SourceRepositoryV2
 
         
 
-        //    [Test]
-        //    public void WhenBranchSelected_ShouldReturnAllActiveDevelopersOnBranch()
-        //    {
-        //        // arrange
-        //        var email = "tmfrisinger@gmail.com";
-        //        var authorName = "T-rav";
-        //        var branchName = "my-branch";
-        //        var author = new Author { Name = authorName, Emails = new List<string> { email } };
+       
 
-        //        var commitBuilder = new CommitTestDataBuilder();
+        
 
-        //        var commit1 = commitBuilder
-        //            .With_Author("ted", "bob@bunddy.co")
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("1", "2")
-        //            .With_Commit_Timestamp(DateTime.Today)
-        //            .With_Commit_Message("init commit to master")
-        //            .Build();
+        
 
-        //        var commit2 = commitBuilder
-        //            .With_Author(authorName, email)
-        //            .With_File_Name("file2.txt")
-        //            .With_File_Content("1", "2")
-        //            .With_Commit_Timestamp(DateTime.Today)
-        //            .With_Commit_Message("first branch commit")
-        //            .With_Branch(branchName)
-        //            .Build();
-
-        //        var commit3 = commitBuilder
-        //            .With_File_Name("file2.txt")
-        //            .With_File_Content("3", "5", "abc")
-        //            .With_Commit_Timestamp(DateTime.Today)
-        //            .With_Commit_Message("second branch commit")
-        //            .With_Branch(branchName)
-        //            .Build();
-
-        //        var context = new RepositoryTestDataBuilder()
-        //            .Make_Commit(commit1)
-        //            .On_Branch(branchName)
-        //            .Make_Commit(commit2)
-        //            .Make_Commit(commit3)
-        //            .Build();
-
-        //        var sut = new SourceControlAnalysisBuilder()
-        //            .WithPath(context.Path)
-        //            .WithRange(DateTime.Today, DateTime.Today)
-        //            .WithWorkingDaysPerWeek(4)
-        //            .WithWorkingWeekHours(32)
-        //            .WithBranch(branchName)
-        //            .Build();
-        //        // act
-        //        var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
-        //        // assert
-        //        var expectedNumberOfDevelopersOnBranch = 1;
-        //        actual.Count.Should().Be(expectedNumberOfDevelopersOnBranch);
-        //    }
-
-        //    // todo : should it count as a period active day if all work is in the ignore list?
-        //    [Test]
-        //    public void WhenPatternsIgnored_ShouldIgnoreMatchingFilesWhenCalculatingDeveloperStats()
-        //    {
-        //        // arrange
-        //        var email = "tmfrisinger@gmail.com";
-        //        var authorName = "T-rav";
-        //        var author = new Author { Name = authorName, Emails = new List<string> { email } };
-
-        //        var commitBuilder = new CommitTestDataBuilder()
-        //            .With_Author(authorName, email);
-
-        //        var commit1 = commitBuilder
-        //            .With_File_Name("file1.txt.orig")
-        //            .With_File_Content("1", "2")
-        //            .With_Commit_Timestamp("2018-09-10 01:01:01")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit2 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("3", "4")
-        //            .With_Commit_Timestamp("2018-09-10 11:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit3 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("5", "6", "7")
-        //            .With_Commit_Timestamp("2018-09-10 13:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var context = new RepositoryTestDataBuilder()
-        //            .After_Init_Commit_To_Master()
-        //            .Make_Commit(commit1)
-        //            .Make_Commit(commit2)
-        //            .Make_Commit(commit3)
-        //            .Build();
-
-        //        var sut = new SourceControlAnalysisBuilder()
-        //            .WithPath(context.Path)
-        //            .WithIgnorePatterns(new[] {".orig"})
-        //            .WithRange(DateTime.Parse("2018-09-10"), DateTime.Parse("2018-09-20"))
-        //            .WithWorkingDaysPerWeek(4)
-        //            .WithWorkingWeekHours(32)
-        //            .Build();
-
-        //        // act
-        //        var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
-        //        // assert
-        //        var expected = new List<DeveloperStats>
-        //        {
-        //            new DeveloperStats
-        //            {
-        //                Author = author,
-        //                ActiveDaysPerWeek = 0.5,
-        //                PeriodActiveDays = 1, 
-        //                CommitsPerDay = 3.0, // per active day
-        //                Impact = 0.010, // affected
-        //                LinesOfChangePerHour = 0.88, // affected
-        //                LinesAdded = 5, // affected
-        //                LinesRemoved = 2,
-        //                Churn = 0.4, // affected
-        //                Rtt100 = 113.64, // affected
-        //                Ptt100 = 263.16 // affected
-        //            }
-        //        };
-        //        actual.Should().BeEquivalentTo(expected);
-        //    }
-
-        //    [Test]
-        //    public void WhenEntireHistory_ShouldReturnDeveloperStatsForLifetime()
-        //    {
-        //        // arrange
-        //        var email = "tmfrisinger@gmail.com";
-        //        var authorName = "T-rav";
-        //        var author = new Author { Name = authorName, Emails = new List<string> { email } };
-
-        //        var commitBuilder = new CommitTestDataBuilder()
-        //            .With_Author(authorName, email);
-
-        //        var commit1 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("1", "2")
-        //            .With_Commit_Timestamp("2018-08-10 01:01:01")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit2 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("3", "4")
-        //            .With_Commit_Timestamp("2018-09-12 11:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit3 = commitBuilder
-        //            .With_File_Name("file3.txt")
-        //            .With_File_Content("1", "2", "5", "7")
-        //            .With_Commit_Timestamp("2018-10-20 11:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var context = new RepositoryTestDataBuilder()
-        //            .After_Init_Commit_To_Master()
-        //            .Make_Commit(commit1)
-        //            .Make_Commit(commit2)
-        //            .Make_Commit(commit3)
-        //            .Build();
-
-        //        var sut = new SourceControlAnalysisBuilder()
-        //            .WithPath(context.Path)
-        //            .WithEntireHistory()
-        //            .WithWorkingDaysPerWeek(4)
-        //            .WithWorkingWeekHours(32)
-        //            .Build();
-        //        // act
-        //        var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
-        //        // assert
-        //        var expected = new List<DeveloperStats>
-        //        {
-        //            new DeveloperStats
-        //            {
-        //                Author = author,
-        //                ActiveDaysPerWeek = 0.12,
-        //                PeriodActiveDays = 3,
-        //                CommitsPerDay = 1.0,
-        //                Impact =0.012,
-        //                LinesOfChangePerHour = 0.42,
-        //                LinesAdded = 8,
-        //                LinesRemoved = 2,
-        //                Churn = 0.25,
-        //                Rtt100 = 238.1,
-        //                Ptt100 = 400.00
-        //            }
-        //        };
-        //        actual.Should().BeEquivalentTo(expected);
-        //    }
-
-        //    [Test]
-        //    public void WhenUsingAliasMappingForTwoEmails_ShouldReturnOneDeveloperStats()
-        //    {
-        //        // arrange
-        //        var email = "tmfrisinger@gmail.com";
-        //        var authorName = "T-rav";
-        //        var author = new Author { Name = authorName, Emails = new List<string> { email, "travis@frisinger.com" } };
-
-        //        var commitBuilder = new CommitTestDataBuilder()
-        //            .With_Author(authorName, email);
-
-        //        var commit1 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("1", "2")
-        //            .With_Commit_Timestamp("2018-09-10 01:01:01")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit2 = commitBuilder
-        //            .With_File_Name("file1.txt")
-        //            .With_File_Content("3", "4")
-        //            .With_Commit_Timestamp("2018-09-12 11:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var commit3 = commitBuilder
-        //            .With_Author("Travis", "travis@frisinger.com")
-        //            .With_File_Name("file3.txt")
-        //            .With_File_Content("1", "2", "5", "7")
-        //            .With_Commit_Timestamp("2018-09-20 11:03:02")
-        //            .With_Commit_Message("it worked!")
-        //            .Build();
-
-        //        var context = new RepositoryTestDataBuilder()
-        //            .After_Init_Commit_To_Master()
-        //            .Make_Commit(commit1)
-        //            .Make_Commit(commit2)
-        //            .Make_Commit(commit3)
-        //            .Build();
-
-        //        var sut = new SourceControlAnalysisBuilder()
-        //            .WithPath(context.Path)
-        //            .WithEntireHistory()
-        //            .WithWorkingDaysPerWeek(4)
-        //            .WithWorkingWeekHours(32)
-        //            .Build();
-        //        // act
-        //        var actual = sut.Build_Individual_Developer_Stats(new List<Author> { author });
-        //        // assert
-        //        var expectedNumberOfStats = 1;
-        //        actual.Count.Should().Be(expectedNumberOfStats);
-        //    }
-        //}
+        
 
         //[TestFixture]
         //public class Build_Daily_Individual_Developer_Stats
