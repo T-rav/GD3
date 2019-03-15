@@ -17,6 +17,7 @@ namespace Analyzer.UseCase.Tests
     public class RangedStatsUseCaseTests
     {
         [Test]
+        [Ignore("wip")]
         public void Execute_WhenRepoDetailsValid_ShouldReturnStats()
         {
             //---------------Arrange------------------
