@@ -2,75 +2,70 @@
 using System.Collections.Generic;
 using System.Linq;
 using Analyzer.Domain.Developer;
+using Analyzer.Domain.Reporting;
+using Analyzer.Domain.SourceControl.Stats;
 
 namespace Analyzer.Domain.SourceControl
 {
     public class CodeAnalysis
     {
         public IList<Author> Authors { get; }
-        public IList<CommitStat> CommitStats { get; }
+        public IList<Commit> Commits { get; }
         public AnalysisContext AnalysisContext { get; }
 
-        public CodeAnalysis(IList<Author> authors, IList<CommitStat> commitStats, AnalysisContext context)
+        public CodeAnalysis(IList<Author> authors, IList<Commit> commits, AnalysisContext context)
         {
             Authors = authors;
-            CommitStats = commitStats;
+            Commits = commits ?? new List<Commit>();
             AnalysisContext = context;
         }
 
-        // todo : need a build stats method that makes it all come together
-        public IList<IndividualPeriodStats> Individual_Period_Stats()
+        public CodeStats Build_Stats()
         {
-            // todo : rework to build 
-            var result = new List<IndividualPeriodStats>();
-            foreach (var author in Authors)
+            var commitStats = Build_Commit_Stats(Commits);
+            return new CodeStats
             {
-                // todo : make stats object for each? Or rules to build IStat objects
-                var activeDays = Fetch_Active_Days(author);
-                var averageCommitsPerDay = Fetch_Average_Commits_Per_Day(author, activeDays);
-                var ptt100 = Calculate_Ptt100(author, activeDays);
+                ReportingPeriod = AnalysisContext.ReportRange,
+                CommitStats = commitStats,
+                DeveloperStatsPerDay = Build_Daily_Developer_Stats(commitStats, Authors, AnalysisContext.ReportRange)
+            };
+        }
 
-                // todo : should be daily stats which aggregate up
-                result.Add(new IndividualPeriodStats
+        private List<DeveloperStatsForDay> Build_Daily_Developer_Stats(IList<CommitStat> commits, IList<Author> authors, ReportingPeriod analysisContextReportRange)
+        {
+            var result = new List<DeveloperStatsForDay>();
+
+            var daysInRange = analysisContextReportRange.Generate_Dates_For_Range();
+            foreach (var day in daysInRange)
+            {
+                foreach (var author in authors)
                 {
-                    Author = author,
-                    ActiveDays = activeDays,
-                    AverageCommitsPerDay = averageCommitsPerDay,
-                    Ptt100 = ptt100
-                });
+                    var stats = commits.Where(x => x.When.Date == day.Date).Where(x => x.Author == author);
+                    var linesOfChange = stats.Sum(x => x.LinesRemoved + x.LinesAdded);
+                    var productionLinesOfChange = stats.Sum(x => x.LinesAdded - x.LinesRemoved);
+
+                    var totalCommits = stats.Count();
+
+                    result.Add(new DeveloperStatsForDay
+                    {
+                        Author = author,
+                        When = day.Date,
+                        Commits = totalCommits,
+                        Impact = stats.Sum(x=>x.Impact(AnalysisContext.IgnorePatterns, AnalysisContext.IgnoreComments)),
+                        Churn = stats.Sum(x=>x.Churn()),
+                        Ptt100 = Calculate_Ptt100(productionLinesOfChange),
+                        RiskFactor = Risk_Factor(linesOfChange, totalCommits)
+                    });
+                }
             }
 
             return result;
         }
 
-        private double Fetch_Average_Commits_Per_Day(Author author, int activeDays)
-        {
-            var totalCommits = CommitStats.Count(x => x.Author == author);
-            if (activeDays == 0 || totalCommits == 0)
-            {
-                return 0.0;
-            }
-
-            var averageCommitsPerDay = (double)totalCommits / activeDays;
-            return Math.Round(averageCommitsPerDay, 2);
-        }
-
-        private int Fetch_Active_Days(Author author)
-        {
-            var activeDays = CommitStats.Where(x => x.Author == author)
-                .Select(x => new
-                {
-                    x.When
-                })
-                .GroupBy(x => x.When)
-                .Count();
-            return activeDays;
-        }
-
-        private double Calculate_Ptt100(Author author, int activeDays)
+        private double Calculate_Ptt100(int productionLinesOfChange)
         {
             var hundredLines = 100.00;
-            var productionLinesPerHour = Lines_Per_Hour(author, activeDays);
+            var productionLinesPerHour = Change_Per_Hour(productionLinesOfChange, 8); // todo : make this configurable
             var result = Math.Abs(Math.Round(hundredLines / productionLinesPerHour, 2));
             if (double.IsPositiveInfinity(result))
             {
@@ -80,28 +75,78 @@ namespace Analyzer.Domain.SourceControl
             return result;
         }
 
-        private double Lines_Per_Hour(Author author, int activeDays)
-        {  
-            var linesOfChange = Author_Lines_Of_Change(author);
-            var hoursPerDay = AnalysisContext.ReportRange.HoursPerWeek / AnalysisContext.ReportRange.DaysPerWeek;
-            var periodHoursWorked = hoursPerDay / activeDays;
-            var linesPerHour = (linesOfChange / periodHoursWorked);
-
-            if (double.IsNaN(linesPerHour))
+        private double Risk_Factor(int linesOfChange, double totalCommits)
+        {
+            var result = Math.Round((linesOfChange / totalCommits), 2);
+            if (result.Equals(double.NaN) || result.Equals(double.PositiveInfinity))
             {
-                linesPerHour = 0;
+                return 0.0;
             }
+
+            return result;
+        }
+
+        private double Change_Per_Hour(int linesOfChange, double dailyHours)
+        {
+            var linesPerHour = (linesOfChange / dailyHours);
+
             return Math.Round(linesPerHour, 2);
         }
 
-        private int Author_Lines_Of_Change(Author author)
+        private List<CommitStat> Build_Commit_Stats(IList<Commit> commits)
         {
-            var authorCommits = CommitStats.Where(x => x.Author == author).ToList();
-            var linesAdded = authorCommits.Sum(x => x.Patch.LinesAdded);
-            var linesRemoved = authorCommits.Sum(x => x.Patch.LinesRemoved);
-            var periodLinesOfChange = linesAdded - linesRemoved;
+            var result = commits.Select(commit => new CommitStat(commit)).ToList();
 
-            return periodLinesOfChange;
+            return result;
         }
+
+        // todo : need a build stats method that makes it all come together
+        //public IList<CommitStat> Individual_Period_Stats()
+        //{
+        //    // todo : rework to build 
+        //    var result = new List<CommitStat>();
+        //    foreach (var author in Authors)
+        //    {
+        //        // todo : make stats object for each? Or rules to build IStat objects
+        //        var activeDays = Fetch_Active_Days(author);
+        //        var averageCommitsPerDay = Fetch_Average_Commits_Per_Day(author, activeDays);
+        //        var ptt100 = Calculate_Ptt100(author, activeDays);
+
+        //        // todo : should be daily stats which aggregate up
+        //        //result.Add(new CommitStat
+        //        //{
+        //        //    Author = author,
+        //        //    ActiveDays = activeDays,
+        //        //    Commits = averageCommitsPerDay,
+        //        //    Ptt100 = ptt100
+        //        //});
+        //    }
+
+        //    return result;
+        //}
+
+        //private double Lines_Per_Hour(Author author, int activeDays)
+        //{
+            //var linesOfChange = Author_Lines_Of_Change(author);
+            //var hoursPerDay = AnalysisContext.ReportRange.HoursPerWeek / AnalysisContext.ReportRange.DaysPerWeek;
+            //var periodHoursWorked = hoursPerDay / activeDays;
+            //var linesPerHour = (linesOfChange / periodHoursWorked);
+
+            //if (double.IsNaN(linesPerHour))
+            //{
+            //    linesPerHour = 0;
+            //}
+            //return Math.Round(linesPerHour, 2);
+        //}
+
+        //private int Author_Lines_Of_Change(Author author)
+        //{
+        //    var authorCommits = CommitStats.Where(x => x.Author == author).ToList();
+        //    var linesAdded = authorCommits.Sum(x => x.Patch.LinesAdded);
+        //    var linesRemoved = authorCommits.Sum(x => x.Patch.LinesRemoved);
+        //    var periodLinesOfChange = linesAdded - linesRemoved;
+
+        //    return periodLinesOfChange;
+        //}
     }
 }

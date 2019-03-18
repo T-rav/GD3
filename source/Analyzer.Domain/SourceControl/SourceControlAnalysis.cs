@@ -35,9 +35,9 @@ namespace Analyzer.Domain.SourceControl
             return new CodeAnalysis(authors, commits, _context);
         }
 
-        private IList<CommitStat> Fetch_Commits(IList<Author> authors)
+        private IList<Commit> Fetch_Commits(IList<Author> authors)
         {
-            var result = new List<CommitStat>();
+            var result = new List<Commit>();
 
             var commits = Get_Commits(_context.ReportRange.Start, _context.ReportRange.End);
             foreach (var commit in commits)
@@ -50,62 +50,83 @@ namespace Analyzer.Domain.SourceControl
                 }
 
                 var convertedCommits = Convert_Commit(authors, commit);
-                result.AddRange(convertedCommits);
+                result.Add(convertedCommits);
             }
 
             return result;
         }
 
-        private List<CommitStat> Convert_Commit(IList<Author> authors, Commit commit)
+        private Commit Convert_Commit(IList<Author> authors, LibGit2Sharp.Commit commit)
         {
-            var result = new List<CommitStat>();
-            foreach (var commitParent in commit.Parents)
-            {
-                var fileChanges = _repository.Diff.Compare<Patch>(commitParent.Tree, commit.Tree);
-                result.Add(new CommitStat
-                {
-                    Author = Find_Commit_Author(authors, commit),
-                    When = commit.Committer.When.DateTime,
-                    Patch = Create_Commit_Patch(fileChanges)
-                });
-            }
-
-            return result;
-        }
-
-        private CommitStat Convert_First_Commit(Commit commit, IList<Author> authors)
-        {
-            var fileChanges = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
-
-            return new CommitStat
+            var result = new Commit
             {
                 Author = Find_Commit_Author(authors, commit),
                 When = commit.Committer.When.DateTime,
-                Patch = new CommitPatch
-                {
-                    LinesAdded = fileChanges.TotalLinesAdded,
-                    LinesRemoved = fileChanges.TotalLinesDeleted,
-                    Contents = string.Empty // todo : get the contents properly
-                }
             };
+
+            foreach (var commitParent in commit.Parents)
+            {
+                var fileChanges = _repository.Diff.Compare<LibGit2Sharp.Patch>(commitParent.Tree, commit.Tree);
+                foreach (var fileChange in fileChanges)
+                {
+                    result.Patch.Add(new Patch
+                    {
+                        LinesAdded = fileChange.LinesAdded,
+                        LinesRemoved = fileChange.LinesDeleted,
+                        Contents = fileChange.Patch,
+                        ChangeType = Set_Status(fileChange.Status)
+                    });
+                }
+            }
+
+            return result;
         }
 
-        private bool First_Commit(Commit commit)
+        private ChangeType Set_Status(ChangeKind fileChangeStatus)
+        {
+            var mapping = new Dictionary<ChangeKind, ChangeType>
+            {
+                {ChangeKind.Added,ChangeType.Added },
+                {ChangeKind.Modified, ChangeType.Modified},
+                {ChangeKind.Conflicted,ChangeType.Conflicted},
+                {ChangeKind.Copied, ChangeType.Copied },
+                {ChangeKind.Deleted, ChangeType.Deleted },
+                {ChangeKind.Ignored, ChangeType.Ignored},
+                {ChangeKind.Renamed, ChangeType.Renamed },
+                {ChangeKind.Unmodified, ChangeType.Unmodified},
+                {ChangeKind.Unreadable, ChangeType.Unreadable },
+                {ChangeKind.Untracked,ChangeType.Untracked}
+            };
+
+            return mapping[fileChangeStatus];
+        }
+
+        private Commit Convert_First_Commit(LibGit2Sharp.Commit commit, IList<Author> authors)
+        {
+            var result = new Commit();
+
+            var fileChanges = _repository.Diff.Compare<PatchStats>(null, commit.Tree);
+
+            foreach (var fileChange in fileChanges)
+            {
+                result.Patch.Add(new Patch
+                {
+                    LinesRemoved = fileChange.LinesDeleted,
+                    LinesAdded = fileChange.LinesAdded,
+                    Contents = string.Empty, // todo : get the contents properly,
+                    ChangeType = ChangeType.Added
+                });
+            }
+            
+            return result;
+        }
+
+        private bool First_Commit(LibGit2Sharp.Commit commit)
         {
             return !commit.Parents.Any();
         }
 
-        private static CommitPatch Create_Commit_Patch(Patch fileChanges)
-        {
-            return new CommitPatch
-            {
-                Contents = fileChanges.Content,
-                LinesAdded = fileChanges.LinesAdded,
-                LinesRemoved = fileChanges.LinesDeleted
-            };
-        }
-
-        private static Author Find_Commit_Author(IList<Author> authors, Commit commit)
+        private static Author Find_Commit_Author(IList<Author> authors, LibGit2Sharp.Commit commit)
         {
             return authors.FirstOrDefault(x=>x.Emails.Contains(commit.Author.Email));
         }
@@ -130,7 +151,7 @@ namespace Analyzer.Domain.SourceControl
             return authors;
         }
 
-        private IEnumerable<Commit> Get_Commits(DateTime start, DateTime end)
+        private IEnumerable<LibGit2Sharp.Commit> Get_Commits(DateTime start, DateTime end)
         {
             var filter = new CommitFilter
             {

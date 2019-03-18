@@ -96,7 +96,7 @@ namespace Analyzer.UseCase.Tests
         {
             var repo = Substitute.For<SourceControlAnalysis>();
 
-            repo.Run_Analysis().Returns(new CodeAnalysis(new List<Author> { author }, new List<CommitStat>(), new AnalysisContext { ReportRange = reportingRange }));
+            repo.Run_Analysis().Returns(new CodeAnalysis(new List<Author> { author }, new List<Commit>(), new AnalysisContext { ReportRange = reportingRange }));
 
             //repo.List_Authors()
             //    .Returns(new List<Author>
