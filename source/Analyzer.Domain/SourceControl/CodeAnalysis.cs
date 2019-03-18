@@ -23,12 +23,60 @@ namespace Analyzer.Domain.SourceControl
         public CodeStats Build_Stats()
         {
             var commitStats = Build_Commit_Stats(Commits);
+            var dailyDeveloperStats = Build_Daily_Developer_Stats(commitStats, Authors, AnalysisContext.ReportRange);
+
             return new CodeStats
             {
                 ReportingPeriod = AnalysisContext.ReportRange,
                 CommitStats = commitStats,
-                DeveloperStatsPerDay = Build_Daily_Developer_Stats(commitStats, Authors, AnalysisContext.ReportRange)
+                DeveloperStatsPerDay = dailyDeveloperStats,
+                TeamStatsPerDay = Build_Daily_Team_Stats(dailyDeveloperStats, AnalysisContext.ReportRange)
             };
+        }
+
+        private List<TeamStatsForDay> Build_Daily_Team_Stats(List<DeveloperStatsForDay> dailyDeveloperStats, ReportingPeriod reportingRange)
+        {
+            var result = new List<TeamStatsForDay>();
+
+            var daysInRange = reportingRange.Generate_Dates_For_Range();
+            foreach (var day in daysInRange)
+            {
+                var statsForDay = dailyDeveloperStats.Where(x=>x.When == day.Date).Where(x=>x.Commits > 0);
+                var activeDevelopers = statsForDay.GroupBy(x=>x.Author).Count();
+
+                result.Add(new TeamStatsForDay
+                {
+                    When = day.Date,
+                    ActiveDevelopers = activeDevelopers,
+                    Commits = statsForDay.Sum(x=>x.Commits),
+                    Impact = Math.Round(statsForDay.Sum(x=>x.Impact),3),
+                    Churn = Math.Round(statsForDay.Sum(x=>x.Churn),3),
+                    Ptt100 = Calculate_Ptt100_For_Team(statsForDay, activeDevelopers),
+                    RiskFactor = Calculate_Team_RiskFactor(statsForDay, activeDevelopers)
+                });
+            }
+
+            return result;
+        }
+
+        private static double Calculate_Ptt100_For_Team(IEnumerable<DeveloperStatsForDay> statsForDay, int activeDevelopers)
+        {
+            if (activeDevelopers == 0)
+            {
+                return 0;
+            }
+
+            return Math.Round(statsForDay.Sum(x=>x.Ptt100) / activeDevelopers,3);
+        }
+
+        private static double Calculate_Team_RiskFactor(IEnumerable<DeveloperStatsForDay> statsForDay, int activeDevelopers)
+        {
+            if (activeDevelopers == 0)
+            {
+                return 0;
+            }
+
+            return Math.Round(statsForDay.Sum(x=>x.RiskFactor) / activeDevelopers,3);
         }
 
         private List<DeveloperStatsForDay> Build_Daily_Developer_Stats(IList<CommitStat> commits, IList<Author> authors, ReportingPeriod analysisContextReportRange)

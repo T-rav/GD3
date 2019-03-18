@@ -43,90 +43,6 @@ namespace Analyzer.Domain.Tests.SourceControl
             }
 
             [TestFixture]
-            class DeveloperStatsPerDay_Property
-            {
-                [Test]
-                public void Given_Reporting_Range_Of_Two_Days_Expect_Two_Days_Of_Stats()
-                {
-                    //---------------Arrange------------------
-                    var author = new Author { Name = "T-rav", Emails = new List<string> { "t@foo.com" } };
-                    var authors = new List<Author>
-                    {
-                        author
-                    };
-                    
-                    var commits = new List<Commit>
-                    {
-                        new Commit
-                        {
-                            Author = author,
-                            When = DateTime.Now,
-                            Patch = new List<Patch>
-                            {
-                                new Patch{ChangeType = ChangeType.Modified, LinesAdded = 2, LinesRemoved = 0,Contents = "@@ 2,0 2,0 @@ namespace Test.Namespace \na\nb"}
-                            }
-                        }
-                    };
-                    var context = new AnalysisContext
-                    {
-                        ReportRange = new Domain.Reporting.ReportingPeriod
-                        {
-                            Start = DateTime.Today.AddDays(-1),
-                            End = DateTime.Now
-                        }
-                    };
-                    var sut = new CodeAnalysis(authors, commits, context);
-                    //---------------Act----------------------
-                    var actual = sut.Build_Stats();
-                    //---------------Assert-------------------
-                    var expected = new List<DeveloperStatsForDay>
-                    {
-                        new DeveloperStatsForDay
-                        {
-                            Author = author,
-                            Commits = 0,
-                            Impact = 0,
-                            Churn = 0,
-                            RiskFactor = 0,
-                            Ptt100 = 0,
-                            When = DateTime.Now.Date.AddDays(-1)
-                        },
-                        new DeveloperStatsForDay
-                        {
-                            Author = author,
-                            Commits = 1,
-                            Impact = 0.003,
-                            Churn = 0.0,
-                            RiskFactor = 2.0,
-                            Ptt100 = 400.00,
-                            When = DateTime.Now.Date
-                        }
-                    };
-                    actual.DeveloperStatsPerDay.Should().BeEquivalentTo(expected);
-                }
-
-                [Test]
-                public void Given_Null_Commits_Expect_Empty_List()
-                {
-                    //---------------Arrange------------------
-                    var authors = new List<Author>();
-                    var context = new AnalysisContext
-                    {
-                        ReportRange = new Domain.Reporting.ReportingPeriod
-                        {
-                            Start = DateTime.Today.AddDays(-7),
-                            End = DateTime.Now
-                        }
-                    };
-                    var sut = new CodeAnalysis(authors, null, context);
-                    //---------------Act----------------------
-                    var actual = sut.Build_Stats();
-                    //---------------Assert-------------------
-                    actual.CommitStats.Should().BeEmpty();
-                }
-            }
-
-            [TestFixture]
             class CommitStats_Property
             {
                 [Test]
@@ -183,6 +99,230 @@ namespace Analyzer.Domain.Tests.SourceControl
                     var actual = sut.Build_Stats();
                     //---------------Assert-------------------
                     actual.CommitStats.Should().BeEmpty();
+                }
+            }
+
+
+            [TestFixture]
+            class DeveloperStatsPerDay_Property
+            {
+                [Test]
+                public void Given_Reporting_Range_Of_Two_Days_With_Single_Developer_Expect_Two_Days_Of_Stats()
+                {
+                    //---------------Arrange------------------
+                    var author = new Author { Name = "T-rav", Emails = new List<string> { "t@foo.com" } };
+                    var authors = new List<Author>
+                    {
+                        author
+                    };
+
+                    var commits = new List<Commit>
+                    {
+                        new Commit
+                        {
+                            Author = author,
+                            When = DateTime.Now,
+                            Patch = new List<Patch>
+                            {
+                                new Patch{ChangeType = ChangeType.Modified, LinesAdded = 2, LinesRemoved = 0,Contents = "@@ 2,0 2,0 @@ namespace Test.Namespace \na\nb"}
+                            }
+                        }
+                    };
+                    var context = new AnalysisContext
+                    {
+                        ReportRange = new Domain.Reporting.ReportingPeriod
+                        {
+                            Start = DateTime.Today.AddDays(-1),
+                            End = DateTime.Now
+                        }
+                    };
+                    var sut = new CodeAnalysis(authors, commits, context);
+                    //---------------Act----------------------
+                    var actual = sut.Build_Stats();
+                    //---------------Assert-------------------
+                    var expected = new List<DeveloperStatsForDay>
+                    {
+                        new DeveloperStatsForDay
+                        {
+                            Author = author,
+                            Commits = 0,
+                            Impact = 0,
+                            Churn = 0,
+                            RiskFactor = 0,
+                            Ptt100 = 0,
+                            When = DateTime.Now.Date.AddDays(-1)
+                        },
+                        new DeveloperStatsForDay
+                        {
+                            Author = author,
+                            Commits = 1,
+                            Impact = 0.003,
+                            Churn = 0.0,
+                            RiskFactor = 2.0,
+                            Ptt100 = 400.00,
+                            When = DateTime.Now.Date
+                        }
+                    };
+                    actual.DeveloperStatsPerDay.Should().BeEquivalentTo(expected);
+                }
+
+                [Test]
+                public void Given_Reporting_Range_Of_Two_Days_With_Multiple_Developers_Expect_Two_Days_Of_Stats()
+                {
+                    //---------------Arrange------------------
+                    var author1 = new Author { Name = "T-rav", Emails = new List<string> { "t@foo.com" } };
+                    var author2 = new Author { Name = "Zen", Emails = new List<string> { "z@foo.com" } };
+                    var authors = new List<Author>
+                    {
+                        author1,
+                        author2
+                    };
+
+                    var commits = new List<Commit>
+                    {
+                        new Commit
+                        {
+                            Author = author1,
+                            When = DateTime.Now,
+                            Patch = new List<Patch>
+                            {
+                                new Patch{ChangeType = ChangeType.Modified, LinesAdded = 2, LinesRemoved = 0,Contents = "@@ 2,0 2,0 @@ namespace Test.Namespace \na\nb"}
+                            }
+                        }
+                    };
+                    var context = new AnalysisContext
+                    {
+                        ReportRange = new Domain.Reporting.ReportingPeriod
+                        {
+                            Start = DateTime.Today.AddDays(-1),
+                            End = DateTime.Now
+                        }
+                    };
+                    var sut = new CodeAnalysis(authors, commits, context);
+                    //---------------Act----------------------
+                    var actual = sut.Build_Stats();
+                    //---------------Assert-------------------
+                    var expected = new List<DeveloperStatsForDay>
+                    {
+                        new DeveloperStatsForDay
+                        {
+                            Author = author1,
+                            Commits = 0,
+                            Impact = 0,
+                            Churn = 0,
+                            RiskFactor = 0,
+                            Ptt100 = 0,
+                            When = DateTime.Now.Date.AddDays(-1)
+                        },
+                        new DeveloperStatsForDay
+                        {
+                            Author = author1,
+                            Commits = 1,
+                            Impact = 0.003,
+                            Churn = 0.0,
+                            RiskFactor = 2.0,
+                            Ptt100 = 400.00,
+                            When = DateTime.Now.Date
+                        },
+                        new DeveloperStatsForDay
+                        {
+                            Author = author2,
+                            Commits = 0,
+                            Impact = 0,
+                            Churn = 0,
+                            RiskFactor = 0,
+                            Ptt100 = 0,
+                            When = DateTime.Now.Date.AddDays(-1)
+                        },
+                        new DeveloperStatsForDay
+                        {
+                            Author = author2,
+                            Commits = 0,
+                            Impact = 0,
+                            Churn = 0,
+                            RiskFactor = 0,
+                            Ptt100 = 0,
+                            When = DateTime.Now.Date
+                        },
+                    };
+                    actual.DeveloperStatsPerDay.Should().BeEquivalentTo(expected);
+                }
+            }
+
+
+            [TestFixture]
+            class TeamStatsPerDay_Property
+            {
+                [Test]
+                public void Given_Reporting_Range_Of_Two_Days_With_MultipleDeveloper_Expect_Two_Days_Of_Stats()
+                {
+                    //---------------Arrange------------------
+                    var author1 = new Author { Name = "T-rav", Emails = new List<string> { "t@foo.com" } };
+                    var author2 = new Author { Name = "Zen", Emails = new List<string> { "z@foo.com" } };
+
+                    var authors = new List<Author>
+                    {
+                        author1,
+                        author2
+                    };
+
+                    var commits = new List<Commit>
+                    {
+                        new Commit
+                        {
+                            Author = author1,
+                            When = DateTime.Now,
+                            Patch = new List<Patch>
+                            {
+                                new Patch{ChangeType = ChangeType.Modified, LinesAdded = 2, LinesRemoved = 0, Contents = "@@ 2,0 2,0 @@ namespace Test.Namespace \na\nb"}
+                            }
+                        },
+                        new Commit
+                        {
+                            Author = author2,
+                            When = DateTime.Now,
+                            Patch = new List<Patch>
+                            {
+                                new Patch{ChangeType = ChangeType.Added, LinesAdded = 3, LinesRemoved = 0, Contents = "@@ 3,0 3,0 @@ namespace Test2.Namespace \n1\n2\n3"}
+                            }
+                        }
+                    };
+                    var context = new AnalysisContext
+                    {
+                        ReportRange = new Domain.Reporting.ReportingPeriod
+                        {
+                            Start = DateTime.Today.AddDays(-1),
+                            End = DateTime.Now
+                        }
+                    };
+                    var sut = new CodeAnalysis(authors, commits, context);
+                    //---------------Act----------------------
+                    var actual = sut.Build_Stats();
+                    //---------------Assert-------------------
+                    var expected = new List<TeamStatsForDay>
+                    {
+                        new TeamStatsForDay
+                        {
+                            ActiveDevelopers = 0,
+                            Commits = 0,
+                            Impact = 0,
+                            Churn = 0,
+                            RiskFactor = 0,
+                            Ptt100 = 0,
+                            When = DateTime.Now.Date.AddDays(-1)
+                        },
+                        new TeamStatsForDay
+                        {
+                            ActiveDevelopers = 2,
+                            Commits = 2,
+                            Impact = 0.006,
+                            Churn = 0.0,
+                            RiskFactor = 2.5,
+                            Ptt100 = 331.58,
+                            When = DateTime.Now.Date
+                        }
+                    };
+                    actual.TeamStatsPerDay.Should().BeEquivalentTo(expected);
                 }
             }
         }
