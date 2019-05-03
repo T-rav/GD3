@@ -1,0 +1,305 @@
+{
+  "authors": [
+    {
+      "name": "T-rav",
+      "emails": [
+        "tmfrisinger@gmail.com",
+        "t@bizvoip.co.za",
+        "travisf@stoneage1.bizvoip.co.za",
+        "tmfirsinger@gmail.com",
+        "t@bizvoip,co.za"
+      ]
+    }
+  ],
+  "developerStats": [
+    {
+      "author": {
+        "name": "T-rav",
+        "emails": [
+          "tmfrisinger@gmail.com",
+          "t@bizvoip.co.za",
+          "travisf@stoneage1.bizvoip.co.za",
+          "tmfirsinger@gmail.com",
+          "t@bizvoip,co.za"
+        ]
+      },
+      "periodActiveDays": 8,
+      "activeDaysPerWeek": 8.0,
+      "commitsPerDay": 16.62,
+      "impact": 239377.332,
+      "linesOfChangePerHour": 1112.62,
+      "churn": 0.16,
+      "linesAdded": 61285,
+      "linesRemoved": 9923,
+      "rtt100": 0.09,
+      "ptt100": 0.12,
+      "dtt100": 0.03,
+      "riskFactor": 66.94
+    }
+  ],
+  "teamStats": {
+    "stats": [
+      {
+        "dateOf": "2019-01-28T00:00:00",
+        "totalCommits": 11,
+        "activeDevelopers": 1,
+        "velocity": 11.0
+      },
+      {
+        "dateOf": "2019-01-29T00:00:00",
+        "totalCommits": 8,
+        "activeDevelopers": 1,
+        "velocity": 8.0
+      },
+      {
+        "dateOf": "2019-01-30T00:00:00",
+        "totalCommits": 14,
+        "activeDevelopers": 2,
+        "velocity": 7.0
+      },
+      {
+        "dateOf": "2019-01-31T00:00:00",
+        "totalCommits": 14,
+        "activeDevelopers": 2,
+        "velocity": 7.0
+      },
+      {
+        "dateOf": "2019-02-01T00:00:00",
+        "totalCommits": 9,
+        "activeDevelopers": 2,
+        "velocity": 4.5
+      },
+      {
+        "dateOf": "2019-02-04T00:00:00",
+        "totalCommits": 41,
+        "activeDevelopers": 2,
+        "velocity": 20.5
+      },
+      {
+        "dateOf": "2019-02-05T00:00:00",
+        "totalCommits": 23,
+        "activeDevelopers": 3,
+        "velocity": 7.67
+      }
+    ],
+    "weekends": [
+      6,
+      0
+    ]
+  },
+  "reportingRange": {
+    "start": "2019-01-28T00:00:00",
+    "end": "2019-02-05T00:00:00",
+    "hoursPerWeek": 40,
+    "daysPerWeek": 5.0,
+    "weekends": [
+      6,
+      0
+    ]
+  },
+  "dailyDeveloperStats": [
+    {
+      "date": "2019-01-28T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 11.0,
+          "impact": 7884.742,
+          "linesOfChangePerHour": 618.5,
+          "churn": 0.91,
+          "linesAdded": 2596,
+          "linesRemoved": 2352,
+          "rtt100": 0.16,
+          "ptt100": 3.28,
+          "dtt100": 3.12,
+          "riskFactor": 56.23
+        }
+      ]
+    },
+    {
+      "date": "2019-01-29T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 8.0,
+          "impact": 88582.186,
+          "linesOfChangePerHour": 392.38,
+          "churn": 1.26,
+          "linesAdded": 1387,
+          "linesRemoved": 1752,
+          "rtt100": 0.25,
+          "ptt100": 2.19,
+          "dtt100": 1.94,
+          "riskFactor": 49.05
+        }
+      ]
+    },
+    {
+      "date": "2019-01-30T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 14.0,
+          "impact": 37393.755,
+          "linesOfChangePerHour": 263.0,
+          "churn": 0.39,
+          "linesAdded": 1512,
+          "linesRemoved": 592,
+          "rtt100": 0.38,
+          "ptt100": 0.87,
+          "dtt100": 0.49,
+          "riskFactor": 18.79
+        }
+      ]
+    },
+    {
+      "date": "2019-01-31T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 14.0,
+          "impact": 2109.293,
+          "linesOfChangePerHour": 96.62,
+          "churn": 0.5,
+          "linesAdded": 515,
+          "linesRemoved": 258,
+          "rtt100": 1.03,
+          "ptt100": 3.11,
+          "dtt100": 2.08,
+          "riskFactor": 6.9
+        }
+      ]
+    },
+    {
+      "date": "2019-02-01T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 9.0,
+          "impact": 1004.508,
+          "linesOfChangePerHour": 112.12,
+          "churn": 0.54,
+          "linesAdded": 584,
+          "linesRemoved": 313,
+          "rtt100": 0.89,
+          "ptt100": 2.95,
+          "dtt100": 2.06,
+          "riskFactor": 12.46
+        }
+      ]
+    },
+    {
+      "date": "2019-02-04T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 41.0,
+          "impact": 92942.978,
+          "linesOfChangePerHour": 7273.88,
+          "churn": 0.08,
+          "linesAdded": 53783,
+          "linesRemoved": 4408,
+          "rtt100": 0.01,
+          "ptt100": 0.02,
+          "dtt100": 0.01,
+          "riskFactor": 177.41
+        }
+      ]
+    },
+    {
+      "date": "2019-02-05T00:00:00",
+      "stats": [
+        {
+          "author": {
+            "name": "T-rav",
+            "emails": [
+              "tmfrisinger@gmail.com",
+              "t@bizvoip.co.za",
+              "travisf@stoneage1.bizvoip.co.za",
+              "tmfirsinger@gmail.com",
+              "t@bizvoip,co.za"
+            ]
+          },
+          "periodActiveDays": 1,
+          "activeDaysPerWeek": 1.0,
+          "commitsPerDay": 23.0,
+          "impact": 9072.558,
+          "linesOfChangePerHour": 94.62,
+          "churn": 0.28,
+          "linesAdded": 590,
+          "linesRemoved": 167,
+          "rtt100": 1.06,
+          "ptt100": 1.89,
+          "dtt100": 0.83,
+          "riskFactor": 4.11
+        }
+      ]
+    }
+  ]
+}
