@@ -11,6 +11,11 @@ namespace Analyzer.Domain.SourceControl
         public DateTime When { get; set; }
         public List<Patch> Patch { get; set; }
 
+        public Commit()
+        {
+            Patch = new List<Patch>();
+        }
+
         public int LinesAdded
         {
             get { return Patch.Sum(x => x.LinesAdded); }

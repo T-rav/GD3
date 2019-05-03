@@ -61,7 +61,7 @@ namespace Analyzer.Domain.SourceControl
             var result = new Commit
             {
                 Author = Find_Commit_Author(authors, commit),
-                When = commit.Committer.When.DateTime,
+                When = commit.Committer.When.DateTime
             };
 
             foreach (var commitParent in commit.Parents)
